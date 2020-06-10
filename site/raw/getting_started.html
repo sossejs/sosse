@@ -1,0 +1,14 @@
+<h1 id="getting-started"><a href="#getting-started" aria-hidden="true"><span class="toc-link"><span class="icono-chain"></span></span></a>Getting started</h1>
+<h2 id="download-and-prepare"><a href="#download-and-prepare" aria-hidden="true"><span class="toc-link"><span class="icono-chain"></span></span></a>Download and prepare</h2>
+<p>You can add changes to the template to prepare it for your use cases. Afterwards create new projects from it with <code>cp</code> or with <a href="https://github.com/hopplajs/hoppla" target="_blank">hoppla</a>.</p>
+<pre><code class="hljs language-bash">git <span class="hljs-built_in">clone</span> git@github.com:witneyjs/witney.git;
+<span class="hljs-comment"># Optionally customize the cloned template</span></code></pre>
+<h2 id="start-a-new-project-from-your-local-witney-copy"><a href="#start-a-new-project-from-your-local-witney-copy" aria-hidden="true"><span class="toc-link"><span class="icono-chain"></span></span></a>Start a new project from your local witney copy</h2>
+<pre><code class="hljs language-bash">npx hoppla -t witney -d newProj -i <span class="hljs-string">"{ install: true }"</span>;
+<span class="hljs-built_in">cd</span> newProj;</code></pre>
+<h2 id="building-prod"><a href="#building-prod" aria-hidden="true"><span class="toc-link"><span class="icono-chain"></span></span></a>Building prod</h2>
+<pre><code class="hljs language-bash">./scripts/build.js</code></pre>
+<h2 id="building-dev"><a href="#building-dev" aria-hidden="true"><span class="toc-link"><span class="icono-chain"></span></span></a>Building dev</h2>
+<pre><code class="hljs language-bash">./scripts/build-core.js -w</code></pre>
+<h2 id="starting-a-server"><a href="#starting-a-server" aria-hidden="true"><span class="toc-link"><span class="icono-chain"></span></span></a>Starting a server</h2>
+<pre><code class="hljs language-bash">./scripts/start.js</code></pre>
