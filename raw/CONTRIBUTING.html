@@ -1,0 +1,22 @@
+<h1 id="contributing"><a href="#contributing" aria-hidden="true"><span class="toc-link"><span class="icono-chain"></span></span></a>Contributing</h1>
+<h2 id="building"><a href="#building" aria-hidden="true"><span class="toc-link"><span class="icono-chain"></span></span></a>Building</h2>
+<p>This projects includes all its development scripts in the script folder.</p>
+<p>Mostly used scripts:</p>
+<ul>
+<li>Build Code: <code>./scripts/build.js</code></li>
+<li>Reformat Code: <code>./scripts/reformat.js</code></li>
+<li>Run tests: <code>./scripts/test.js</code></li>
+<li>Build docs html: <code>./scripts/docs.js</code></li>
+</ul>
+<h2 id="releasing"><a href="#releasing" aria-hidden="true"><span class="toc-link"><span class="icono-chain"></span></span></a>Releasing</h2>
+<p>Before releasing make sure that all changes for the release are committed and in the proper branch merged.</p>
+<p>To start the release workflow, run: <code>./scripts/before-publish.js</code>
+This workflow will run through:</p>
+<ul>
+<li>Reformat</li>
+<li>Build</li>
+<li>Test &#x26; Coverage</li>
+</ul>
+<p>Afterwards you are notified that you should run: <code>npx standard-version -a</code>
+This increases the version in package.json, updates README.md CHANGELOG.md and docs and adds a new git tag with the proper version.</p>
+<p>Then push the tag (something like <code>git push --tags</code>) and if needed publish to npm with: <code>npm publish</code></p>
