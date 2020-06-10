@@ -4,5 +4,12 @@ const { spawn, args, buildArgs, rmDir, pkgDir } = require("./lib");
 
 (async () => {
   await rmDir(pkgDir("dist"), { recursive: true });
-  spawn("npx", ["microbundle", "--raw", ...buildArgs(), ...args]);
+  spawn("npx", [
+    "microbundle",
+    "--raw",
+    "--target",
+    "node",
+    ...buildArgs(),
+    ...args,
+  ]);
 })();
