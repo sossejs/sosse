@@ -1,0 +1,6 @@
+docs/* linguist-documentation
+templates/* linguist-detectable=false
+coverage/* linguist-detectable=false
+scripts/* linguist-detectable=false
+dist/* linguist-generated=true
+site/* linguist-generated=true

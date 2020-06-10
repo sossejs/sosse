@@ -1,0 +1,17 @@
+{
+  "compilerOptions": {
+    "jsx": "react",
+    "jsxFactory": "h",
+    "noEmit": true,
+    "allowJs": true,
+    "baseUrl": "./node_modules",
+    "esModuleInterop": true,
+    "downlevelIteration": true,
+    "target": "es5",
+    "paths": {
+      "sosse": ["../lib/main.ts"],
+      "sosse/example": ["../example/lib/main.ts"],
+      "sosse/preact": ["../preact/lib/main.ts"]
+    }
+  }
+}
