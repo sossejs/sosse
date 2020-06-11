@@ -124,6 +124,11 @@ ${clientJs}
     }
   };
 
-  ctx.events.on("restart", restartListener);
-  ctx.events.on("error", errorListener);
+  const startedListener = function () {
+    ctx.events.removeListener("started", startedListener);
+    ctx.events.on("restart", restartListener);
+    ctx.events.on("error", errorListener);
+  };
+
+  ctx.events.on("started", startedListener);
 };

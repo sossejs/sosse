@@ -52,8 +52,6 @@ export const hsr = async function ({
     const { setCtx, unsetCtx } = require("sosse");
 
     ctx.mainError = undefined;
-    const prevEvents = ctx.events;
-    ctx.events = new EventEmitter();
     setCtx(ctx);
 
     try {
@@ -65,18 +63,18 @@ export const hsr = async function ({
 
     unsetCtx();
     if (ctx.mainError) {
-      prevEvents.emit("error");
-      ctx.events = prevEvents;
+      ctx.events.emit("error");
     }
 
     if (listen) {
       if (stopMain) {
-        prevEvents.emit("restart");
+        ctx.events.emit("restart");
         const oldStopMain = stopMain;
         stopMain = undefined;
         await oldStopMain();
       }
       stopMain = await listen();
+      ctx.events.emit("started");
     }
 
     restarting = false;
