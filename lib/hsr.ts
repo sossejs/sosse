@@ -35,8 +35,17 @@ export const hsr = async function ({
   let absWatch = watch.map((dir) => path.resolve(base, dir));
 
   let stopMain;
-  // TODO: add something to handle restarts while a restart already is happening
+  let restarting = false;
+  let pendingRestart = false;
+
   const restartMain = debounce(async () => {
+    if (restarting) {
+      pendingRestart = true;
+      return;
+    }
+
+    restarting = true;
+
     let listen;
     clearModule.all();
 
@@ -68,6 +77,12 @@ export const hsr = async function ({
         await oldStopMain();
       }
       stopMain = await listen();
+    }
+
+    restarting = false;
+    if (pendingRestart) {
+      pendingRestart = false;
+      restartMain();
     }
   }, wait);
   const watcher = chokidar.watch(absWatch);
