@@ -21,19 +21,98 @@
     <div id="app">
       <main>
         <h1 id="getting-started"><a href="#getting-started" aria-hidden="true"><span class="toc-link"><span class="icono-chain"></span></span></a>Getting started</h1>
-<h2 id="download-and-prepare"><a href="#download-and-prepare" aria-hidden="true"><span class="toc-link"><span class="icono-chain"></span></span></a>Download and prepare</h2>
-<p>You can add changes to the template to prepare it for your use cases. Afterwards create new projects from it with <code>cp</code> or with <a href="https://github.com/hopplajs/hoppla" target="_blank">hoppla</a>.</p>
-<pre><code class="hljs language-bash">git <span class="hljs-built_in">clone</span> git@github.com:witneyjs/witney.git;
-<span class="hljs-comment"># Optionally customize the cloned template</span></code></pre>
-<h2 id="start-a-new-project-from-your-local-witney-copy"><a href="#start-a-new-project-from-your-local-witney-copy" aria-hidden="true"><span class="toc-link"><span class="icono-chain"></span></span></a>Start a new project from your local witney copy</h2>
-<pre><code class="hljs language-bash">npx hoppla -t witney -d newProj -i <span class="hljs-string">"{ install: true }"</span>;
-<span class="hljs-built_in">cd</span> newProj;</code></pre>
-<h2 id="building-prod"><a href="#building-prod" aria-hidden="true"><span class="toc-link"><span class="icono-chain"></span></span></a>Building prod</h2>
-<pre><code class="hljs language-bash">./scripts/build.js</code></pre>
-<h2 id="building-dev"><a href="#building-dev" aria-hidden="true"><span class="toc-link"><span class="icono-chain"></span></span></a>Building dev</h2>
-<pre><code class="hljs language-bash">./scripts/build-core.js -w</code></pre>
-<h2 id="starting-a-server"><a href="#starting-a-server" aria-hidden="true"><span class="toc-link"><span class="icono-chain"></span></span></a>Starting a server</h2>
-<pre><code class="hljs language-bash">./scripts/start.js</code></pre>
+<h2 id="basic-usage"><a href="#basic-usage" aria-hidden="true"><span class="toc-link"><span class="icono-chain"></span></span></a>Basic usage</h2>
+<p>main.js:</p>
+<pre><code class="hljs language-js"><span class="hljs-keyword">import</span> { hsr } <span class="hljs-keyword">from</span> <span class="hljs-string">"sosse"</span>;
+
+hsr({
+  <span class="hljs-comment">// Used as a prefix to resolve other configuration paths</span>
+  <span class="hljs-attr">base</span>: __dirname,
+  <span class="hljs-comment">// Will be called on file changes</span>
+  <span class="hljs-attr">main</span>: <span class="hljs-function"><span class="hljs-params">()</span> =></span> <span class="hljs-built_in">require</span>(<span class="hljs-string">"./server"</span>).default()
+})</code></pre>
+<p>server.js:</p>
+<pre><code class="hljs language-js"><span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> () {
+  <span class="hljs-comment">// Called before previous server is stopped</span>
+  <span class="hljs-built_in">console</span>.log(<span class="hljs-string">"preparation"</span>)
+
+  <span class="hljs-keyword">return</span> <span class="hljs-function"><span class="hljs-params">()</span> =></span> {
+    <span class="hljs-comment">// Called if the preparation was successfully executed and then only after the previous server is shutdown</span>
+    <span class="hljs-built_in">console</span>.log(<span class="hljs-string">"start"</span>)
+
+    <span class="hljs-keyword">return</span> <span class="hljs-function"><span class="hljs-params">()</span> =></span> {
+      <span class="hljs-comment">// Called after the next preparation was successfully executed</span>
+      <span class="hljs-built_in">console</span>.log(<span class="hljs-string">"stop"</span>)
+    }
+  }
+}</code></pre>
+<h2 id="watch-custom-directories"><a href="#watch-custom-directories" aria-hidden="true"><span class="toc-link"><span class="icono-chain"></span></span></a>Watch custom directories</h2>
+<pre><code class="hljs language-js">hsr({
+  <span class="hljs-attr">base</span>: __dirname,
+  <span class="hljs-comment">// Custom watch paths, relative to base (default: ["."])</span>
+  <span class="hljs-attr">watch</span>: [<span class="hljs-string">"routes"</span>, <span class="hljs-string">"views"</span>]
+})</code></pre>
+<h2 id="basic-express-server-example"><a href="#basic-express-server-example" aria-hidden="true"><span class="toc-link"><span class="icono-chain"></span></span></a>Basic Express server example</h2>
+<pre><code class="hljs language-js"><span class="hljs-keyword">import</span> express <span class="hljs-keyword">from</span> <span class="hljs-string">"express"</span>;
+
+globalThis.count = globalThis.count || <span class="hljs-number">1</span>;
+
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> () => {
+  <span class="hljs-keyword">const</span> app = express();
+  app.get(<span class="hljs-string">"/"</span>, (req, res) =>
+    res.send(<span class="hljs-string">`&#x3C;h1>hey visitor <span class="hljs-subst">${globalThis.count++}</span>&#x3C;/h1>`</span>)); 
+
+  <span class="hljs-keyword">return</span> <span class="hljs-function"><span class="hljs-params">()</span> =></span> {
+    <span class="hljs-keyword">const</span> port = <span class="hljs-number">8080</span>;
+    <span class="hljs-keyword">const</span> server = app.listen(port);
+
+    <span class="hljs-built_in">console</span>.log(<span class="hljs-string">`Started http://localhost:<span class="hljs-subst">${port}</span>`</span>);
+
+    <span class="hljs-keyword">return</span> <span class="hljs-function"><span class="hljs-params">()</span> =></span>
+      <span class="hljs-keyword">new</span> <span class="hljs-built_in">Promise</span>(<span class="hljs-function">(<span class="hljs-params">res, rej</span>) =></span> server.close(<span class="hljs-function">(<span class="hljs-params">e</span>) =></span> (e ? rej(e) : res())));
+  };
+};</code></pre>
+<h2 id="complete-express-server-example"><a href="#complete-express-server-example" aria-hidden="true"><span class="toc-link"><span class="icono-chain"></span></span></a>Complete Express server example</h2>
+<pre><code class="hljs language-js"><span class="hljs-keyword">import</span> http <span class="hljs-keyword">from</span> <span class="hljs-string">"http"</span>;
+<span class="hljs-keyword">import</span> express <span class="hljs-keyword">from</span> <span class="hljs-string">"express"</span>;
+<span class="hljs-keyword">import</span> { html, notFoundHtml, devSocket, useCtx } <span class="hljs-keyword">from</span> <span class="hljs-string">"sosse"</span>;
+<span class="hljs-keyword">import</span> { h } <span class="hljs-keyword">from</span> <span class="hljs-string">"preact"</span>;
+<span class="hljs-keyword">import</span> render <span class="hljs-keyword">from</span> <span class="hljs-string">"preact-render-to-string"</span>;
+
+globalThis.count = globalThis.count || <span class="hljs-number">1</span>;
+
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> () => {
+  <span class="hljs-keyword">const</span> ctx = useCtx();
+
+  <span class="hljs-keyword">const</span> app = express();
+
+  <span class="hljs-comment">// Home route</span>
+  app.get(<span class="hljs-string">"/"</span>, (req, res) =>
+    res.send(
+      html({
+        <span class="hljs-attr">body</span>: render(<span class="xml"><span class="hljs-tag">&#x3C;<span class="hljs-name">h1</span>></span>hey visitor {globalThis.count++}<span class="hljs-tag">&#x3C;/<span class="hljs-name">h1</span>></span></span>),
+        ctx,
+      })
+    )
+  );
+
+  <span class="hljs-comment">// 404 route</span>
+  app.use(<span class="hljs-function">(<span class="hljs-params">req, res</span>) =></span> res.status(<span class="hljs-number">404</span>).send(notFoundHtml()));
+
+  <span class="hljs-keyword">const</span> port = <span class="hljs-number">8080</span>;
+  <span class="hljs-keyword">const</span> server = http.createServer(app);
+
+  devSocket({ server });
+
+  <span class="hljs-keyword">return</span> <span class="hljs-function"><span class="hljs-params">()</span> =></span> {
+    server.listen(port);
+
+    <span class="hljs-built_in">console</span>.log(<span class="hljs-string">`Started http://localhost:<span class="hljs-subst">${port}</span>`</span>);
+
+    <span class="hljs-keyword">return</span> <span class="hljs-function"><span class="hljs-params">()</span> =></span>
+      <span class="hljs-keyword">new</span> <span class="hljs-built_in">Promise</span>(<span class="hljs-function">(<span class="hljs-params">res, rej</span>) =></span> server.close(<span class="hljs-function">(<span class="hljs-params">e</span>) =></span> (e ? rej(e) : res())));
+  };
+};</code></pre>
 
       </main>
     </div>
@@ -118,45 +197,37 @@
         1,
         2,
         3,
-        4,
-        5
+        4
        ],
        "id": 0
       },
       {
        "level": "2",
-       "heading": "Download and prepare",
-       "hash": "download-and-prepare",
+       "heading": "Basic usage",
+       "hash": "basic-usage",
        "children": [],
        "id": 1
       },
       {
        "level": "2",
-       "heading": "Start a new project from your local witney copy",
-       "hash": "start-a-new-project-from-your-local-witney-copy",
+       "heading": "Watch custom directories",
+       "hash": "watch-custom-directories",
        "children": [],
        "id": 2
       },
       {
        "level": "2",
-       "heading": "Building prod",
-       "hash": "building-prod",
+       "heading": "Basic Express server example",
+       "hash": "basic-express-server-example",
        "children": [],
        "id": 3
       },
       {
        "level": "2",
-       "heading": "Building dev",
-       "hash": "building-dev",
+       "heading": "Complete Express server example",
+       "hash": "complete-express-server-example",
        "children": [],
        "id": 4
-      },
-      {
-       "level": "2",
-       "heading": "Starting a server",
-       "hash": "starting-a-server",
-       "children": [],
-       "id": 5
       }
      ]
     },
@@ -182,16 +253,19 @@
        "heading": "Changelog",
        "hash": "changelog",
        "children": [
-        1,
-        2
+        1
        ],
        "id": 0
       },
       {
-       "level": "3",
-       "heading": "0.0.1 (2020-06-10)",
-       "hash": "001-2020-06-10",
-       "children": [],
+       "level": "2",
+       "heading": "0.1.0 (2020-06-11)",
+       "hash": "010-2020-06-11",
+       "children": [
+        2,
+        3,
+        4
+       ],
        "id": 1
       },
       {
@@ -200,6 +274,20 @@
        "hash": "features",
        "children": [],
        "id": 2
+      },
+      {
+       "level": "3",
+       "heading": "0.0.1 (2020-06-10)",
+       "hash": "001-2020-06-10",
+       "children": [],
+       "id": 3
+      },
+      {
+       "level": "3",
+       "heading": "Features",
+       "hash": "features-1",
+       "children": [],
+       "id": 4
       }
      ]
     },
