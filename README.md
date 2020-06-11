@@ -8,6 +8,8 @@
 
 Spice your servers up with a lil Sosse
 
+Usage examples can be found in the [Getting started](https://github.com/sossejs/sosse/blob/master/docs/getting_started.md) section.
+
 ## Features:
 
 - 🔥 Hot server restart
