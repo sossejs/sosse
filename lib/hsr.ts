@@ -2,28 +2,33 @@ import clearModule from "clear-module";
 import chokidar from "chokidar";
 import debounce from "lodash/debounce";
 import path from "path";
-import { EventEmitter } from "events";
-
 import { createCtx, setCtx, unsetCtx } from "./ctx";
+import stripAnsi from "strip-ansi";
 
 export const hsr = async function ({
   base,
   watch = ["."],
+  exclude = ["client", "public", "node_modules"],
   wait = 500,
   main,
   plugins,
-  enable = process.env.NODE_ENV !== "production",
+  restart = process.env.NODE_ENV !== "production",
 }: {
   base: string;
   watch?: string[];
+  exclude?: string[];
   wait?: number;
   main: () => () => Function | void;
   plugins?: Function[];
-  enable?: boolean;
+  restart?: boolean;
 }) {
   const ctx = createCtx({ base });
 
-  if (!enable) {
+  for (const plugin of plugins) {
+    await plugin({ ctx });
+  }
+
+  if (!restart) {
     setCtx(ctx);
     const listen = await main();
     unsetCtx();
@@ -32,7 +37,8 @@ export const hsr = async function ({
     return;
   }
 
-  let absWatch = watch.map((dir) => path.resolve(base, dir));
+  const absWatch = watch.map((dir) => path.resolve(base, dir));
+  const absExclude = exclude.map((dir) => path.resolve(base, dir));
 
   let stopMain;
   let restarting = false;
@@ -51,20 +57,17 @@ export const hsr = async function ({
 
     const { setCtx, unsetCtx } = require("sosse");
 
-    ctx.mainError = undefined;
     setCtx(ctx);
 
     try {
       listen = await main();
     } catch (err) {
-      ctx.mainError = err;
+      ctx.errors.push(stripAnsi(err.message));
+      ctx.events.emit("error");
       console.error(err);
     }
 
     unsetCtx();
-    if (ctx.mainError) {
-      ctx.events.emit("error");
-    }
 
     if (listen) {
       if (stopMain) {
@@ -83,6 +86,8 @@ export const hsr = async function ({
       restartMain();
     }
   }, wait);
-  const watcher = chokidar.watch(absWatch);
+  const watcher = chokidar.watch(absWatch, {
+    ignored: absExclude,
+  });
   watcher.on("all", restartMain);
 };

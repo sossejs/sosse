@@ -1,25 +1,14 @@
 import http from "http";
 import express from "express";
-import { html, notFoundHtml, devSocket, useCtx } from "sosse";
-import { h } from "preact";
-import render from "preact-render-to-string";
-
-globalThis.count = globalThis.count || 1;
+import { notFoundHtml, devSocket } from "sosse";
+import { homeRoute } from "./routes/home";
 
 export default () => {
-  const ctx = useCtx();
-
   const app = express();
 
-  // Home route
-  app.get("/", (req, res) =>
-    res.send(
-      html({
-        body: render(<h1>hey visitor {globalThis.count++}</h1>),
-        ctx,
-      })
-    )
-  );
+  app.use(express.static(__dirname + "/public"));
+
+  homeRoute(app);
 
   // 404 route
   app.use((req, res) => res.status(404).send(notFoundHtml()));
