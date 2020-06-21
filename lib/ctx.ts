@@ -5,9 +5,11 @@ let currentCtx: Ctx;
 export type Ctx = {
   base: string;
   errors: string[];
+  willRestart: boolean;
   events: EventEmitter;
   assets: Record<string, { html?: string; url?: string }>;
   injectHtml: {
+    head: Record<string, string>;
     footer: Record<string, string>;
   };
 };
@@ -28,9 +30,10 @@ export const createCtx = function ({ base }): Ctx {
   return {
     base,
     errors: [],
+    willRestart: false,
     events: new EventEmitter(),
     assets: {},
-    injectHtml: { footer: {} },
+    injectHtml: { head: {}, footer: {} },
   };
 };
 

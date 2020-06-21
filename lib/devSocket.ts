@@ -3,28 +3,15 @@ import WebSocket from "ws";
 import url from "url";
 import { useCtx } from "./ctx";
 
-const clientJs = (wait) => `(function() {
-const debounce = function(func, wait) {
-  let timeoutId;
-  return function() {
-    if (timeoutId != null) {
-      clearTimeout(timeoutId)
-    }
-
-    timeoutId = setTimeout(func, wait);
-  }
-}
-
-const reload = debounce(function() {
+const clientJs = () => `(function() {
+const reload = function() {
   let tries = 0;
   let maxTries = 15;
   const reconnect = async function() {
     let res;
     try {
       const res = await fetch('/sosse-dev')
-      if (res.status === 404) {
-        location.reload(true);
-      }
+      location.reload(true);
     }
     catch(err) {
       console.dir(err);
@@ -39,7 +26,7 @@ const reload = debounce(function() {
     }, 1000)
   }
   reconnect()
-}, ${wait})
+}
 
 let errorEl;
 const socket = new WebSocket('ws://' + location.host + '/sosse-dev');
@@ -85,7 +72,6 @@ socket.onmessage = (msg) => {
 export const devSocket = function ({
   server,
   enable = process.env.NODE_ENV !== "production",
-  wait = 3000,
 }: {
   server: Server;
   enable?: boolean;
@@ -99,10 +85,10 @@ export const devSocket = function ({
 
   ctx.assets.sosseDev = {
     html: `<script>
-${clientJs(wait)}
+${clientJs()}
 </script>`,
   };
-  ctx.injectHtml.footer.sosseDev = ctx.assets.sosseDev.html;
+  ctx.injectHtml.head.sosseDev = ctx.assets.sosseDev.html;
 
   const wss = new WebSocket.Server({
     noServer: true,

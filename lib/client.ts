@@ -13,16 +13,20 @@ export const clientPlugin = function ({
   publicDir = "/sosse",
   format = "umd",
   watch = process.env.NODE_ENV !== "production",
-  microbundleOptions = [],
+  microbundleOptions = {},
 }: {
   src?: string;
   dist?: string;
   publicDir?: string;
   format?: string;
   watch?: boolean;
-  microbundleOptions?: string[];
+  microbundleOptions?: Record<string, any>;
 } = {}) {
   return async ({ ctx }: { ctx: Ctx }) => {
+    const pluginCtx = {
+      throttleRestart: false,
+    };
+
     const absSrc = path.resolve(ctx.base, src);
     const absDist = path.resolve(ctx.base, dist);
 
@@ -33,19 +37,19 @@ export const clientPlugin = function ({
     await fs.mkdirp(absDist);
     await fs.emptyDir(absDist);
 
-    let bundlerProcesses: Record<string, ChildProcess> = {};
+    let watchers: Record<string, any> = {};
 
-    const emitReload = debounce(function () {
-      ctx.events.emit("reload");
-    }, 500);
+    const microbundle = require("microbundle");
 
     const startBundlers = async function () {
-      const nextBundlerProcesses: Record<string, ChildProcess> = {};
+      let runningBuilds = 0;
+      const nextWatchers: Record<string, any> = {};
       const srcEntries = await fs.readdir(absSrc);
+
       for (const file of srcEntries) {
-        if (bundlerProcesses[file]) {
-          nextBundlerProcesses[file] = bundlerProcesses[file];
-          delete bundlerProcesses[file];
+        if (watchers[file]) {
+          nextWatchers[file] = watchers[file];
+          delete watchers[file];
           continue;
         }
 
@@ -55,31 +59,44 @@ export const clientPlugin = function ({
         const distFileName = fileBase + (!watch ? `.${cuid()}` : "") + ".js";
         const absFileDist = path.resolve(absDist, distFileName);
 
-        let spawnOptions: SpawnOptions = {};
-        if (!watch) {
-          spawnOptions.stdio = "inherit";
-        }
+        const microbundleDefaults = {
+          target: "web",
+          cwd: ".",
+          sourcemap: true,
+        };
 
-        // TODO: If someday possible microbundle should be called through a JS api
-        const bundlerProcess = spawn(
-          "npx",
-          [
-            "microbundle",
-            ...(watch ? ["watch"] : []),
-            "--no-pkg-main",
-            "--define",
-            "process.env.NODE_ENV=production",
-            "-i",
-            absFile,
-            "-o",
-            absFileDist,
-            "-f",
-            format,
-            ...microbundleOptions,
-          ],
-          spawnOptions
-        );
+        const microbundleConfig = {
+          ...microbundleDefaults,
+          entries: [absFile],
+          output: absFileDist,
+          watch,
+          format,
+          "no-pkg-main": true,
+          define: "process.env.NODE_ENV=production",
+          ...microbundleOptions,
+          onStart(e) {
+            runningBuilds++;
+            pluginCtx.throttleRestart = true;
+          },
+          onBuild() {
+            runningBuilds--;
+            if (runningBuilds > 0) {
+              return;
+            }
 
+            pluginCtx.throttleRestart = false;
+            if (!ctx.willRestart) {
+              ctx.events.emit("reload");
+            }
+          },
+          onError(e) {
+            runningBuilds--;
+            ctx.errors.push(stripAnsi(e.error.stack));
+            ctx.events.emit("error");
+          },
+        };
+
+        const newWatchers = await microbundle(microbundleConfig);
         const publicFile = `${publicDir}/${distFileName}`;
         ctx.assets[fileBase] = {
           url: publicFile,
@@ -87,40 +104,16 @@ export const clientPlugin = function ({
         };
 
         if (watch) {
-          nextBundlerProcesses[file] = bundlerProcess;
-          bundlerProcess.stdout.setEncoding("utf8");
-          bundlerProcess.stderr.setEncoding("utf8");
-          bundlerProcess.stdout.on("data", function (data: string) {
-            if (data.indexOf("Wrote") === -1) {
-              return;
-            }
-
-            console.info("Bundler info", data);
-
-            emitReload();
-          });
-          bundlerProcess.stderr.on("data", function (data: string) {
-            if (!data) {
-              return;
-            }
-
-            const errorMessage = stripAnsi(data);
-            if (errorMessage.startsWith("(babel plugin)")) {
-              return;
-            }
-
-            console.error("Bundler error", data);
-            ctx.errors.push(errorMessage);
-            ctx.events.emit("error");
-          });
+          nextWatchers[file] = newWatchers[0];
         }
       }
 
-      for (const bundlerProcess of Object.values(bundlerProcesses)) {
-        bundlerProcess.kill();
+      if (watch) {
+        for (const watcher of Object.values(watchers)) {
+          watcher.close();
+        }
+        watchers = nextWatchers;
       }
-
-      bundlerProcesses = nextBundlerProcesses;
     };
 
     await startBundlers();
@@ -128,5 +121,7 @@ export const clientPlugin = function ({
     if (watch) {
       chokidar.watch(absSrc).on("all", startBundlers);
     }
+
+    return pluginCtx;
   };
 };

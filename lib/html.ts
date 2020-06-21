@@ -34,6 +34,10 @@ export const html = function ({
   tpl = defaultTpl,
 }: HtmlOptions) {
   if (ctx) {
+    for (const injectHtml of Object.values(ctx.injectHtml.head)) {
+      head += injectHtml;
+    }
+
     for (const injectHtml of Object.values(ctx.injectHtml.footer)) {
       body += injectHtml;
     }
