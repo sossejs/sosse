@@ -45,7 +45,7 @@
     "cuid": "^2.1.8",
     "fs-extra": "^9.0.1",
     "lodash": "^4.17.15",
-    "microbundle": "github:developit/microbundle#master",
+    "microbundle": "^0.12.2",
     "strip-ansi": "^6.0.0",
     "ts-node": "^8.10.2",
     "typescript": "^3.9.3",
