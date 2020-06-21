@@ -1,0 +1,10 @@
+{
+  "name": "sosse-otion",
+  "amdName": "sosseOtion",
+  "source": "lib/main.ts",
+  "main": "dist/main.js",
+  "module": "dist/main.m.js",
+  "umd:main": "dist/main.umd.js",
+  "esmodule": "dist/main.modern.js",
+  "types": "dist/main.d.ts"
+}

@@ -31,6 +31,7 @@
     "express": "^4.17.1",
     "jest": "^26.0.1",
     "mallery": "1.0.0-alpha.7",
+    "otion": "^0.3.2",
     "preact": "^10.4.4",
     "preact-render-to-string": "^5.1.9",
     "prettier": "^2.0.5",
@@ -58,7 +59,10 @@
     "example/dist",
     "preact/package.json",
     "preact/lib",
-    "preact/dist"
+    "preact/dist",
+    "otion/package.json",
+    "otion/lib",
+    "otion/dist"
   ],
   "standard-version": {
     "scripts": {
@@ -82,7 +86,8 @@
     "collectCoverageFrom": [
       "lib/**/*.{ts,tsx,js,jsx}",
       "example/lib/**/*.{ts,tsx,js,jsx}",
-      "preact/lib/**/*.{ts,tsx,js,jsx}"
+      "preact/lib/**/*.{ts,tsx,js,jsx}",
+      "otion/lib/**/*.{ts,tsx,js,jsx}"
     ]
   }
 }

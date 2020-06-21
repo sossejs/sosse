@@ -11,7 +11,8 @@
     "paths": {
       "sosse": ["../lib/main.ts"],
       "sosse/example": ["../example/lib/main.ts"],
-      "sosse/preact": ["../preact/lib/main.ts"]
+      "sosse/preact": ["../preact/lib/main.ts"],
+      "sosse/otion": ["../otion/lib/main.ts"]
     }
   }
 }

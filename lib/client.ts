@@ -67,6 +67,8 @@ export const clientPlugin = function ({
             "microbundle",
             ...(watch ? ["watch"] : []),
             "--no-pkg-main",
+            "--define",
+            "process.env.NODE_ENV=production",
             "-i",
             absFile,
             "-o",
