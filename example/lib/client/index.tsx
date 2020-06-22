@@ -5,4 +5,4 @@ import { hydrate, setup } from "otion";
 setup({});
 hydrate();
 
-render(<Counter />, document.querySelector("#app"));
+render(<Counter />, document.querySelector("#counter"));

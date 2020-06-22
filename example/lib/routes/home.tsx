@@ -13,43 +13,51 @@ export const homeRoute = function (app: Express) {
   // Home route
   app.get("/", (req, res) =>
     res.send(
-      html(
-        otion(() => {
-          return {
-            head: render(
-              <Fragment>
-                <link href="https://unpkg.com/sanitize.css" rel="stylesheet" />
-                <link
-                  href="https://unpkg.com/sanitize.css/forms.css"
-                  rel="stylesheet"
-                />
-                <link
-                  href="https://unpkg.com/sanitize.css/typography.css"
-                  rel="stylesheet"
-                />
-              </Fragment>
-            ),
-            body:
-              render(
-                <Fragment>
-                  <h1>hello visitor {globalThis.count++}</h1>
-                  <div id="app" />
-                  <footer
-                    class={css({
-                      backgroundColor: "#034",
-                      marginTop: "1rem",
-                      padding: "3rem",
-                      color: "#fff",
-                    })}
-                  >
-                    Spiced up with Sosse
-                  </footer>
-                </Fragment>
-              ) + ctx.assets.index.html,
-            ctx,
-          };
-        })
-      )
+      otion(() => {
+        return html({
+          head: render(
+            <Fragment>
+              <link href="https://unpkg.com/sanitize.css" rel="stylesheet" />
+              <link
+                href="https://unpkg.com/sanitize.css/forms.css"
+                rel="stylesheet"
+              />
+              <link
+                href="https://unpkg.com/sanitize.css/typography.css"
+                rel="stylesheet"
+              />
+            </Fragment>
+          ),
+          bodyAttrs: {
+            class: css({
+              selectors: {
+                "& > #app": {
+                  width: "40rem",
+                  margin: "auto",
+                },
+              },
+            }),
+          },
+          body:
+            render(
+              <div id="app">
+                <h1>hello visitor {globalThis.count++}</h1>
+                <div id="counter" />
+                <footer
+                  class={css({
+                    backgroundColor: "#034",
+                    marginTop: "1rem",
+                    padding: "3rem",
+                    color: "#fff",
+                  })}
+                >
+                  Spiced up with Sosse
+                </footer>
+              </div>
+            ) + ctx.assets.index.html,
+          ctx,
+        });
+      })
     )
   );
 };

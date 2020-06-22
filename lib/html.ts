@@ -10,7 +10,7 @@ const defaultTpl = function ({ title, head, bodyAttrs, body }) {
     ${title ? `<title>${title}</title>` : ""}
     ${head}
   </head>
-  <body ${bodyAttrs}>
+  <body${bodyAttrs}>
     ${body}
   </body>
 </html>`;
@@ -20,7 +20,7 @@ export type HtmlOptions = {
   head?: string;
   title?: string;
   body?: string;
-  bodyAttrs?: string;
+  bodyAttrs?: Record<string, string>;
   ctx?: Ctx;
   tpl?: typeof defaultTpl;
 };
@@ -29,7 +29,7 @@ export const html = function ({
   head = "",
   title = "",
   body = "",
-  bodyAttrs = "",
+  bodyAttrs = {},
   ctx,
   tpl = defaultTpl,
 }: HtmlOptions) {
@@ -43,11 +43,16 @@ export const html = function ({
     }
   }
 
+  let bodyAttrsString = "";
+  for (const [key, value] of Object.entries(bodyAttrs)) {
+    bodyAttrsString += ` ${key}="${value}"`;
+  }
+
   return tpl({
     head,
     title,
     body,
-    bodyAttrs,
+    bodyAttrs: bodyAttrsString,
   });
 };
 
@@ -55,13 +60,13 @@ export const notFoundHtml = function ({
   head = "",
   title = "Page not found",
   body = "<h1>Page not found</h1>",
-  bodyAttrs = "",
+  bodyAttrs = {},
   ctx,
 }: {
   head?: string;
   title?: string;
   body?: string;
-  bodyAttrs?: string;
+  bodyAttrs?: Record<string, string>;
   ctx?: Ctx;
 } = {}) {
   return html({ head, title, body, bodyAttrs, ctx });

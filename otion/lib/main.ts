@@ -10,11 +10,9 @@ export const otion = function (func: Function, otionOptions = {}) {
 
   setup({ ...otionOptions, injector });
 
-  let htmlOptions = func();
+  let html = func();
+  const styleTag = getStyleTag(filterOutUnusedRules(injector, html));
+  html = html.replace("</head>", styleTag + "</head>");
 
-  htmlOptions.head += getStyleTag(
-    filterOutUnusedRules(injector, htmlOptions.body)
-  );
-
-  return htmlOptions;
+  return html;
 };
