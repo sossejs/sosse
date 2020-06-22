@@ -10,7 +10,8 @@ type PluginCtx = { throttleRestart?: boolean };
 export const hsr = async function ({
   base,
   watch = ["."],
-  exclude = ["client", "public", "node_modules"],
+  publicDir = "public",
+  exclude = ["client", "node_modules"],
   wait = 500,
   main,
   plugins,
@@ -18,13 +19,16 @@ export const hsr = async function ({
 }: {
   base: string;
   watch?: string[];
+  publicDir?: string;
   exclude?: string[];
   wait?: number;
   main: () => () => Function | void;
   plugins?: ((opts) => void | Promise<PluginCtx | void>)[];
   restart?: boolean;
 }) {
-  const ctx = createCtx({ base });
+  exclude.push(publicDir);
+
+  const ctx = createCtx({ base, publicDir });
   const pluginsCtx: PluginCtx[] = [];
   for (const plugin of plugins) {
     const pluginCtx = await plugin({ ctx });

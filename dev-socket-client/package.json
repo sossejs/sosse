@@ -1,6 +1,6 @@
 {
   "name": "sosse-dev-socket-client",
-  "amdName": "sosseDev-socket-client",
+  "amdName": "sosseDevSocketClient",
   "source": "lib/main.ts",
   "main": "dist/main.js",
   "module": "dist/main.m.js",

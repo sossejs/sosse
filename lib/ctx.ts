@@ -1,9 +1,11 @@
 import { EventEmitter } from "events";
+import { resolve } from "path";
 
 let currentCtx: Ctx;
 
 export type Ctx = {
   base: string;
+  publicDir: string;
   errors: string[];
   willRestart: boolean;
   events: EventEmitter;
@@ -26,9 +28,12 @@ export const useCtx = function (): Ctx {
   return currentCtx;
 };
 
-export const createCtx = function ({ base }): Ctx {
+export const createCtx = function ({ base, publicDir }): Ctx {
+  publicDir = resolve(base, publicDir);
+
   return {
     base,
+    publicDir,
     errors: [],
     willRestart: false,
     events: new EventEmitter(),
