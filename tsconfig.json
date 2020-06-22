@@ -15,5 +15,6 @@
       "sosse/otion": ["../otion/lib/main.ts"],
       "sosse/dev-socket-client": ["../dev-socket-client/lib/main.ts"]
     }
-  }
+  },
+  "exclude": ["node_modules", "**/dist"]
 }
