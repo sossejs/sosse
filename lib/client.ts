@@ -60,6 +60,7 @@ export const clientPlugin = function ({
         const absFileDist = path.resolve(absDist, distFileName);
 
         const microbundleDefaults = {
+          "pkg-main": true,
           target: "web",
           cwd: ".",
           sourcemap: true,
@@ -71,7 +72,7 @@ export const clientPlugin = function ({
           output: absFileDist,
           watch,
           format,
-          "no-pkg-main": true,
+          "pkg-main": false,
           define: "process.env.NODE_ENV=production",
           ...microbundleOptions,
           onStart(e) {
