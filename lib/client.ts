@@ -9,8 +9,7 @@ import cuid from "cuid";
 
 export const clientPlugin = function ({
   src = "client",
-  dist = "public/sosse",
-  publicDir = "/sosse",
+  dist = "sosse",
   format = "umd",
   watch = process.env.NODE_ENV !== "production",
   microbundleOptions = {},
@@ -28,7 +27,7 @@ export const clientPlugin = function ({
     };
 
     const absSrc = path.resolve(ctx.base, src);
-    const absDist = path.resolve(ctx.base, dist);
+    const absDist = path.resolve(ctx.publicDir, dist);
 
     if (!(await fs.pathExists(absSrc))) {
       return;
@@ -98,7 +97,7 @@ export const clientPlugin = function ({
         };
 
         const newWatchers = await microbundle(microbundleConfig);
-        const publicFile = `${publicDir}/${distFileName}`;
+        const publicFile = `/${dist}/${distFileName}`;
         ctx.assets[fileBase] = {
           url: publicFile,
           html: `<script src="${publicFile}"></script>`,

@@ -1,13 +1,13 @@
 import http from "http";
 import express from "express";
-import { notFoundHtml, devSocket } from "sosse";
+import { notFoundHtml, devSocket, useCtx } from "sosse";
 import { homeRoute } from "./routes/home";
 
 export default async () => {
+  const ctx = useCtx();
+
   const app = express();
-
-  app.use(express.static(__dirname + "/public"));
-
+  app.use(express.static(ctx.publicDir));
   homeRoute(app);
 
   // 404 route

@@ -1,21 +1,38 @@
 import { Server } from "http";
 import WebSocket from "ws";
 import url from "url";
-import { useCtx } from "./ctx";
-import { readFile } from "fs-extra";
+import { Ctx, useCtx } from "./ctx";
+import { copy } from "fs-extra";
 import path from "path";
 
-const getClientJs = async function () {
-  const jsDistPath = path.resolve(
-    __dirname,
-    "..",
-    "dev-socket-client",
-    "dist",
-    "main.umd.js"
-  );
-  const code = await readFile(jsDistPath);
+const integrateClientJs = async function (ctx: Ctx) {
+  const publicFileName = "sosseDevSocketClient.js";
 
-  return code;
+  if (!globalThis.sosseDevClientCopied) {
+    const clientJsPath = path.resolve(
+      __dirname,
+      "..",
+      "dev-socket-client",
+      "dist",
+      "main.umd.js"
+    );
+
+    const publicPath = path.resolve(ctx.publicDir, publicFileName);
+    await copy(clientJsPath, publicPath);
+    globalThis.sosseDevClientCopied = true;
+  }
+
+  const publicUrl = `/${publicFileName}`;
+
+  ctx.assets.sosseDev = {
+    url: publicUrl,
+    html: `
+<script src="${publicUrl}"></script>
+<script>
+window.sosseDevSocketClient.init();
+</script>`,
+  };
+  ctx.injectHtml.head.sosseDev = ctx.assets.sosseDev.html;
 };
 
 export const devSocket = async function ({
@@ -32,12 +49,7 @@ export const devSocket = async function ({
 
   const ctx = useCtx();
 
-  ctx.assets.sosseDev = {
-    html: `<script>
-${await getClientJs()}
-</script>`,
-  };
-  ctx.injectHtml.head.sosseDev = ctx.assets.sosseDev.html;
+  await integrateClientJs(ctx);
 
   const wss = new WebSocket.Server({
     noServer: true,
@@ -59,9 +71,6 @@ ${await getClientJs()}
   });
 
   const restartListener = function () {
-    for (const client of wss.clients) {
-      client.send(JSON.stringify({ type: "reload" }));
-    }
     ctx.errors = [];
     wss.close();
     ctx.events.removeListener("restart", restartListener);

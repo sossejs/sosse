@@ -1,62 +1,60 @@
+import Sockette from "sockette";
+
 const reload = function () {
-  let tries = 0;
-  let maxTries = 15;
-  const reconnect = async function () {
-    let res;
-    try {
-      const res = await fetch("/sosse-dev");
-      location.reload(true);
-    } catch (err) {
-      console.dir(err);
-    }
-    tries++;
-    if (tries === maxTries) {
-      console.error("Failed to reconnect to Nexo Dev Server");
-      return;
-    }
-    setTimeout(function () {
-      reconnect();
-    }, 1000);
-  };
-  reconnect();
+  location.reload(true);
 };
 
 let errorEl;
-const socket = new WebSocket("ws://" + location.host + "/sosse-dev");
-socket.onopen = () => {
-  console.info("Connected to Sosse Dev Server");
+const showErrors = function (errors: string[]) {
+  if (!errorEl) {
+    errorEl = document.createElement("div");
+    errorEl.style.zIndex = 10000;
+    errorEl.style.backgroundColor = "#000D";
+    errorEl.style.color = "#FFF";
+    errorEl.style.fontSize = "1.2rem";
+    errorEl.style.minWidth = "100%";
+    errorEl.style.minHeight = "100%";
+    errorEl.style.top = 0;
+    errorEl.style.left = 0;
+    errorEl.style.margin = 0;
+    errorEl.style.padding = 0;
+    errorEl.style.position = "absolute";
+    document.body.appendChild(errorEl);
+  }
+
+  errorEl.textContent = "";
+
+  errors.forEach(function (error) {
+    const errorMsgEl = document.createElement("pre");
+    errorMsgEl.style.margin = "30px";
+    errorMsgEl.textContent = error;
+    errorEl.appendChild(errorMsgEl);
+  });
 };
-socket.onmessage = (msg) => {
-  const data = JSON.parse(msg.data);
 
-  if (data.type === "error") {
-    if (!errorEl) {
-      errorEl = document.createElement("div");
-      errorEl.style.zIndex = 10000;
-      errorEl.style.backgroundColor = "#000D";
-      errorEl.style.color = "#FFF";
-      errorEl.style.fontSize = "1.2rem";
-      errorEl.style.minWidth = "100%";
-      errorEl.style.minHeight = "100%";
-      errorEl.style.top = 0;
-      errorEl.style.left = 0;
-      errorEl.style.margin = 0;
-      errorEl.style.padding = 0;
-      errorEl.style.position = "absolute";
-      document.body.appendChild(errorEl);
-    }
+export const init = function () {
+  let connected = false;
 
-    errorEl.textContent = "";
+  new Sockette("ws://" + location.host + "/sosse-dev", {
+    onopen() {
+      if (connected) {
+        reload();
+        return;
+      }
 
-    data.errors.forEach(function (v) {
-      const errorMsgEl = document.createElement("pre");
-      errorMsgEl.style.margin = "30px";
-      errorMsgEl.textContent = v;
-      errorEl.appendChild(errorMsgEl);
-    });
-  }
+      console.info("Connected to Sosse Dev Server");
+      connected = true;
+    },
+    onmessage(msg) {
+      const data = JSON.parse(msg.data);
 
-  if (data.type === "reload") {
-    reload();
-  }
+      if (data.type === "error") {
+        showErrors(data.errors);
+      }
+
+      if (data.type === "reload") {
+        reload();
+      }
+    },
+  });
 };
