@@ -2,74 +2,23 @@ import { Server } from "http";
 import WebSocket from "ws";
 import url from "url";
 import { useCtx } from "./ctx";
+import { readFile } from "fs-extra";
+import path from "path";
 
-const clientJs = () => `(function() {
-const reload = function() {
-  let tries = 0;
-  let maxTries = 15;
-  const reconnect = async function() {
-    let res;
-    try {
-      const res = await fetch('/sosse-dev')
-      location.reload(true);
-    }
-    catch(err) {
-      console.dir(err);
-    }
-    tries++;
-    if (tries === maxTries) {
-      console.error('Failed to reconnect to Nexo Dev Server')
-      return;
-    }
-    setTimeout(function() {
-      reconnect()
-    }, 1000)
-  }
-  reconnect()
-}
+const getClientJs = async function () {
+  const jsDistPath = path.resolve(
+    __dirname,
+    "..",
+    "dev-socket-client",
+    "dist",
+    "main.umd.js"
+  );
+  const code = await readFile(jsDistPath);
 
-let errorEl;
-const socket = new WebSocket('ws://' + location.host + '/sosse-dev');
-socket.onopen = () => {
-  console.info('Connected to Sosse Dev Server');
+  return code;
 };
-socket.onmessage = (msg) => {
-  const data = JSON.parse(msg.data);
 
-  if (data.type === 'error') {
-    if (!errorEl) {
-      errorEl = document.createElement('div');
-      errorEl.style.zIndex = 10000;
-      errorEl.style.backgroundColor = '#000D';
-      errorEl.style.color = '#FFF';
-      errorEl.style.fontSize = '1.2rem';
-      errorEl.style.minWidth = '100%';
-      errorEl.style.minHeight = '100%';
-      errorEl.style.top = 0;
-      errorEl.style.left = 0;
-      errorEl.style.margin = 0;
-      errorEl.style.padding = 0;
-      errorEl.style.position = 'absolute';
-      document.body.appendChild(errorEl)
-    }
-
-    errorEl.textContent = '';
-
-    data.errors.forEach(function(v) {
-      const errorMsgEl = document.createElement('pre');
-      errorMsgEl.style.margin = '30px';
-      errorMsgEl.textContent = v;
-      errorEl.appendChild(errorMsgEl);
-    });
-  }
-
-  if (data.type === 'reload') {
-    reload();
-  }
-};
-})()`;
-
-export const devSocket = function ({
+export const devSocket = async function ({
   server,
   enable = process.env.NODE_ENV !== "production",
 }: {
@@ -85,7 +34,7 @@ export const devSocket = function ({
 
   ctx.assets.sosseDev = {
     html: `<script>
-${clientJs()}
+${await getClientJs()}
 </script>`,
   };
   ctx.injectHtml.head.sosseDev = ctx.assets.sosseDev.html;

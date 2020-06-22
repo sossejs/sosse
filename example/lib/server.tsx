@@ -3,7 +3,7 @@ import express from "express";
 import { notFoundHtml, devSocket } from "sosse";
 import { homeRoute } from "./routes/home";
 
-export default () => {
+export default async () => {
   const app = express();
 
   app.use(express.static(__dirname + "/public"));
@@ -16,7 +16,7 @@ export default () => {
   const port = 8080;
   const server = http.createServer(app);
 
-  devSocket({ server });
+  await devSocket({ server });
 
   return () => {
     server.listen(port);

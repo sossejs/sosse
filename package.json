@@ -15,6 +15,12 @@
       "import": "./dist/main.m.js",
       "require": "./dist/main.js"
     },
+    "./dev-socket-client": {
+      "browser": "./dev-socket-client/dist/main.m.js",
+      "umd": "./dev-socket-client/dist/main.umd.js",
+      "import": "./dev-socket-client/dist/main.m.js",
+      "require": "./dev-socket-client/dist/main.js"
+    },
     "./package.json": "./package.json",
     "./": "./"
   },
@@ -72,7 +78,10 @@
     "preact/dist",
     "otion/package.json",
     "otion/lib",
-    "otion/dist"
+    "otion/dist",
+    "dev-socket-client/package.json",
+    "dev-socket-client/lib",
+    "dev-socket-client/dist"
   ],
   "standard-version": {
     "scripts": {
@@ -97,7 +106,8 @@
       "lib/**/*.{ts,tsx,js,jsx}",
       "example/lib/**/*.{ts,tsx,js,jsx}",
       "preact/lib/**/*.{ts,tsx,js,jsx}",
-      "otion/lib/**/*.{ts,tsx,js,jsx}"
+      "otion/lib/**/*.{ts,tsx,js,jsx}",
+      "dev-socket-client/lib/**/*.{ts,tsx,js,jsx}"
     ]
   }
 }
