@@ -19,8 +19,31 @@ const updatePkg = async function (moduleName, pkg) {
     `${moduleName}/lib`,
     `${moduleName}/dist`
   );
+  pkg.files = Array.from(new Set(pkg.files));
 
   pkg.jest.collectCoverageFrom.push(`${moduleName}/lib/**/*.{ts,tsx,js,jsx}`);
+  pkg.jest.collectCoverageFrom = Array.from(
+    new Set(pkg.jest.collectCoverageFrom)
+  );
+
+  const exportsBase = `./${moduleName}`;
+  pkg.exports[exportsBase] = {
+    browser: `${exportsBase}/dist/main.m.js`,
+    umd: `${exportsBase}/dist/main.umd.js`,
+    import: `${exportsBase}/dist/main.m.js`,
+    require: `${exportsBase}/dist/main.js`,
+  };
+
+  // These entries should stay at the very end of the exports object
+  for (const entry of ["./package.json", "./"]) {
+    if (!pkg.exports[entry]) {
+      continue;
+    }
+
+    const value = pkg.exports[entry];
+    delete pkg.exports[entry];
+    pkg.exports[entry] = value;
+  }
 
   await writeJson(pkgDir("package.json"), pkg, {
     spaces: "  ",

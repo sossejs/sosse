@@ -8,6 +8,16 @@
   "module": "dist/main.m.js",
   "umd:main": "dist/main.umd.js",
   "esmodule": "dist/main.modern.js",
+  "exports": {
+    ".": {
+      "browser": "./dist/main.m.js",
+      "umd": "./dist/main.umd.js",
+      "import": "./dist/main.m.js",
+      "require": "./dist/main.js"
+    },
+    "./package.json": "./package.json",
+    "./": "./"
+  },
   "types": "dist/main.d.ts",
   "authors": [
     "Katja Lutz <mail@katjalutz.ch>"
