@@ -96,7 +96,9 @@ export const clientPlugin = function ({
           },
         };
 
-        const newWatchers = await microbundle(microbundleConfig);
+        const bundleResult = await microbundle(microbundleConfig);
+        const newWatchers = bundleResult.watchers;
+
         const publicFile = `/${dist}/${distFileName}`;
         ctx.assets[fileBase] = {
           url: publicFile,
@@ -104,7 +106,7 @@ export const clientPlugin = function ({
         };
 
         if (watch) {
-          nextWatchers[file] = newWatchers[0];
+          nextWatchers[file] = Object.values(newWatchers)[0];
         }
       }
 
