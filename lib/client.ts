@@ -120,6 +120,9 @@ export const clientPlugin = function ({
         };
 
         const bundleResult = await microbundle(microbundleConfig);
+        if (bundleResult.output) {
+          console.log(bundleResult.output);
+        }
         const newWatchers = bundleResult.watchers;
 
         const publicFile = `/${dist}/${distFileName}`;
