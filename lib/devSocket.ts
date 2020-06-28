@@ -26,7 +26,6 @@ const integrateClientJs = async function (ctx: Ctx) {
       path.resolve(clientJsPath, "main.umd.js.map"),
       path.resolve(publicPath, "main.umd.js.map")
     );
-    // await copy(path.resolve(clientJsPath, 'main.umd.js'), path.resolve(publicPath, 'main.js'));
     globalThis.sosseDevClientCopied = true;
   }
 
