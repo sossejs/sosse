@@ -1,5 +1,4 @@
 import { Ctx } from "./ctx";
-import { spawn, ChildProcess, SpawnOptions } from "child_process";
 import {
   mkdirp,
   emptyDir,
@@ -9,7 +8,6 @@ import {
   readJson,
 } from "fs-extra";
 import path from "path";
-import debounce from "lodash/debounce";
 import chokidar from "chokidar";
 import stripAnsi from "strip-ansi";
 import cuid from "cuid";
