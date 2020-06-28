@@ -2,27 +2,35 @@ import { Server } from "http";
 import WebSocket from "ws";
 import url from "url";
 import { Ctx, useCtx } from "./ctx";
-import { copy } from "fs-extra";
+import { copy, emptyDir } from "fs-extra";
 import path from "path";
 
 const integrateClientJs = async function (ctx: Ctx) {
-  const publicFileName = "sosseDevSocketClient.js";
+  const publicFolder = "sosseDevSocketClient";
 
   if (!globalThis.sosseDevClientCopied) {
     const clientJsPath = path.resolve(
       __dirname,
       "..",
       "dev-socket-client",
-      "dist",
-      "main.umd.js"
+      "dist"
     );
 
-    const publicPath = path.resolve(ctx.publicDir, publicFileName);
-    await copy(clientJsPath, publicPath);
+    const publicPath = path.resolve(ctx.publicDir, publicFolder);
+    await emptyDir(publicPath);
+    await copy(
+      path.resolve(clientJsPath, "main.umd.js"),
+      path.resolve(publicPath, "main.umd.js")
+    );
+    await copy(
+      path.resolve(clientJsPath, "main.umd.js.map"),
+      path.resolve(publicPath, "main.umd.js.map")
+    );
+    // await copy(path.resolve(clientJsPath, 'main.umd.js'), path.resolve(publicPath, 'main.js'));
     globalThis.sosseDevClientCopied = true;
   }
 
-  const publicUrl = `/${publicFileName}`;
+  const publicUrl = `/${publicFolder}/main.umd.js`;
 
   ctx.assets.sosseDev = {
     url: publicUrl,

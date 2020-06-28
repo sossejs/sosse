@@ -8,8 +8,6 @@ const { spawn, args, buildArgs, rmDir, pkgDir } = require("./lib");
     "microbundle",
     "--cwd",
     "dev-socket-client",
-    "--sourcemap",
-    false,
     "--raw",
     ...buildArgs(),
     ...args,
