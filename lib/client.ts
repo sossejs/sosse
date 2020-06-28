@@ -1,6 +1,13 @@
 import { Ctx } from "./ctx";
 import { spawn, ChildProcess, SpawnOptions } from "child_process";
-import fs from "fs-extra";
+import {
+  mkdirp,
+  emptyDir,
+  pathExists,
+  readdir,
+  writeJson,
+  readJson,
+} from "fs-extra";
 import path from "path";
 import debounce from "lodash/debounce";
 import chokidar from "chokidar";
@@ -29,21 +36,33 @@ export const clientPlugin = function ({
     const absSrc = path.resolve(ctx.base, src);
     const absDist = path.resolve(ctx.publicDir, dist);
 
-    if (!(await fs.pathExists(absSrc))) {
+    if (!(await pathExists(absSrc))) {
       return;
     }
 
-    await fs.mkdirp(absDist);
-    await fs.emptyDir(absDist);
+    await mkdirp(absDist);
+    if (watch) {
+      await emptyDir(absDist);
+    }
 
     let watchers: Record<string, any> = {};
 
     const microbundle = require("microbundle");
 
     const startBundlers = async function () {
+      const assetsJsonPath = path.resolve(absDist, "clientAssets.json");
+      if (!watch && (await pathExists(assetsJsonPath))) {
+        const clientAssets = await readJson(assetsJsonPath);
+        for (const [fileBase, asset] of Object.entries(clientAssets)) {
+          ctx.assets[fileBase] = asset;
+        }
+        return;
+      }
+
       let runningBuilds = 0;
       const nextWatchers: Record<string, any> = {};
-      const srcEntries = await fs.readdir(absSrc);
+      const srcEntries = await readdir(absSrc);
+      const clientAssets = {};
 
       for (const file of srcEntries) {
         if (watchers[file]) {
@@ -104,6 +123,7 @@ export const clientPlugin = function ({
           url: publicFile,
           html: `<script src="${publicFile}"></script>`,
         };
+        clientAssets[fileBase] = ctx.assets[fileBase];
 
         if (watch) {
           nextWatchers[file] = Object.values(newWatchers)[0];
@@ -115,6 +135,8 @@ export const clientPlugin = function ({
           watcher.close();
         }
         watchers = nextWatchers;
+      } else {
+        await writeJson(assetsJsonPath, clientAssets);
       }
     };
 
