@@ -86,6 +86,8 @@ export const clientPlugin = function ({
           sourcemap: true,
         };
 
+        const bundleNodeEnv = process.env.NODE_ENV || "development";
+
         const microbundleConfig = {
           ...microbundleDefaults,
           entries: [absFile],
@@ -93,7 +95,7 @@ export const clientPlugin = function ({
           watch,
           format,
           "pkg-main": false,
-          define: "process.env.NODE_ENV=production",
+          define: `process.env.NODE_ENV=${bundleNodeEnv}`,
           ...microbundleOptions,
           onStart(e) {
             runningBuilds++;
