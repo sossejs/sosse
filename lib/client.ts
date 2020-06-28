@@ -17,6 +17,7 @@ export const clientPlugin = function ({
   dist = "sosse",
   format = "umd",
   watch = process.env.NODE_ENV !== "production",
+  exitAfterBuild = process.env.SOSSE_CLIENT_BUILD === "1",
   microbundleOptions = {},
 }: {
   src?: string;
@@ -24,8 +25,11 @@ export const clientPlugin = function ({
   publicDir?: string;
   format?: string;
   watch?: boolean;
+  exitAfterBuild?: boolean;
   microbundleOptions?: Record<string, any>;
 } = {}) {
+  watch = watch && !exitAfterBuild;
+
   return async ({ ctx }: { ctx: Ctx }) => {
     const pluginCtx = {
       throttleRestart: false,
@@ -39,7 +43,7 @@ export const clientPlugin = function ({
     }
 
     await mkdirp(absDist);
-    if (watch) {
+    if (watch || exitAfterBuild) {
       await emptyDir(absDist);
     }
 
@@ -139,6 +143,10 @@ export const clientPlugin = function ({
     };
 
     await startBundlers();
+
+    if (exitAfterBuild) {
+      process.exit();
+    }
 
     if (watch) {
       chokidar.watch(absSrc).on("all", startBundlers);
