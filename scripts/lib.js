@@ -56,6 +56,7 @@ exports.buildArgs = () => {
     "ws",
     "otion",
     "microbundle",
+    "clear-module",
   ];
   args.push("--external", externals.join(","));
 
