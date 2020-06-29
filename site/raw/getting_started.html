@@ -59,7 +59,7 @@ globalThis.count = globalThis.count || <span class="hljs-number">1</span>;
 
 globalThis.count = globalThis.count || <span class="hljs-number">1</span>;
 
-<span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> () => {
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> <span class="hljs-keyword">async</span> () => {
   <span class="hljs-keyword">const</span> ctx = useCtx();
 
   <span class="hljs-keyword">const</span> app = express();
@@ -80,7 +80,7 @@ globalThis.count = globalThis.count || <span class="hljs-number">1</span>;
   <span class="hljs-keyword">const</span> port = <span class="hljs-number">8080</span>;
   <span class="hljs-keyword">const</span> server = http.createServer(app);
 
-  devSocket({ server });
+  <span class="hljs-keyword">await</span> devSocket({ server });
 
   <span class="hljs-keyword">return</span> <span class="hljs-function"><span class="hljs-params">()</span> =></span> {
     server.listen(port);
