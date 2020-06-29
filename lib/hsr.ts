@@ -1,5 +1,4 @@
 import clearModule from "clear-module";
-import chokidar from "chokidar";
 import debounce from "lodash/debounce";
 import path from "path";
 import { createCtx, setCtx, unsetCtx } from "./ctx";
@@ -117,6 +116,9 @@ export const hsr = async function ({
       restartMain();
     }
   }, wait);
+
+  const chokidar = require("chokidar");
+
   const watcher = chokidar.watch(absWatch, {
     ignored: absExclude,
   });

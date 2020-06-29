@@ -1,5 +1,4 @@
 import { Server } from "http";
-import WebSocket from "ws";
 import url from "url";
 import { Ctx, useCtx } from "./ctx";
 import { copy, emptyDir } from "fs-extra";
@@ -53,6 +52,8 @@ export const devSocket = async function ({
   if (!enable) {
     return;
   }
+
+  const WebSocket = require("ws");
 
   const ctx = useCtx();
 

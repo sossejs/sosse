@@ -49,7 +49,14 @@ exports.spawnScripts = async (prefix, args = [], options) => {
 exports.buildArgs = () => {
   const args = [];
 
-  const externals = [pkg.name, "events", "chokidar", "ws", "clear-module"];
+  const externals = [
+    pkg.name,
+    "events",
+    "chokidar",
+    "ws",
+    "otion",
+    "microbundle",
+  ];
   args.push("--external", externals.join(","));
 
   return args;

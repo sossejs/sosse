@@ -8,7 +8,6 @@ import {
   readJson,
 } from "fs-extra";
 import path from "path";
-import chokidar from "chokidar";
 import stripAnsi from "strip-ansi";
 import cuid from "cuid";
 
@@ -154,6 +153,7 @@ export const clientPlugin = function ({
     }
 
     if (watch) {
+      const chokidar = require("chokidar");
       chokidar.watch(absSrc).on("all", startBundlers);
     }
 
