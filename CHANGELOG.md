@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.4.0](https://github.com/sossejs/sosse/compare/v0.3.0...v0.4.0) (2020-06-29)
+
+
+### Bug Fixes
+
+* make clear-module external again ([256c8f1](https://github.com/sossejs/sosse/commit/256c8f1ffaa41de3c9664151e33445d58ffd7c34))
+
 ## [0.3.0](https://github.com/sossejs/sosse/compare/v0.2.0...v0.3.0) (2020-06-29)
 
 
