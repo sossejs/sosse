@@ -77,7 +77,7 @@ import render from "preact-render-to-string";
 
 globalThis.count = globalThis.count || 1;
 
-export default () => {
+export default async () => {
   const ctx = useCtx();
 
   const app = express();
@@ -98,7 +98,7 @@ export default () => {
   const port = 8080;
   const server = http.createServer(app);
 
-  devSocket({ server });
+  await devSocket({ server });
 
   return () => {
     server.listen(port);
