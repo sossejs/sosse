@@ -14,7 +14,7 @@ import cuid from "cuid";
 export const clientPlugin = function ({
   src = "client",
   dist = "sosse",
-  format = "umd",
+  format = "modern",
   watch = process.env.NODE_ENV !== "production",
   exitAfterBuild = process.env.SOSSE_CLIENT_BUILD === "1",
   microbundleOptions = {},
@@ -22,7 +22,7 @@ export const clientPlugin = function ({
   src?: string;
   dist?: string;
   publicDir?: string;
-  format?: string;
+  format?: "umd" | "modern";
   watch?: boolean;
   exitAfterBuild?: boolean;
   microbundleOptions?: Record<string, any>;
@@ -76,7 +76,7 @@ export const clientPlugin = function ({
         const fileBase = path.basename(file, fileExt);
         const absFile = path.resolve(absSrc, file);
         const distFileName = fileBase + (!watch ? `.${cuid()}` : "") + ".js";
-        const absFileDist = path.resolve(absDist, distFileName);
+        const absFileDist = path.resolve(absDist, fileBase, distFileName);
 
         const microbundleDefaults = {
           "pkg-main": true,
@@ -124,10 +124,11 @@ export const clientPlugin = function ({
         }
         const newWatchers = bundleResult.watchers;
 
-        const publicFile = `/${dist}/${distFileName}`;
+        const publicFile = `/${dist}/${fileBase}/${distFileName}`;
+        const scriptTypeAttr = format == "modern" ? 'type="module"' : "";
         ctx.assets[fileBase] = {
           url: publicFile,
-          html: `<script src="${publicFile}"></script>`,
+          html: `<script ${scriptTypeAttr} src="${publicFile}"></script>`,
         };
         clientAssets[fileBase] = ctx.assets[fileBase];
 
