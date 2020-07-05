@@ -8,7 +8,7 @@ export default async () => {
 
   const app = express();
   app.use(express.static(ctx.publicDir));
-  homeRoute(app);
+  await homeRoute(app);
 
   // 404 route
   app.use((req, res) => res.status(404).send(notFoundHtml()));

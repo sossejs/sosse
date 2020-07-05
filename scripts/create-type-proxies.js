@@ -22,5 +22,5 @@ export default DefaultProxy;\n`;
 };
 
 (async () => {
-  // await createProxy("some-module");
+  await createProxy("preact");
 })();

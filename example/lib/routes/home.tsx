@@ -1,15 +1,24 @@
 import { html, useCtx } from "sosse";
-import { h, Fragment } from "preact";
+import React, { Fragment } from "react";
 import render from "preact-render-to-string";
 import { Express } from "express";
 import { otion } from "sosse/otion";
 import { css } from "otion";
 import { htmlData } from "sosse/uni";
+import {
+  SsrInjectCounter,
+  SuspenseInjectCounter,
+  LazyInjectCounter,
+} from "../injects";
 
 const ctx = useCtx();
 
-export const homeRoute = function (app: Express) {
+export const homeRoute = async function (app: Express) {
   globalThis.count = globalThis.count || 1;
+
+  const SsrCounter = (await SsrInjectCounter).server;
+  const SuspenseCounter = (await SuspenseInjectCounter).server;
+  const LazyCounter = (await LazyInjectCounter).server;
 
   // Home route
   app.get("/", (req, res) =>
@@ -18,6 +27,7 @@ export const homeRoute = function (app: Express) {
         htmlData({ count: globalThis.count });
 
         return html({
+          title: "Hello world",
           head: render(
             <Fragment>
               <link href="https://unpkg.com/sanitize.css" rel="stylesheet" />
@@ -45,7 +55,10 @@ export const homeRoute = function (app: Express) {
             render(
               <div id="app">
                 <h1>hello visitor {globalThis.count++}</h1>
-                <div id="counter" />
+                <SsrCounter startCount={4} />
+                <SuspenseCounter startCount={7} />
+                <div class={css({ marginTop: "100rem" })} />
+                <LazyCounter startCount={9} />
                 <footer
                   class={css({
                     backgroundColor: "#034",

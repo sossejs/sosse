@@ -1,11 +1,10 @@
-import { render, h } from "preact";
-import { Counter } from "../components/counter";
 import { hydrate, setup } from "otion";
+import "../injects";
+import { inject } from "sosse/preact";
 import { htmlData } from "sosse/uni";
 
 setup({});
 hydrate();
-
-render(<Counter />, document.querySelector("#counter"));
+inject({ logInjects: true });
 
 console.info("Visitor count", htmlData().count);

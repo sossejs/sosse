@@ -15,6 +15,7 @@ export const clientPlugin = function ({
   src = "client",
   dist = "sosse",
   format = "modern",
+  preactAlias = true,
   watch = process.env.NODE_ENV !== "production",
   exitAfterBuild = process.env.SOSSE_CLIENT_BUILD === "1",
   microbundleOptions = {},
@@ -23,6 +24,7 @@ export const clientPlugin = function ({
   dist?: string;
   publicDir?: string;
   format?: "umd" | "modern";
+  preactAlias?: boolean;
   watch?: boolean;
   exitAfterBuild?: boolean;
   microbundleOptions?: Record<string, any>;
@@ -117,6 +119,13 @@ export const clientPlugin = function ({
             ctx.events.emit("error");
           },
         };
+
+        if (preactAlias) {
+          microbundleConfig["jsx"] = "React.createElement";
+          microbundleConfig["alias"] = microbundleConfig["alias"] || "";
+          microbundleConfig["alias"] +=
+            (microbundleConfig["alias"] && ",") + "react=preact/compat";
+        }
 
         const bundleResult = await microbundle(microbundleConfig);
         if (bundleResult.output) {
