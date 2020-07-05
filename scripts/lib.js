@@ -57,6 +57,8 @@ exports.buildArgs = () => {
     "otion",
     "microbundle",
     "clear-module",
+    "preact",
+    "react",
   ];
   args.push("--external", externals.join(","));
 

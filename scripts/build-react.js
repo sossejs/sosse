@@ -3,13 +3,11 @@
 const { spawn, args, buildArgs, rmDir, pkgDir } = require("./lib");
 
 (async () => {
-  await rmDir(pkgDir("preact", "dist"), { recursive: true });
+  await rmDir(pkgDir("react", "dist"), { recursive: true });
   spawn("npx", [
     "microbundle",
     "--cwd",
-    "preact",
-    "--alias",
-    "react=preact/compat",
+    "react",
     "--jsx",
     "React.createElement",
     "--raw",

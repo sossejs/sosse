@@ -1,1 +1,1 @@
-export const hello = "world";
+export * from "../../react/lib/main";

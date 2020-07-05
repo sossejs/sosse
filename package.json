@@ -27,6 +27,18 @@
       "import": "./uni/dist/main.m.js",
       "require": "./uni/dist/main.js"
     },
+    "./react": {
+      "browser": "./react/dist/main.m.js",
+      "umd": "./react/dist/main.umd.js",
+      "import": "./react/dist/main.m.js",
+      "require": "./react/dist/main.js"
+    },
+    "./preact": {
+      "browser": "./preact/dist/main.m.js",
+      "umd": "./preact/dist/main.umd.js",
+      "import": "./preact/dist/main.m.js",
+      "require": "./preact/dist/main.js"
+    },
     "./package.json": "./package.json",
     "./": "./"
   },
@@ -50,6 +62,7 @@
     "@types/ws": "^7.2.5",
     "badgen": "^3.1.0",
     "chai": "^4.2.0",
+    "colorette": "1.2.0",
     "chokidar": "^3.4.0",
     "cuid": "^2.1.8",
     "express": "^4.17.1",
@@ -57,10 +70,12 @@
     "jest": "^26.0.1",
     "lodash": "^4.17.15",
     "mallery": "1.0.0-alpha.7",
+    "microbundle": "^0.12.3",
     "otion": "^0.3.2",
-    "preact-render-to-string": "^5.1.9",
     "preact": "^10.4.4",
+    "preact-render-to-string": "^5.1.9",
     "prettier": "^2.0.5",
+    "react": "^16.13.1",
     "sockette": "^2.0.6",
     "standard-version": "^8.0.0",
     "strip-ansi": "^6.0.0",
@@ -70,11 +85,25 @@
     "typescript": "^3.9.3",
     "ws": "^7.3.0"
   },
-  "dependencies": {
-    "clear-module": "^4.1.1",
-    "microbundle": "developit/microbundle#js-watch-api"
-  },
   "optionalDependencies": {
+    "clear-module": "^4.1.1"
+  },
+  "peerDependenciesMeta": {
+    "microbundle": {
+      "optional": true
+    },
+    "chokidar": {
+      "optional": true
+    },
+    "otion": {
+      "optional": true
+    },
+    "ws": {
+      "optional": true
+    }
+  },
+  "peerDependencies": {
+    "microbundle": "^0.12.3",
     "chokidar": "^3.4.0",
     "otion": "^0.3.2",
     "ws": "^7.3.0"
@@ -96,7 +125,10 @@
     "dev-socket-client/dist",
     "uni/package.json",
     "uni/lib",
-    "uni/dist"
+    "uni/dist",
+    "react/package.json",
+    "react/lib",
+    "react/dist"
   ],
   "standard-version": {
     "scripts": {
@@ -123,7 +155,8 @@
       "preact/lib/**/*.{ts,tsx,js,jsx}",
       "otion/lib/**/*.{ts,tsx,js,jsx}",
       "dev-socket-client/lib/**/*.{ts,tsx,js,jsx}",
-      "uni/lib/**/*.{ts,tsx,js,jsx}"
+      "uni/lib/**/*.{ts,tsx,js,jsx}",
+      "react/lib/**/*.{ts,tsx,js,jsx}"
     ]
   }
 }

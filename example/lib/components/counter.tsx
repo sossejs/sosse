@@ -1,9 +1,9 @@
-import { h } from "preact";
+import React from "react";
 import { useState } from "preact/hooks";
 import { css } from "otion";
 
-export const Counter = function () {
-  const [count, setCount] = useState(0);
+export const Counter = function ({ startCount = 0 }) {
+  const [count, setCount] = useState(startCount);
 
   return (
     <button
@@ -15,6 +15,7 @@ export const Counter = function () {
         color: "#cde",
         fontSize: "1.2rem",
         padding: "1rem",
+        marginBottom: "1rem",
         ":hover": {
           backgroundColor: "#145",
         },
