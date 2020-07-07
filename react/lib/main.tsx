@@ -17,11 +17,29 @@ type Options<T> = {
 
 type ThenArg<T> = T extends PromiseLike<infer U> ? U : T;
 
-const components: Record<string, any> = {};
+let components: Record<string, any> = {};
+const injectCache: Record<string, any> = {};
+
+export const preload = async function () {
+  const importPromises = [];
+  for (const [id, { component, ssr }] of Object.entries(injectCache)) {
+    if (!ssr) {
+      continue;
+    }
+
+    const importPromise = (async () => {
+      components[id] = await component();
+    })();
+
+    importPromises.push(importPromise);
+  }
+
+  await Promise.all(importPromises);
+};
 
 export const inject = function ({ logInjects = false } = {}) {
   for (const [id, { component, ssr, suspense, lazy }] of Object.entries(
-    components
+    injectCache
   )) {
     let jsonElList = document.querySelectorAll(`[data-interactive="${id}"`);
     if (jsonElList.length === 0) {
@@ -71,47 +89,40 @@ const defaultContainer = function ({ children }) {
   return <div>{children}</div>;
 };
 
-export const interactive = async function <T, C = ThenArg<T>>({
+export const interactive = function <T, C = ThenArg<T>>({
   id,
   container = defaultContainer,
   component,
   suspense,
   lazy = false,
   ssr = false,
-}: Options<T>): Promise<{ server: C }> {
+}: Options<T>): C {
   if (suspense && ssr) {
     console.warn("Using suspense and ssr together isn't supported");
   }
 
   lazy = lazy && typeof IntersectionObserver === "function";
 
+  injectCache[id] = { component, ssr, suspense, lazy };
+
   if (isNode) {
     const Container = container;
-    let Component;
 
-    if (ssr) {
-      Component = await component();
-    }
+    return function (props) {
+      const Component = components[id];
 
-    return {
-      server: function (props) {
-        return (
-          <Fragment>
-            <script
-              type="application/json"
-              data-interactive={id}
-              dangerouslySetInnerHTML={{ __html: JSON.stringify(props) }}
-            />
-            <Container>{ssr && <Component {...props} />}</Container>
-          </Fragment>
-        );
-      } as any,
-    };
+      return (
+        <Fragment>
+          <script
+            type="application/json"
+            data-interactive={id}
+            dangerouslySetInnerHTML={{ __html: JSON.stringify(props) }}
+          />
+          <Container>{ssr && <Component {...props} />}</Container>
+        </Fragment>
+      );
+    } as any;
   } else {
-    components[id] = { component, ssr, suspense, lazy };
-
-    return {
-      server: emptyFunc as any,
-    };
+    return emptyFunc as any;
   }
 };

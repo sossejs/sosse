@@ -16,10 +16,6 @@ const ctx = useCtx();
 export const homeRoute = async function (app: Express) {
   globalThis.count = globalThis.count || 1;
 
-  const SsrCounter = (await SsrInjectCounter).server;
-  const SuspenseCounter = (await SuspenseInjectCounter).server;
-  const LazyCounter = (await LazyInjectCounter).server;
-
   // Home route
   app.get("/", (req, res) =>
     res.send(
@@ -55,10 +51,10 @@ export const homeRoute = async function (app: Express) {
             render(
               <div id="app">
                 <h1>hello visitor {globalThis.count++}</h1>
-                <SsrCounter startCount={4} />
-                <SuspenseCounter startCount={7} />
+                <SsrInjectCounter startCount={4} />
+                <SuspenseInjectCounter startCount={7} />
                 <div class={css({ marginTop: "100rem" })} />
-                <LazyCounter startCount={9} />
+                <LazyInjectCounter startCount={9} />
                 <footer
                   class={css({
                     backgroundColor: "#034",
