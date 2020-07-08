@@ -5,6 +5,6 @@ import { htmlData } from "sosse/uni";
 
 setup({});
 hydrate();
-inject({ logInjects: true });
+inject();
 
 console.info("Visitor count", htmlData().count);
