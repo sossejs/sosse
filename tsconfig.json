@@ -13,7 +13,8 @@
       "sosse/example": ["../example/lib/main.ts"],
       "sosse/preact": ["../preact/lib/main.ts"],
       "sosse/otion": ["../otion/lib/main.ts"],
-      "sosse/dev-socket-client": ["../dev-socket-client/lib/main.ts"]
+      "sosse/dev-socket-client": ["../dev-socket-client/lib/main.ts"],
+      "sosse/data": ["../data/lib/main.ts"]
     }
   },
   "exclude": ["node_modules", "**/dist"]

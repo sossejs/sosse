@@ -1,4 +1,5 @@
 import { Ctx } from "./ctx";
+import { htmlData } from "sosse/data";
 
 const defaultTpl = function ({ title, head, bodyAttrs, body }) {
   return `
@@ -38,6 +39,14 @@ export type HtmlOptions = {
 
 export const html = function (options: HtmlOptions = {}) {
   let { head, title, body, bodyAttrs, tpl, ctx } = createHtmlOptions(options);
+
+  const data = htmlData();
+  htmlData(null);
+  if (data) {
+    head += `<script class="sosse-html-data" type="application/json">${JSON.stringify(
+      data
+    )}</script>`;
+  }
 
   if (ctx) {
     for (const injectHtml of Object.values(ctx.injectHtml.head)) {

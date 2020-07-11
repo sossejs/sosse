@@ -4,6 +4,7 @@ import render from "preact-render-to-string";
 import { Express } from "express";
 import { otion } from "sosse/otion";
 import { css } from "otion";
+import { htmlData } from "sosse/data";
 
 const ctx = useCtx();
 
@@ -14,6 +15,8 @@ export const homeRoute = function (app: Express) {
   app.get("/", (req, res) =>
     res.send(
       otion(() => {
+        htmlData({ count: globalThis.count });
+
         return html({
           head: render(
             <Fragment>
