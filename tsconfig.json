@@ -7,7 +7,8 @@
     "baseUrl": "./node_modules",
     "esModuleInterop": true,
     "downlevelIteration": true,
-    "target": "es5",
+    "target": "ESNext",
+    "module": "commonjs",
     "paths": {
       "sosse": ["../lib/main.ts"],
       "sosse/example": ["../example/lib/main.ts"],
