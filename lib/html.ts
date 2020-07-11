@@ -16,6 +16,17 @@ const defaultTpl = function ({ title, head, bodyAttrs, body }) {
 </html>`;
 };
 
+const createHtmlOptions = function (overrides: HtmlOptions = {}): HtmlOptions {
+  return {
+    head: "",
+    title: "",
+    body: "",
+    bodyAttrs: {},
+    tpl: defaultTpl,
+    ...overrides,
+  };
+};
+
 export type HtmlOptions = {
   head?: string;
   title?: string;
@@ -25,14 +36,9 @@ export type HtmlOptions = {
   tpl?: typeof defaultTpl;
 };
 
-export const html = function ({
-  head = "",
-  title = "",
-  body = "",
-  bodyAttrs = {},
-  ctx,
-  tpl = defaultTpl,
-}: HtmlOptions) {
+export const html = function (options: HtmlOptions = {}) {
+  let { head, title, body, bodyAttrs, tpl, ctx } = createHtmlOptions(options);
+
   if (ctx) {
     for (const injectHtml of Object.values(ctx.injectHtml.head)) {
       head += injectHtml;
@@ -56,18 +62,12 @@ export const html = function ({
   });
 };
 
-export const notFoundHtml = function ({
-  head = "",
-  title = "Page not found",
-  body = "<h1>Page not found</h1>",
-  bodyAttrs = {},
-  ctx,
-}: {
-  head?: string;
-  title?: string;
-  body?: string;
-  bodyAttrs?: Record<string, string>;
-  ctx?: Ctx;
-} = {}) {
-  return html({ head, title, body, bodyAttrs, ctx });
+export const notFoundHtml = function (options: HtmlOptions = {}) {
+  return html(
+    createHtmlOptions({
+      title: "Page not found",
+      body: "<h1>Page not found</h1>",
+      ...options,
+    })
+  );
 };
