@@ -42,7 +42,7 @@ export const html = function (options: HtmlOptions = {}) {
 
   const data = htmlData();
   htmlData(null);
-  if (data) {
+  if (data != null) {
     head += `<script class="sosse-html-data" type="application/json">${JSON.stringify(
       data
     )}</script>`;
