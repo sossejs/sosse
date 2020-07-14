@@ -4,7 +4,7 @@ import render from "preact-render-to-string";
 import { Express } from "express";
 import { otion } from "sosse/otion";
 import { css } from "otion";
-import { htmlData } from "sosse/data";
+import { htmlData } from "sosse/uni";
 
 const ctx = useCtx();
 

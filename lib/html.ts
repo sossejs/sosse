@@ -1,5 +1,5 @@
 import { Ctx } from "./ctx";
-import { htmlData } from "sosse/data";
+import { htmlData } from "sosse/uni";
 
 const defaultTpl = function ({ title, head, bodyAttrs, body }) {
   return `

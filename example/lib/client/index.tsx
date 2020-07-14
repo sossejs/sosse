@@ -1,7 +1,7 @@
 import { render, h } from "preact";
 import { Counter } from "../components/counter";
 import { hydrate, setup } from "otion";
-import { htmlData } from "sosse/data";
+import { htmlData } from "sosse/uni";
 
 setup({});
 hydrate();

@@ -1,6 +1,6 @@
 {
-  "name": "sosse-data",
-  "amdName": "sosseData",
+  "name": "sosse-uni",
+  "amdName": "sosseUni",
   "source": "lib/main.ts",
   "main": "dist/main.js",
   "module": "dist/main.m.js",
