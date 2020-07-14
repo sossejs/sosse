@@ -1,5 +1,9 @@
+export const isNode =
+  typeof process !== "undefined" &&
+  typeof process.versions.node !== "undefined";
+
 let currentData;
-if (typeof document != "undefined") {
+if (!isNode) {
   const els = document.getElementsByClassName("sosse-html-data");
   if (els.length > 0) {
     currentData = JSON.parse(els[0].innerHTML);
