@@ -2,6 +2,20 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.5.0](https://github.com/sossejs/sosse/compare/v0.4.1...v0.5.0) (2020-07-15)
+
+
+### ⚠ BREAKING CHANGES
+
+* **client-plugin:** use modern output by default
+
+### Features
+
+* implement htmlData ([b4f91c6](https://github.com/sossejs/sosse/commit/b4f91c6a09064c466eb3485a13002e0cc13d8ad0))
+* implement interactive components ([960c88f](https://github.com/sossejs/sosse/commit/960c88fd0742381e45923ccb64f76c5ea458bd6a))
+* implement isNode api ([6e41b96](https://github.com/sossejs/sosse/commit/6e41b96ea3051e72d51e4bc2413af70b86f539ba))
+* **client-plugin:** use modern output by default ([0c689e2](https://github.com/sossejs/sosse/commit/0c689e26f1e87aa5f7a6096a583cd4685ad4a91b))
+
 ### [0.4.1](https://github.com/sossejs/sosse/compare/v0.4.0...v0.4.1) (2020-06-29)
 
 
