@@ -1,8 +1,12 @@
-import React, { Fragment, hydrate, render } from "react";
-
-const isNode =
-  typeof process !== "undefined" &&
-  typeof process.versions.node !== "undefined";
+import React, {
+  Fragment,
+  hydrate,
+  render,
+  useContext,
+  useEffect,
+  useState,
+} from "react";
+import { isNode } from "sosse/uni";
 
 const emptyFunc = () => {};
 
@@ -13,6 +17,7 @@ type Options<T> = {
   suspense?: Function;
   lazy?: boolean;
   ssr?: boolean;
+  wrapper?: any[];
 };
 
 type ThenArg<T> = T extends PromiseLike<infer U> ? U : T;
@@ -48,9 +53,9 @@ export const inject = function ({
   const componentPromises: Record<string, any> = {};
 
   const jsonEls = Array.from(jsonElList);
-  jsonEls.forEach((async (el) => {
+  jsonEls.forEach(async (el) => {
     const id = el["dataset"].interactive;
-    const { component, ssr, suspense, lazy } = injectCache[id];
+    const { component, ssr, suspense, lazy, wrapper } = injectCache[id];
     const ASuspense = suspense;
 
     componentPromises[id] =
@@ -72,6 +77,11 @@ export const inject = function ({
 
       const props = JSON.parse(el.innerHTML);
       let vdom = <LoadingComponent {...props} />;
+      if (wrapper.length) {
+        for (const Wrapper of wrapper) {
+          vdom = <Wrapper>{vdom}</Wrapper>;
+        }
+      }
       if (ASuspense) {
         vdom = <ASuspense>{vdom}</ASuspense>;
       }
@@ -88,7 +98,7 @@ export const inject = function ({
     } else {
       aInject();
     }
-  }))
+  });
 };
 
 const defaultContainer = function ({ children }) {
@@ -102,6 +112,7 @@ export const interactive = function <T, C = ThenArg<T>>({
   suspense,
   lazy = false,
   ssr = false,
+  wrapper = [],
 }: Options<T>): C {
   if (suspense && ssr) {
     console.warn("Using suspense and ssr together isn't supported");
@@ -109,7 +120,13 @@ export const interactive = function <T, C = ThenArg<T>>({
 
   lazy = lazy && typeof IntersectionObserver === "function";
 
-  injectCache[id] = { component, ssr, suspense: !ssr && suspense, lazy };
+  injectCache[id] = {
+    component,
+    ssr,
+    suspense: !ssr && suspense,
+    lazy,
+    wrapper,
+  };
 
   if (isNode) {
     const Container = container;
@@ -131,5 +148,71 @@ export const interactive = function <T, C = ThenArg<T>>({
     } as any;
   } else {
     return emptyFunc as any;
+  }
+};
+
+const defaultSerializer = function (value) {
+  return JSON.stringify(value);
+};
+
+const defaultDeserializer = function (value) {
+  return JSON.parse(value);
+};
+
+export const hydratedContext = function ({
+  id,
+  context,
+  serialize = defaultSerializer,
+  deserialize = defaultDeserializer,
+}): any {
+  const elClass = "sosse-context-" + id;
+
+  if (isNode) {
+    return function () {
+      const value = useContext(context);
+
+      return (
+        <script
+          type="application/json"
+          class={elClass}
+          dangerouslySetInnerHTML={{ __html: serialize(value) }}
+        />
+      );
+    };
+  } else {
+    let value;
+
+    const el = document.getElementsByClassName(elClass);
+    if (el[0]) {
+      value = deserialize(el[0].innerHTML);
+    }
+
+    const subs = [];
+    const Context = context;
+
+    const comp = function ({ children }) {
+      const [localValue, setValue] = useState(value);
+
+      useEffect(function () {
+        subs.push(function () {
+          setValue(value);
+        });
+      });
+
+      return <Context.Provider value={localValue}>{children}</Context.Provider>;
+    };
+
+    comp["value"] = function (newValue?) {
+      if (newValue !== undefined) {
+        value = newValue;
+        for (const sub of subs) {
+          sub();
+        }
+      }
+
+      return value;
+    };
+
+    return comp;
   }
 };

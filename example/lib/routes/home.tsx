@@ -9,7 +9,10 @@ import {
   SsrInjectCounter,
   SuspenseInjectCounter,
   LazyInjectCounter,
+  Box,
+  HydrateColorContext,
 } from "../injects";
+import { ColorContext } from "../context";
 
 const ctx = useCtx();
 
@@ -49,23 +52,31 @@ export const homeRoute = async function (app: Express) {
           },
           body:
             render(
-              <div id="app">
-                <h1>hello visitor {globalThis.count++}</h1>
-                <SsrInjectCounter startCount={4} />
-                <SuspenseInjectCounter startCount={7} />
-                <div class={css({ marginTop: "100rem" })} />
-                <LazyInjectCounter startCount={9} />
-                <footer
-                  class={css({
-                    backgroundColor: "#034",
-                    marginTop: "1rem",
-                    padding: "3rem",
-                    color: "#fff",
-                  })}
-                >
-                  Spiced up with Sosse
-                </footer>
-              </div>
+              <ColorContext.Provider value="#A09BD7">
+                <HydrateColorContext />
+                <div id="app">
+                  <h1>hello visitor {globalThis.count++}</h1>
+
+                  <Box />
+                  <Box />
+
+                  <SsrInjectCounter startCount={4} />
+                  <SuspenseInjectCounter startCount={7} />
+                  <div class={css({ marginTop: "100rem" })} />
+                  <LazyInjectCounter startCount={9} />
+                  <Box />
+                  <footer
+                    class={css({
+                      backgroundColor: "#034",
+                      marginTop: "1rem",
+                      padding: "3rem",
+                      color: "#fff",
+                    })}
+                  >
+                    Spiced up with Sosse
+                  </footer>
+                </div>
+              </ColorContext.Provider>
             ) + ctx.assets.index.html,
           ctx,
         });

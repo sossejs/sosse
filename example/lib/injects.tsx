@@ -1,5 +1,6 @@
 import React, { Suspense } from "react";
-import { interactive } from "sosse/preact";
+import { interactive, hydratedContext } from "sosse/preact";
+import { ColorContext } from "./context";
 
 class ErrorBoundary extends React.Component {
   state = { hasError: false };
@@ -22,6 +23,11 @@ const MySuspense = ({ children }) => (
   </ErrorBoundary>
 );
 
+export const HydrateColorContext = hydratedContext({
+  id: "colorContext",
+  context: ColorContext,
+});
+
 export const SsrInjectCounter = interactive({
   id: "ssrCounter",
   component: async () => (await import("./components/counter")).Counter,
@@ -39,4 +45,11 @@ export const LazyInjectCounter = interactive({
   lazy: true,
   component: async () => (await import("./components/counter")).Counter,
   suspense: MySuspense,
+});
+
+export const Box = interactive({
+  id: "box",
+  lazy: true,
+  component: async () => (await import("./components/box")).Box,
+  wrapper: [HydrateColorContext],
 });
