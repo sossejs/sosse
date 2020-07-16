@@ -15,8 +15,6 @@ Usage examples can be found in the [Getting started](https://github.com/sossejs/
 - 🔥 Hot server restart
 - 🔄 Live reload
 - 🖨 Outputs server errors in browser
-
-## Planned:
-
+- ⚛️ Interactive (p)react components
 - 🌊 Css Serverside Rendering with [Otion](https://github.com/kripod/otion)
 - 📦 Bundling client assets with [Microbundle](https://github.com/developit/microbundle)
