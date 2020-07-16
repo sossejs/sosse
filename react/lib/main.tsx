@@ -159,9 +159,21 @@ const defaultDeserializer = function (value) {
   return JSON.parse(value);
 };
 
+export const valueRef = function <T = any>(
+  value?: T
+): {
+  value: T;
+  update?: (newValue: T) => void;
+} {
+  return {
+    value,
+  };
+};
+
 export const hydratedContext = function ({
   id,
   context,
+  ref = valueRef(),
   serialize = defaultSerializer,
   deserialize = defaultDeserializer,
 }): any {
@@ -180,37 +192,30 @@ export const hydratedContext = function ({
       );
     };
   } else {
-    let value;
-
     const el = document.getElementsByClassName(elClass);
     if (el[0]) {
-      value = deserialize(el[0].innerHTML);
+      ref.value = deserialize(el[0].innerHTML);
     }
 
     const subs = [];
+    ref.update = function (newValue) {
+      this.value = newValue;
+      for (const sub of subs) {
+        sub();
+      }
+    };
     const Context = context;
 
     const comp = function ({ children }) {
-      const [localValue, setValue] = useState(value);
+      const [localValue, setValue] = useState(ref.value);
 
       useEffect(function () {
         subs.push(function () {
-          setValue(value);
+          setValue(ref.value);
         });
       });
 
       return <Context.Provider value={localValue}>{children}</Context.Provider>;
-    };
-
-    comp["value"] = function (newValue?) {
-      if (newValue !== undefined) {
-        value = newValue;
-        for (const sub of subs) {
-          sub();
-        }
-      }
-
-      return value;
     };
 
     return comp;

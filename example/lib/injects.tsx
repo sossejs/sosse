@@ -1,6 +1,6 @@
 import React, { Suspense } from "react";
 import { interactive, hydratedContext } from "sosse/preact";
-import { ColorContext } from "./context";
+import { ColorContext, colorRef } from "./context";
 
 class ErrorBoundary extends React.Component {
   state = { hasError: false };
@@ -26,6 +26,7 @@ const MySuspense = ({ children }) => (
 export const HydrateColorContext = hydratedContext({
   id: "colorContext",
   context: ColorContext,
+  ref: colorRef,
 });
 
 export const SsrInjectCounter = interactive({
