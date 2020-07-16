@@ -5,38 +5,38 @@
   "description": "Spice your servers up with a lil Sosse",
   "source": "lib/main.ts",
   "main": "dist/main.js",
-  "module": "dist/main.m.js",
+  "module": "dist/main.mjs",
   "umd:main": "dist/main.umd.js",
   "esmodule": "dist/main.modern.js",
   "exports": {
     ".": {
-      "browser": "./dist/main.m.js",
+      "browser": "./dist/main.mjs",
       "umd": "./dist/main.umd.js",
-      "import": "./dist/main.m.js",
+      "import": "./dist/main.mjs",
       "require": "./dist/main.js"
     },
     "./dev-socket-client": {
-      "browser": "./dev-socket-client/dist/main.m.js",
+      "browser": "./dev-socket-client/dist/main.mjs",
       "umd": "./dev-socket-client/dist/main.umd.js",
-      "import": "./dev-socket-client/dist/main.m.js",
+      "import": "./dev-socket-client/dist/main.mjs",
       "require": "./dev-socket-client/dist/main.js"
     },
     "./uni": {
-      "browser": "./uni/dist/main.m.js",
+      "browser": "./uni/dist/main.mjs",
       "umd": "./uni/dist/main.umd.js",
-      "import": "./uni/dist/main.m.js",
+      "import": "./uni/dist/main.mjs",
       "require": "./uni/dist/main.js"
     },
     "./react": {
-      "browser": "./react/dist/main.m.js",
+      "browser": "./react/dist/main.mjs",
       "umd": "./react/dist/main.umd.js",
-      "import": "./react/dist/main.m.js",
+      "import": "./react/dist/main.mjs",
       "require": "./react/dist/main.js"
     },
     "./preact": {
-      "browser": "./preact/dist/main.m.js",
+      "browser": "./preact/dist/main.mjs",
       "umd": "./preact/dist/main.umd.js",
-      "import": "./preact/dist/main.m.js",
+      "import": "./preact/dist/main.mjs",
       "require": "./preact/dist/main.js"
     },
     "./package.json": "./package.json",
