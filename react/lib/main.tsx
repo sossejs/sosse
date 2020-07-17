@@ -207,15 +207,15 @@ export const hydratedContext = function ({
     const Context = context;
 
     const comp = function ({ children }) {
-      const [localValue, setValue] = useState(ref.value);
+      const [_, setValue] = useState({});
 
       useEffect(function () {
         subs.push(function () {
-          setValue(ref.value);
+          setValue({});
         });
-      });
+      }, []);
 
-      return <Context.Provider value={localValue}>{children}</Context.Provider>;
+      return <Context.Provider value={ref.value}>{children}</Context.Provider>;
     };
 
     return comp;
