@@ -90,8 +90,8 @@ export const hsr = async function ({
       listen = await main();
     } catch (err) {
       ctx.errors.push(stripAnsi(err.message));
-      ctx.events.emit("error");
       console.error(err);
+      ctx.events.emit("error");
     }
 
     unsetCtx();
