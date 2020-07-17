@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.7.0](https://github.com/sossejs/sosse/compare/v0.6.0...v0.7.0) (2020-07-17)
+
+
+### Bug Fixes
+
+* **hydratedContext:** make sure that useEffect only gets called once ([250c20d](https://github.com/sossejs/sosse/commit/250c20d24cba8fcfd6a45f8f4c00b2eb28c5cfec))
+
 ## [0.6.0](https://github.com/sossejs/sosse/compare/v0.5.0...v0.6.0) (2020-07-16)
 
 
