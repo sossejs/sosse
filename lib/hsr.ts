@@ -1,4 +1,3 @@
-import clearModule from "clear-module";
 import debounce from "lodash/debounce";
 import path from "path";
 import { createCtx, setCtx, unsetCtx } from "./ctx";
@@ -46,6 +45,8 @@ export const hsr = async function ({
     await listen();
     return;
   }
+
+  const clearModule = (await import("clear-module")).default;
 
   const absWatch = watch.map((dir) => path.resolve(base, dir));
   const absExclude = exclude.map((dir) => path.resolve(base, dir));
