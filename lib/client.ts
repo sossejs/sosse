@@ -50,7 +50,7 @@ export const clientPlugin = function ({
 
     let watchers: Record<string, any> = {};
 
-    const microbundle = require("microbundle");
+    const microbundle = (await import("microbundle")).default;
 
     const startBundlers = async function () {
       const assetsJsonPath = path.resolve(absDist, "clientAssets.json");
@@ -164,7 +164,7 @@ export const clientPlugin = function ({
     }
 
     if (watch) {
-      const chokidar = require("chokidar");
+      const chokidar = (await import("chokidar")).default;
       chokidar.watch(absSrc).on("all", startBundlers);
     }
 
