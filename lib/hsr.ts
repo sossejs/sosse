@@ -12,7 +12,7 @@ export const hsr = async function ({
   exclude = ["client", "node_modules"],
   wait = 500,
   main,
-  plugins,
+  plugins = [],
   restart = process.env.NODE_ENV !== "production",
 }: {
   base: string;
