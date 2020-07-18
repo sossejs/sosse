@@ -6,7 +6,7 @@ import stripAnsi from "strip-ansi";
 type PluginCtx = { throttleRestart?: boolean };
 
 export const hsr = async function ({
-  base,
+  base = process.cwd(),
   watch = ["."],
   publicDir = "public",
   exclude = ["client", "node_modules"],
@@ -15,7 +15,7 @@ export const hsr = async function ({
   plugins = [],
   restart = process.env.NODE_ENV !== "production",
 }: {
-  base: string;
+  base?: string;
   watch?: string[];
   publicDir?: string;
   exclude?: string[];
