@@ -83,7 +83,7 @@ export const hsr = async function ({
     let listen;
     clearModule.all();
 
-    const { setCtx, unsetCtx } = require("sosse");
+    const { setCtx, unsetCtx } = await import("sosse");
 
     setCtx(ctx);
 
@@ -118,7 +118,7 @@ export const hsr = async function ({
     }
   }, wait);
 
-  const chokidar = require("chokidar");
+  const chokidar = (await import("chokidar")).default;
 
   const watcher = chokidar.watch(absWatch, {
     ignored: absExclude,

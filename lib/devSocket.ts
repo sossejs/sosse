@@ -3,13 +3,19 @@ import url from "url";
 import { Ctx, useCtx } from "./ctx";
 import { copy, emptyDir } from "fs-extra";
 import path from "path";
+import { fileURLToPath } from "url";
 
 const integrateClientJs = async function (ctx: Ctx) {
   const publicFolder = "sosseDevSocketClient";
 
   if (!globalThis.sosseDevClientCopied) {
+    const dirName =
+      typeof __dirname !== "undefined"
+        ? __dirname
+        : path.dirname(fileURLToPath(import.meta.url));
+
     const clientJsPath = path.resolve(
-      __dirname,
+      dirName,
       "..",
       "dev-socket-client",
       "dist"
@@ -53,7 +59,7 @@ export const devSocket = async function ({
     return;
   }
 
-  const WebSocket = require("ws");
+  const WebSocket = (await import("ws")).default;
 
   const ctx = useCtx();
 
