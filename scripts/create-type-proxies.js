@@ -31,5 +31,6 @@ export default DefaultProxy;\n`;
 
 (async () => {
   await createProxy();
+  await createProxy({ moduleName: "react" });
   await createProxy({ moduleName: "preact" });
 })();
