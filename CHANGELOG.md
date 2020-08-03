@@ -2,6 +2,17 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.8.0-next.0](https://github.com/sossejs/sosse/compare/v0.7.2...v0.8.0-next.0) (2020-08-03)
+
+
+### ⚠ BREAKING CHANGES
+
+* implement sosse api and cli, rework hsr api
+
+### Features
+
+* implement sosse api and cli, rework hsr api ([d295db4](https://github.com/sossejs/sosse/commit/d295db472f533f9fd74bcc3e14b586d6efffaba0))
+
 ### [0.7.2](https://github.com/sossejs/sosse/compare/v0.7.1...v0.7.2) (2020-07-25)
 
 ### [0.7.1](https://github.com/sossejs/sosse/compare/v0.7.0...v0.7.1) (2020-07-18)
