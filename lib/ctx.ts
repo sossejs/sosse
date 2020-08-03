@@ -1,15 +1,27 @@
 import { EventEmitter } from "events";
-import { resolve } from "path";
+import { isDev } from "./env";
 
 let currentCtx: Ctx;
 
+export type ServeClientOptions = {
+  enable?: boolean;
+};
+
+export type OtionOptions = {
+  enable?: boolean;
+};
+
+export type Asset = { html?: string; url?: string };
+
 export type Ctx = {
-  base: string;
-  publicDir: string;
+  distDir: string;
+  serveClient: ServeClientOptions;
+  otion: OtionOptions;
+  throttleRestart: Record<string, boolean>;
   errors: string[];
   willRestart: boolean;
   events: EventEmitter;
-  assets: Record<string, { html?: string; url?: string }>;
+  assets: Record<string, Asset>;
   injectHtml: {
     head: Record<string, string>;
     footer: Record<string, string>;
@@ -28,12 +40,20 @@ export const useCtx = function (): Ctx {
   return currentCtx;
 };
 
-export const createCtx = function ({ base, publicDir }): Ctx {
-  publicDir = resolve(base, publicDir);
-
+export const createCtx = function ({
+  distDir = "",
+  serveClient = { enable: false },
+  otion = { enable: false },
+}: {
+  distDir?: string;
+  serveClient?: ServeClientOptions;
+  otion?: OtionOptions;
+} = {}): Ctx {
   return {
-    base,
-    publicDir,
+    distDir,
+    serveClient,
+    otion,
+    throttleRestart: {},
     errors: [],
     willRestart: false,
     events: new EventEmitter(),
@@ -44,4 +64,20 @@ export const createCtx = function ({ base, publicDir }): Ctx {
 
 export const unsetCtx = function () {
   currentCtx = undefined;
+};
+
+export const useAsset = function (name: string): Asset {
+  const ctx = useCtx();
+
+  const asset = ctx.assets[name];
+
+  if (!asset) {
+    if (isDev) {
+      throw new Error(`Could not find asset "${name}"`);
+    }
+
+    return {};
+  }
+
+  return asset;
 };

@@ -1,10 +1,7 @@
-import { html, useCtx } from "sosse";
+import { useHtml, jsx, useAsset } from "sosse";
 import React, { Fragment } from "react";
-import render from "preact-render-to-string";
 import { Express } from "express";
-import { otion } from "sosse/otion";
-import { css } from "otion";
-import { htmlData } from "sosse/uni";
+import { htmlData, css } from "sosse/uni";
 import {
   SsrInjectCounter,
   SuspenseInjectCounter,
@@ -14,73 +11,71 @@ import {
 } from "../injects";
 import { ColorContext } from "../context";
 
-const ctx = useCtx();
-
 export const homeRoute = async function (app: Express) {
   globalThis.count = globalThis.count || 1;
 
+  const html = useHtml();
+  const indexAsset = useAsset("index");
+
   // Home route
-  app.get("/", (req, res) =>
+  app.get("/", (req, res) => {
+    htmlData({ count: globalThis.count });
+
     res.send(
-      otion(() => {
-        htmlData({ count: globalThis.count });
-
-        return html({
-          title: "Hello world",
-          head: render(
-            <Fragment>
-              <link href="https://unpkg.com/sanitize.css" rel="stylesheet" />
-              <link
-                href="https://unpkg.com/sanitize.css/forms.css"
-                rel="stylesheet"
-              />
-              <link
-                href="https://unpkg.com/sanitize.css/typography.css"
-                rel="stylesheet"
-              />
-            </Fragment>
-          ),
-          bodyAttrs: {
-            class: css({
-              selectors: {
-                "& > #app": {
-                  width: "40rem",
-                  margin: "auto",
-                },
+      html(() => ({
+        title: "Hello world",
+        head: jsx(
+          <Fragment>
+            <link href="https://unpkg.com/sanitize.css" rel="stylesheet" />
+            <link
+              href="https://unpkg.com/sanitize.css/forms.css"
+              rel="stylesheet"
+            />
+            <link
+              href="https://unpkg.com/sanitize.css/typography.css"
+              rel="stylesheet"
+            />
+          </Fragment>
+        ),
+        bodyAttrs: {
+          class: css({
+            selectors: {
+              "& > #app": {
+                width: "40rem",
+                margin: "auto",
               },
-            }),
-          },
-          body:
-            render(
-              <ColorContext.Provider value="#A09BD7">
-                <HydrateColorContext />
-                <div id="app">
-                  <h1>hello visitor {globalThis.count++}</h1>
+            },
+          }),
+        },
+        body:
+          jsx(
+            <ColorContext.Provider value="#A09BD7">
+              <HydrateColorContext />
+              <div id="app">
+                <h1>hello visitor {globalThis.count++}</h1>
 
-                  <Box />
-                  <Box />
+                <Box />
+                <Box />
 
-                  <SsrInjectCounter startCount={4} />
-                  <SuspenseInjectCounter startCount={7} />
-                  <div class={css({ marginTop: "100rem" })} />
-                  <LazyInjectCounter startCount={9} />
-                  <Box />
-                  <footer
-                    class={css({
-                      backgroundColor: "#034",
-                      marginTop: "1rem",
-                      padding: "3rem",
-                      color: "#fff",
-                    })}
-                  >
-                    Spiced up with Sosse
-                  </footer>
-                </div>
-              </ColorContext.Provider>
-            ) + ctx.assets.index.html,
-          ctx,
-        });
-      })
-    )
-  );
+                <SsrInjectCounter startCount={4} />
+                <SuspenseInjectCounter startCount={7} />
+                <div class={css({ marginTop: "100rem" })} />
+                <LazyInjectCounter startCount={9} />
+                <Box />
+                <footer
+                  class={css({
+                    backgroundColor: "#034",
+                    marginTop: "1rem",
+                    padding: "3rem",
+                    color: "#fff",
+                  })}
+                >
+                  Spiced up with Sosse
+                </footer>
+              </div>
+            </ColorContext.Provider>
+          ) + indexAsset.html,
+      }))
+    );
+  });
 };

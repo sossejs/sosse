@@ -1,11 +1,8 @@
-import { hydrate, setup } from "otion";
 import "../injects";
 import { inject } from "sosse/preact";
 import { htmlData } from "sosse/uni";
 import { colorRef } from "../context";
 
-setup({});
-hydrate();
 inject();
 
 let idx = 0;

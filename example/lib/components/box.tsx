@@ -1,6 +1,6 @@
 import React, { useContext } from "react";
-import { css } from "otion";
 import { ColorContext } from "../context";
+import { css } from "sosse/uni";
 
 export const Box = function () {
   const color = useContext(ColorContext);

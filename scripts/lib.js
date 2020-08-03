@@ -53,11 +53,13 @@ exports.buildArgs = () => {
     pkg.name,
     "events",
     "chokidar",
+    "express",
     "ws",
     "otion",
     "microbundle",
     "clear-module",
     "preact",
+    "preact-render-to-string",
     "react",
   ];
   args.push("--external", externals.join(","));

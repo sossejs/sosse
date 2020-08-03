@@ -1,41 +1,28 @@
 import debounce from "lodash/debounce";
 import path from "path";
-import { createCtx, setCtx, unsetCtx } from "./ctx";
+import { createCtx, setCtx, unsetCtx, Ctx } from "./ctx";
 import stripAnsi from "strip-ansi";
-
-type PluginCtx = { throttleRestart?: boolean };
+import { Server } from "http";
 
 export const hsr = async function ({
-  base = process.cwd(),
+  cwd = process.cwd(),
   watch = ["."],
-  publicDir = "public",
-  exclude = ["client", "node_modules"],
+  exclude = [],
   wait = 500,
   main,
-  plugins = [],
+  ctx = createCtx(),
   restart = process.env.NODE_ENV !== "production",
 }: {
-  base?: string;
+  cwd?: string;
   watch?: string[];
   publicDir?: string;
   exclude?: string[];
   wait?: number;
-  main: () => () => Function | void;
-  plugins?: ((opts) => void | Promise<PluginCtx | void>)[];
+  main: () => () => Server | Function | void;
+  ctx?: Ctx;
   restart?: boolean;
 }) {
-  exclude.push(publicDir);
-
-  const ctx = createCtx({ base, publicDir });
-  const pluginsCtx: PluginCtx[] = [];
-  for (const plugin of plugins) {
-    const pluginCtx = await plugin({ ctx });
-    if (!pluginCtx) {
-      continue;
-    }
-
-    pluginsCtx.push(pluginCtx);
-  }
+  exclude.push("node_modules");
 
   if (!restart) {
     setCtx(ctx);
@@ -48,8 +35,8 @@ export const hsr = async function ({
 
   const clearModule = (await import("clear-module")).default;
 
-  const absWatch = watch.map((dir) => path.resolve(base, dir));
-  const absExclude = exclude.map((dir) => path.resolve(base, dir));
+  const absWatch = watch.map((dir) => path.resolve(cwd, dir));
+  const absExclude = exclude.map((dir) => path.resolve(cwd, dir));
 
   let stopMain;
   let restarting = false;
@@ -65,8 +52,8 @@ export const hsr = async function ({
 
     await new Promise(function (resolve) {
       const intervalId = setInterval(function () {
-        for (const pluginCtx of pluginsCtx) {
-          if (!pluginCtx.throttleRestart) {
+        for (const value of Object.values(ctx.throttleRestart)) {
+          if (!value) {
             continue;
           }
 
@@ -90,9 +77,9 @@ export const hsr = async function ({
     try {
       listen = await main();
     } catch (err) {
-      ctx.errors.push(stripAnsi(err.message));
+      ctx.errors.push(stripAnsi(err.stack || err.message));
       console.error(err);
-      ctx.events.emit("error");
+      ctx.events.emit("sosseError");
     }
 
     unsetCtx();
@@ -102,7 +89,17 @@ export const hsr = async function ({
         ctx.events.emit("restart");
         const oldStopMain = stopMain;
         stopMain = undefined;
-        await oldStopMain();
+        if (typeof oldStopMain === "function") {
+          await oldStopMain();
+        } else {
+          // If the consumer returns their server instance we close it for them
+          await new Promise((res, rej) =>
+            oldStopMain.close((e) => (e ? rej(e) : res()))
+          );
+        }
+      } else {
+        // TODO: Currently this just deletes all errors, we should separate between (server/client)-bundler/node
+        ctx.errors = [];
       }
       stopMain = await listen();
       ctx.events.emit("started");
@@ -118,13 +115,19 @@ export const hsr = async function ({
     }
   }, wait);
 
-  const chokidar = require("chokidar");
-
-  const watcher = chokidar.watch(absWatch, {
-    ignored: absExclude,
-  });
-  watcher.on("all", function () {
+  ctx.events.on("triggerRestart", function () {
     ctx.willRestart = true;
     restartMain();
   });
+
+  if (absWatch.length) {
+    const chokidar = require("chokidar");
+    const watcher = chokidar.watch(absWatch, {
+      ignored: absExclude,
+    });
+    watcher.on("all", function () {
+      ctx.willRestart = true;
+      restartMain();
+    });
+  }
 };

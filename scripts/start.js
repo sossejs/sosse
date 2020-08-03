@@ -2,9 +2,4 @@
 
 const { spawn } = require("./lib");
 
-spawn("npx", [
-  "ts-node",
-  "-r",
-  "tsconfig-paths/register",
-  "example/lib/main.ts",
-]);
+spawn("node", ["example/sosse.js"]);

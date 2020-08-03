@@ -5,14 +5,9 @@
   "description": "Spice your servers up with a lil Sosse",
   "source": "lib/main.ts",
   "main": "dist/main.js",
-  "module": "dist/main.mjs",
-  "umd:main": "dist/main.umd.js",
-  "esmodule": "dist/main.modern.js",
+  "bin": "cli/dist/main.js",
   "exports": {
     ".": {
-      "browser": "./dist/main.mjs",
-      "umd": "./dist/main.umd.js",
-      "import": "./dist/main.mjs",
       "require": "./dist/main.js"
     },
     "./dev-socket-client": {
@@ -38,6 +33,12 @@
       "umd": "./preact/dist/main.umd.js",
       "import": "./preact/dist/main.mjs",
       "require": "./preact/dist/main.js"
+    },
+    "./cli": {
+      "browser": "./cli/dist/main.mjs",
+      "umd": "./cli/dist/main.umd.js",
+      "import": "./cli/dist/main.mjs",
+      "require": "./cli/dist/main.js"
     },
     "./package.json": "./package.json",
     "./": "./"
@@ -70,11 +71,10 @@
     "lodash": "^4.17.15",
     "mallery": "1.0.0-alpha.7",
     "microbundle": "^0.12.3",
-    "otion": "^0.3.2",
-    "preact": "^10.4.4",
-    "preact-render-to-string": "^5.1.9",
     "prettier": "^2.0.5",
     "react": "^16.13.1",
+    "sade": "^1.7.3",
+    "serve-static": "^1.14.1",
     "sockette": "^2.0.6",
     "standard-version": "^8.0.0",
     "strip-ansi": "^6.0.0",
@@ -86,23 +86,15 @@
   },
   "optionalDependencies": {
     "clear-module": "^4.1.1",
-    "chokidar": "^3.4.0"
-  },
-  "peerDependenciesMeta": {
-    "microbundle": {
-      "optional": true
-    },
-    "otion": {
-      "optional": true
-    },
-    "ws": {
-      "optional": true
-    }
-  },
-  "peerDependencies": {
+    "chokidar": "^3.4.0",
     "microbundle": "^0.12.3",
     "otion": "^0.3.2",
+    "preact": "^10.4.4",
+    "preact-render-to-string": "^5.1.9",
     "ws": "^7.3.0"
+  },
+  "_moduleAliases": {
+    "sosse": "."
   },
   "files": [
     "lib",
@@ -124,7 +116,10 @@
     "uni/dist",
     "react/package.json",
     "react/lib",
-    "react/dist"
+    "react/dist",
+    "cli/package.json",
+    "cli/lib",
+    "cli/dist"
   ],
   "standard-version": {
     "scripts": {
@@ -149,10 +144,13 @@
       "lib/**/*.{ts,tsx,js,jsx}",
       "example/lib/**/*.{ts,tsx,js,jsx}",
       "preact/lib/**/*.{ts,tsx,js,jsx}",
-      "otion/lib/**/*.{ts,tsx,js,jsx}",
       "dev-socket-client/lib/**/*.{ts,tsx,js,jsx}",
       "uni/lib/**/*.{ts,tsx,js,jsx}",
-      "react/lib/**/*.{ts,tsx,js,jsx}"
+      "react/lib/**/*.{ts,tsx,js,jsx}",
+      "cli/lib/**/*.{ts,tsx,js,jsx}"
     ]
+  },
+  "dependencies": {
+    "module-alias": "^2.2.2"
   }
 }
