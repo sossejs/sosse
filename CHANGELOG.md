@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.8.0-next.2](https://github.com/sossejs/sosse/compare/v0.8.0-next.1...v0.8.0-next.2) (2020-08-05)
+
+
+### Bug Fixes
+
+* **create-type-proxies:** resolve module dts path with moduleName ([5c95a05](https://github.com/sossejs/sosse/commit/5c95a05f794086f774585b70e5db78e0671a67a6))
+
 ## [0.8.0-next.1](https://github.com/sossejs/sosse/compare/v0.8.0-next.0...v0.8.0-next.1) (2020-08-05)
 
 ## [0.8.0-next.0](https://github.com/sossejs/sosse/compare/v0.7.2...v0.8.0-next.0) (2020-08-03)
