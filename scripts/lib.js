@@ -49,6 +49,7 @@ exports.spawnScripts = async (prefix, args = [], options) => {
 exports.buildArgs = () => {
   const args = [];
 
+  const pkgDeps = Object.keys(pkg.dependencies || {});
   const externals = [
     pkg.name,
     "events",
@@ -61,6 +62,7 @@ exports.buildArgs = () => {
     "preact",
     "preact-render-to-string",
     "react",
+    ...pkgDeps,
   ];
   args.push("--external", externals.join(","));
 
