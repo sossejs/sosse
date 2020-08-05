@@ -1,12 +1,8 @@
 #!/usr/bin/env node
 
-const { writeFile, pkgDir, resolve, exists } = require("./lib");
+const { writeFile, pkgDir, resolve, exists, readFile } = require("./lib");
 
-const createProxy = async ({
-  moduleName,
-  exportDefault = false,
-  exportNamed = true,
-} = {}) => {
+const createProxy = async (moduleName) => {
   const distPath = moduleName ? pkgDir(moduleName, "dist") : pkgDir("dist");
   const libDtsPath = moduleName
     ? resolve(distPath, moduleName, "lib")
@@ -16,6 +12,10 @@ const createProxy = async ({
   if (!(await exists(mainDtsPath))) {
     return;
   }
+
+  const mainContent = await readFile(mainDtsPath, { encoding: "utf8" });
+  const exportNamed = mainContent.match(/export (?!default)/) != null;
+  const exportDefault = mainContent.match(/export default/) != null;
 
   const mainPath = moduleName ? `./${moduleName}/lib/main` : "./lib/main";
   let proxySrc = "";
@@ -34,6 +34,6 @@ export default DefaultProxy;\n`;
 
 (async () => {
   await createProxy();
-  await createProxy({ moduleName: "react" });
-  await createProxy({ moduleName: "preact" });
+  await createProxy("react");
+  await createProxy("preact");
 })();
