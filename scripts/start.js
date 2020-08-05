@@ -2,4 +2,4 @@
 
 const { spawn } = require("./lib");
 
-spawn("node", ["example/sosse.js"]);
+spawn("node", ["cli/dist/main.js", "--cwd", "example"]);
