@@ -8,7 +8,10 @@ const createProxy = async ({
   exportNamed = true,
 } = {}) => {
   const distPath = moduleName ? pkgDir(moduleName, "dist") : pkgDir("dist");
-  const mainDtsPath = resolve(distPath, "lib", "main.d.ts");
+  const libDtsPath = moduleName
+    ? resolve(distPath, moduleName, "lib")
+    : resolve(distPath, "lib");
+  const mainDtsPath = resolve(libDtsPath, "main.d.ts");
 
   if (!(await exists(mainDtsPath))) {
     return;
