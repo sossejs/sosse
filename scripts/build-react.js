@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 
-const { spawn, args, buildArgs, rmDir, pkgDir } = require("./lib");
+const { spawn, args, buildArgs, rmDir, pkgDir, proxyTypes } = require("./lib");
 
 (async () => {
   await rmDir(pkgDir("react", "dist"), { recursive: true });
@@ -14,4 +14,5 @@ const { spawn, args, buildArgs, rmDir, pkgDir } = require("./lib");
     ...buildArgs(),
     ...args,
   ]);
+  await proxyTypes("react");
 })();
