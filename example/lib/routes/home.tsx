@@ -35,6 +35,7 @@ export const homeRoute = async function (app: Express) {
               href="https://unpkg.com/sanitize.css/typography.css"
               rel="stylesheet"
             />
+            <script {...indexAsset.props} defer={true} />
           </Fragment>
         ),
         bodyAttrs: {
@@ -47,34 +48,33 @@ export const homeRoute = async function (app: Express) {
             },
           }),
         },
-        body:
-          jsx(
-            <ColorContext.Provider value="#A09BD7">
-              <HydrateColorContext />
-              <div id="app">
-                <h1>hello visitor {globalThis.count++}</h1>
+        body: jsx(
+          <ColorContext.Provider value="#A09BD7">
+            <HydrateColorContext />
+            <div id="app">
+              <h1>hello visitor {globalThis.count++}</h1>
 
-                <Box />
-                <Box />
+              <Box />
+              <Box />
 
-                <SsrInjectCounter startCount={4} />
-                <SuspenseInjectCounter startCount={7} />
-                <div class={css({ marginTop: "100rem" })} />
-                <LazyInjectCounter startCount={9} />
-                <Box />
-                <footer
-                  class={css({
-                    backgroundColor: "#034",
-                    marginTop: "1rem",
-                    padding: "3rem",
-                    color: "#fff",
-                  })}
-                >
-                  Spiced up with Sosse
-                </footer>
-              </div>
-            </ColorContext.Provider>
-          ) + indexAsset.html,
+              <SsrInjectCounter startCount={4} />
+              <SuspenseInjectCounter startCount={7} />
+              <div class={css({ marginTop: "100rem" })} />
+              <LazyInjectCounter startCount={9} />
+              <Box />
+              <footer
+                class={css({
+                  backgroundColor: "#034",
+                  marginTop: "1rem",
+                  padding: "3rem",
+                  color: "#fff",
+                })}
+              >
+                Spiced up with Sosse
+              </footer>
+            </div>
+          </ColorContext.Provider>
+        ),
       }))
     );
   });

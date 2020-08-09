@@ -267,7 +267,11 @@ export const bundleClients = async function ({
       const publicFile = `/sosse-client/${fileBase}/${distFileName}`;
       ctx.assets[fileBase] = {
         url: publicFile,
-        html: `<script type="module" src="${publicFile}"></script>`,
+        path: absFileDist,
+        props: {
+          type: "module",
+          src: publicFile,
+        },
       };
       clientAssets[fileBase] = ctx.assets[fileBase];
 

@@ -11,7 +11,11 @@ export type OtionOptions = {
   enable?: boolean;
 };
 
-export type Asset = { html?: string; url?: string };
+export type Asset = {
+  path?: string;
+  url?: string;
+  props?: Record<string, any>;
+};
 
 export type Ctx = {
   distDir: string;
