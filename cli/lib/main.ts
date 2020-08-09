@@ -4,8 +4,10 @@ import sade from "sade";
 import { resolve } from "path";
 const { pathExists } = require("fs-extra");
 
-// Only needed for dev
-// require("module-alias/register");
+if (process.env.NODE_ENV === "development") {
+  require("module-alias/register");
+}
+
 const { sosse } = require("sosse");
 
 const prog = sade("sosse");
