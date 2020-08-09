@@ -1,7 +1,7 @@
 {
   "name": "sosse",
   "amdName": "sosse",
-  "version": "0.8.0-next.2",
+  "version": "0.8.0-next.3",
   "description": "Spice your servers up with a lil Sosse",
   "source": "lib/main.ts",
   "main": "dist/main.js",

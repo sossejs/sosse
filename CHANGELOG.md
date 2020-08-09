@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.8.0-next.3](https://github.com/sossejs/sosse/compare/v0.8.0-next.2...v0.8.0-next.3) (2020-08-09)
+
+
+### ⚠ BREAKING CHANGES
+
+* remove html attribute from asset, but add path and props
+
+### Features
+
+* export Asset type ([277fe97](https://github.com/sossejs/sosse/commit/277fe970648a6830103458ce6869f3f6d6438592))
+* remove html attribute from asset, but add path and props ([d74a895](https://github.com/sossejs/sosse/commit/d74a8956fb789ac457e4aa6a007810dadf86f1d1))
+
 ## [0.8.0-next.2](https://github.com/sossejs/sosse/compare/v0.8.0-next.1...v0.8.0-next.2) (2020-08-05)
 
 
