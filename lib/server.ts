@@ -30,15 +30,11 @@ export const withSosse = function (
       encoding: "utf-8",
     });
 
-    ctx.assets.sosseDev = {
-      url: devSocketUrl,
-      html: `
+    ctx.injectHtml.head.sosseDev = `
   <script src="${devSocketUrl}"></script>
   <script>
   window.sosseDevSocketClient.init();
-  </script>`,
-    };
-    ctx.injectHtml.head.sosseDev = ctx.assets.sosseDev.html;
+  </script>`;
   }
 
   let serve;
