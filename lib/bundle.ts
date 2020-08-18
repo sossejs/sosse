@@ -242,8 +242,11 @@ export const bundleClients = async function ({
       const fileExt = extname(file);
       const fileBase = basename(file, fileExt);
       const absFile = resolve(src, file);
-      const distFileName = fileBase + (!watch ? `.${cuid()}` : "") + ".js";
-      const absFileDist = resolve(dist, fileBase, distFileName);
+      const uniqueFileBase = fileBase + (!watch ? `.${cuid()}` : "");
+      const distJsFileName = uniqueFileBase + ".js";
+      const distCssFileName = uniqueFileBase + ".css";
+      const absJsFileDist = resolve(dist, fileBase, distJsFileName);
+      const absCssFileDist = resolve(dist, fileBase, distCssFileName);
 
       let aEntryOptions: BundleEntryOptions = {};
       if (entryOptions) {
@@ -257,20 +260,32 @@ export const bundleClients = async function ({
         cwd,
         ctx,
         src: absFile,
-        dist: absFileDist,
+        dist: absJsFileDist,
         watch,
         entryOptions: aEntryOptions,
       });
 
       const newWatchers = bundleResult.watchers;
 
-      const publicFile = `/sosse-client/${fileBase}/${distFileName}`;
+      const publicJsFile = `/sosse-client/${fileBase}/${distJsFileName}`;
+      const publicCssFile = `/sosse-client/${fileBase}/${distCssFileName}`;
       ctx.assets[fileBase] = {
-        url: publicFile,
-        path: absFileDist,
-        props: {
-          type: "module",
-          src: publicFile,
+        js: {
+          url: publicJsFile,
+          path: absJsFileDist,
+          props: {
+            type: "module",
+            src: publicJsFile,
+          },
+        },
+        css: {
+          url: publicCssFile,
+          path: absCssFileDist,
+          props: {
+            rel: "stylesheet",
+            type: "text/css",
+            href: publicCssFile,
+          },
         },
       };
       clientAssets[fileBase] = ctx.assets[fileBase];

@@ -12,9 +12,16 @@ export type OtionOptions = {
 };
 
 export type Asset = {
-  path?: string;
-  url?: string;
-  props?: Record<string, any>;
+  js?: {
+    path?: string;
+    url?: string;
+    props?: Record<string, any>;
+  };
+  css?: {
+    path?: string;
+    url?: string;
+    props?: Record<string, any>;
+  };
 };
 
 export type Ctx = {
