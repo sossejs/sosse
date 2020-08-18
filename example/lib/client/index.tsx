@@ -2,6 +2,7 @@ import "../injects";
 import { inject } from "sosse/preact";
 import { htmlData } from "sosse/uni";
 import { colorRef } from "../context";
+import "../index.css";
 
 inject();
 

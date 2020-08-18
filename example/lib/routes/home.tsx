@@ -35,7 +35,8 @@ export const homeRoute = async function (app: Express) {
               href="https://unpkg.com/sanitize.css/typography.css"
               rel="stylesheet"
             />
-            <script {...indexAsset.props} defer={true} />
+            <link {...indexAsset.css.props} />
+            <script {...indexAsset.js.props} defer={true} />
           </Fragment>
         ),
         bodyAttrs: {
