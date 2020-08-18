@@ -112,6 +112,9 @@ export const bundle = async function ({
 
   external = {
     ...pkgExternals,
+    sosse: server,
+    otion: server,
+    preact: server,
     microbundle: true,
     ...external,
   };
@@ -120,12 +123,6 @@ export const bundle = async function ({
     jsx = "React.createElement";
   } else {
     alias["react"] = "preact/compat";
-  }
-
-  if (watch && server) {
-    external["sosse"] = true;
-    external["otion"] = true;
-    external["preact"] = true;
   }
 
   let onStart, onBuild, onError;
