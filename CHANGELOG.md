@@ -2,6 +2,29 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.8.0-next.4](https://github.com/sossejs/sosse/compare/v0.8.0-next.3...v0.8.0-next.4) (2020-08-18)
+
+
+### ⚠ BREAKING CHANGES
+
+* only replace NODE_ENV in client bundles
+* remove sosseDev ref from ctx assets
+* split assets into js and css
+
+### Features
+
+* split assets into js and css ([3e73b38](https://github.com/sossejs/sosse/commit/3e73b3880bd3d9de771f209974e703f6a904be09))
+* try to build the server in production when main is missing ([09d12c9](https://github.com/sossejs/sosse/commit/09d12c93c13bce928d6bfaf39b8dfa970be79219))
+
+
+### Bug Fixes
+
+* dont bundle client if assets already exist ([338ea4a](https://github.com/sossejs/sosse/commit/338ea4a14c4d57d623073b762b08c0f919271267))
+
+
+* only replace NODE_ENV in client bundles ([d754f13](https://github.com/sossejs/sosse/commit/d754f130647f2e72c97bad0a9645ab7c2465edf8))
+* remove sosseDev ref from ctx assets ([3738e09](https://github.com/sossejs/sosse/commit/3738e090dd4ea843d05915d8ca62cab6bd975b89))
+
 ## [0.8.0-next.3](https://github.com/sossejs/sosse/compare/v0.8.0-next.2...v0.8.0-next.3) (2020-08-09)
 
 

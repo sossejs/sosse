@@ -1,52 +1,72 @@
 <h1 id="changelog"><a href="#changelog" aria-hidden="true"><span class="toc-link"><span class="icono-chain"></span></span></a>Changelog</h1>
 <p>All notable changes to this project will be documented in this file. See <a href="https://github.com/conventional-changelog/standard-version" target="_blank">standard-version</a> for commit guidelines.</p>
-<h2 id="080-next3-2020-08-09"><a href="#080-next3-2020-08-09" aria-hidden="true"><span class="toc-link"><span class="icono-chain"></span></span></a><a href="https://github.com/sossejs/sosse/compare/v0.8.0-next.2...v0.8.0-next.3" target="_blank">0.8.0-next.3</a> (2020-08-09)</h2>
+<h2 id="080-next4-2020-08-18"><a href="#080-next4-2020-08-18" aria-hidden="true"><span class="toc-link"><span class="icono-chain"></span></span></a><a href="https://github.com/sossejs/sosse/compare/v0.8.0-next.3...v0.8.0-next.4" target="_blank">0.8.0-next.4</a> (2020-08-18)</h2>
 <h3 id="-breaking-changes"><a href="#-breaking-changes" aria-hidden="true"><span class="toc-link"><span class="icono-chain"></span></span></a>⚠ BREAKING CHANGES</h3>
+<ul>
+<li>only replace NODE_ENV in client bundles</li>
+<li>remove sosseDev ref from ctx assets</li>
+<li>split assets into js and css</li>
+</ul>
+<h3 id="features"><a href="#features" aria-hidden="true"><span class="toc-link"><span class="icono-chain"></span></span></a>Features</h3>
+<ul>
+<li>split assets into js and css (<a href="https://github.com/sossejs/sosse/commit/3e73b3880bd3d9de771f209974e703f6a904be09" target="_blank">3e73b38</a>)</li>
+<li>try to build the server in production when main is missing (<a href="https://github.com/sossejs/sosse/commit/09d12c93c13bce928d6bfaf39b8dfa970be79219" target="_blank">09d12c9</a>)</li>
+</ul>
+<h3 id="bug-fixes"><a href="#bug-fixes" aria-hidden="true"><span class="toc-link"><span class="icono-chain"></span></span></a>Bug Fixes</h3>
+<ul>
+<li>dont bundle client if assets already exist (<a href="https://github.com/sossejs/sosse/commit/338ea4a14c4d57d623073b762b08c0f919271267" target="_blank">338ea4a</a>)</li>
+</ul>
+<ul>
+<li>only replace NODE_ENV in client bundles (<a href="https://github.com/sossejs/sosse/commit/d754f130647f2e72c97bad0a9645ab7c2465edf8" target="_blank">d754f13</a>)</li>
+<li>remove sosseDev ref from ctx assets (<a href="https://github.com/sossejs/sosse/commit/3738e090dd4ea843d05915d8ca62cab6bd975b89" target="_blank">3738e09</a>)</li>
+</ul>
+<h2 id="080-next3-2020-08-09"><a href="#080-next3-2020-08-09" aria-hidden="true"><span class="toc-link"><span class="icono-chain"></span></span></a><a href="https://github.com/sossejs/sosse/compare/v0.8.0-next.2...v0.8.0-next.3" target="_blank">0.8.0-next.3</a> (2020-08-09)</h2>
+<h3 id="-breaking-changes-1"><a href="#-breaking-changes-1" aria-hidden="true"><span class="toc-link"><span class="icono-chain"></span></span></a>⚠ BREAKING CHANGES</h3>
 <ul>
 <li>remove html attribute from asset, but add path and props</li>
 </ul>
-<h3 id="features"><a href="#features" aria-hidden="true"><span class="toc-link"><span class="icono-chain"></span></span></a>Features</h3>
+<h3 id="features-1"><a href="#features-1" aria-hidden="true"><span class="toc-link"><span class="icono-chain"></span></span></a>Features</h3>
 <ul>
 <li>export Asset type (<a href="https://github.com/sossejs/sosse/commit/277fe970648a6830103458ce6869f3f6d6438592" target="_blank">277fe97</a>)</li>
 <li>remove html attribute from asset, but add path and props (<a href="https://github.com/sossejs/sosse/commit/d74a8956fb789ac457e4aa6a007810dadf86f1d1" target="_blank">d74a895</a>)</li>
 </ul>
 <h2 id="080-next2-2020-08-05"><a href="#080-next2-2020-08-05" aria-hidden="true"><span class="toc-link"><span class="icono-chain"></span></span></a><a href="https://github.com/sossejs/sosse/compare/v0.8.0-next.1...v0.8.0-next.2" target="_blank">0.8.0-next.2</a> (2020-08-05)</h2>
-<h3 id="bug-fixes"><a href="#bug-fixes" aria-hidden="true"><span class="toc-link"><span class="icono-chain"></span></span></a>Bug Fixes</h3>
+<h3 id="bug-fixes-1"><a href="#bug-fixes-1" aria-hidden="true"><span class="toc-link"><span class="icono-chain"></span></span></a>Bug Fixes</h3>
 <ul>
 <li><strong>create-type-proxies:</strong> resolve module dts path with moduleName (<a href="https://github.com/sossejs/sosse/commit/5c95a05f794086f774585b70e5db78e0671a67a6" target="_blank">5c95a05</a>)</li>
 </ul>
 <h2 id="080-next1-2020-08-05"><a href="#080-next1-2020-08-05" aria-hidden="true"><span class="toc-link"><span class="icono-chain"></span></span></a><a href="https://github.com/sossejs/sosse/compare/v0.8.0-next.0...v0.8.0-next.1" target="_blank">0.8.0-next.1</a> (2020-08-05)</h2>
 <h2 id="080-next0-2020-08-03"><a href="#080-next0-2020-08-03" aria-hidden="true"><span class="toc-link"><span class="icono-chain"></span></span></a><a href="https://github.com/sossejs/sosse/compare/v0.7.2...v0.8.0-next.0" target="_blank">0.8.0-next.0</a> (2020-08-03)</h2>
-<h3 id="-breaking-changes-1"><a href="#-breaking-changes-1" aria-hidden="true"><span class="toc-link"><span class="icono-chain"></span></span></a>⚠ BREAKING CHANGES</h3>
+<h3 id="-breaking-changes-2"><a href="#-breaking-changes-2" aria-hidden="true"><span class="toc-link"><span class="icono-chain"></span></span></a>⚠ BREAKING CHANGES</h3>
 <ul>
 <li>implement sosse api and cli, rework hsr api</li>
 </ul>
-<h3 id="features-1"><a href="#features-1" aria-hidden="true"><span class="toc-link"><span class="icono-chain"></span></span></a>Features</h3>
+<h3 id="features-2"><a href="#features-2" aria-hidden="true"><span class="toc-link"><span class="icono-chain"></span></span></a>Features</h3>
 <ul>
 <li>implement sosse api and cli, rework hsr api (<a href="https://github.com/sossejs/sosse/commit/d295db472f533f9fd74bcc3e14b586d6efffaba0" target="_blank">d295db4</a>)</li>
 </ul>
 <h3 id="072-2020-07-25"><a href="#072-2020-07-25" aria-hidden="true"><span class="toc-link"><span class="icono-chain"></span></span></a><a href="https://github.com/sossejs/sosse/compare/v0.7.1...v0.7.2" target="_blank">0.7.2</a> (2020-07-25)</h3>
 <h3 id="071-2020-07-18"><a href="#071-2020-07-18" aria-hidden="true"><span class="toc-link"><span class="icono-chain"></span></span></a><a href="https://github.com/sossejs/sosse/compare/v0.7.0...v0.7.1" target="_blank">0.7.1</a> (2020-07-18)</h3>
 <h2 id="070-2020-07-17"><a href="#070-2020-07-17" aria-hidden="true"><span class="toc-link"><span class="icono-chain"></span></span></a><a href="https://github.com/sossejs/sosse/compare/v0.6.0...v0.7.0" target="_blank">0.7.0</a> (2020-07-17)</h2>
-<h3 id="bug-fixes-1"><a href="#bug-fixes-1" aria-hidden="true"><span class="toc-link"><span class="icono-chain"></span></span></a>Bug Fixes</h3>
+<h3 id="bug-fixes-2"><a href="#bug-fixes-2" aria-hidden="true"><span class="toc-link"><span class="icono-chain"></span></span></a>Bug Fixes</h3>
 <ul>
 <li><strong>hydratedContext:</strong> make sure that useEffect only gets called once (<a href="https://github.com/sossejs/sosse/commit/250c20d24cba8fcfd6a45f8f4c00b2eb28c5cfec" target="_blank">250c20d</a>)</li>
 </ul>
 <h2 id="060-2020-07-16"><a href="#060-2020-07-16" aria-hidden="true"><span class="toc-link"><span class="icono-chain"></span></span></a><a href="https://github.com/sossejs/sosse/compare/v0.5.0...v0.6.0" target="_blank">0.6.0</a> (2020-07-16)</h2>
-<h3 id="-breaking-changes-2"><a href="#-breaking-changes-2" aria-hidden="true"><span class="toc-link"><span class="icono-chain"></span></span></a>⚠ BREAKING CHANGES</h3>
+<h3 id="-breaking-changes-3"><a href="#-breaking-changes-3" aria-hidden="true"><span class="toc-link"><span class="icono-chain"></span></span></a>⚠ BREAKING CHANGES</h3>
 <ul>
 <li>implement valueRef api for hydratedContext</li>
 </ul>
-<h3 id="features-2"><a href="#features-2" aria-hidden="true"><span class="toc-link"><span class="icono-chain"></span></span></a>Features</h3>
+<h3 id="features-3"><a href="#features-3" aria-hidden="true"><span class="toc-link"><span class="icono-chain"></span></span></a>Features</h3>
 <ul>
 <li>implement valueRef api for hydratedContext (<a href="https://github.com/sossejs/sosse/commit/2f7f77182bbb964fdf21ec571c56498f6a842b09" target="_blank">2f7f771</a>)</li>
 </ul>
 <h2 id="050-2020-07-15"><a href="#050-2020-07-15" aria-hidden="true"><span class="toc-link"><span class="icono-chain"></span></span></a><a href="https://github.com/sossejs/sosse/compare/v0.4.1...v0.5.0" target="_blank">0.5.0</a> (2020-07-15)</h2>
-<h3 id="-breaking-changes-3"><a href="#-breaking-changes-3" aria-hidden="true"><span class="toc-link"><span class="icono-chain"></span></span></a>⚠ BREAKING CHANGES</h3>
+<h3 id="-breaking-changes-4"><a href="#-breaking-changes-4" aria-hidden="true"><span class="toc-link"><span class="icono-chain"></span></span></a>⚠ BREAKING CHANGES</h3>
 <ul>
 <li><strong>client-plugin:</strong> use modern output by default</li>
 </ul>
-<h3 id="features-3"><a href="#features-3" aria-hidden="true"><span class="toc-link"><span class="icono-chain"></span></span></a>Features</h3>
+<h3 id="features-4"><a href="#features-4" aria-hidden="true"><span class="toc-link"><span class="icono-chain"></span></span></a>Features</h3>
 <ul>
 <li>implement htmlData (<a href="https://github.com/sossejs/sosse/commit/b4f91c6a09064c466eb3485a13002e0cc13d8ad0" target="_blank">b4f91c6</a>)</li>
 <li>implement interactive components (<a href="https://github.com/sossejs/sosse/commit/960c88fd0742381e45923ccb64f76c5ea458bd6a" target="_blank">960c88f</a>)</li>
@@ -54,26 +74,26 @@
 <li><strong>client-plugin:</strong> use modern output by default (<a href="https://github.com/sossejs/sosse/commit/0c689e26f1e87aa5f7a6096a583cd4685ad4a91b" target="_blank">0c689e2</a>)</li>
 </ul>
 <h3 id="041-2020-06-29"><a href="#041-2020-06-29" aria-hidden="true"><span class="toc-link"><span class="icono-chain"></span></span></a><a href="https://github.com/sossejs/sosse/compare/v0.4.0...v0.4.1" target="_blank">0.4.1</a> (2020-06-29)</h3>
-<h3 id="bug-fixes-2"><a href="#bug-fixes-2" aria-hidden="true"><span class="toc-link"><span class="icono-chain"></span></span></a>Bug Fixes</h3>
+<h3 id="bug-fixes-3"><a href="#bug-fixes-3" aria-hidden="true"><span class="toc-link"><span class="icono-chain"></span></span></a>Bug Fixes</h3>
 <ul>
 <li>make clear-module external again, now for real (<a href="https://github.com/sossejs/sosse/commit/d8893998eeb91133c0fbeac9c62cf79cc0f88692" target="_blank">d889399</a>)</li>
 </ul>
 <h2 id="040-2020-06-29"><a href="#040-2020-06-29" aria-hidden="true"><span class="toc-link"><span class="icono-chain"></span></span></a><a href="https://github.com/sossejs/sosse/compare/v0.3.0...v0.4.0" target="_blank">0.4.0</a> (2020-06-29)</h2>
-<h3 id="bug-fixes-3"><a href="#bug-fixes-3" aria-hidden="true"><span class="toc-link"><span class="icono-chain"></span></span></a>Bug Fixes</h3>
+<h3 id="bug-fixes-4"><a href="#bug-fixes-4" aria-hidden="true"><span class="toc-link"><span class="icono-chain"></span></span></a>Bug Fixes</h3>
 <ul>
 <li>make clear-module external again (<a href="https://github.com/sossejs/sosse/commit/256c8f1ffaa41de3c9664151e33445d58ffd7c34" target="_blank">256c8f1</a>)</li>
 </ul>
 <h2 id="030-2020-06-29"><a href="#030-2020-06-29" aria-hidden="true"><span class="toc-link"><span class="icono-chain"></span></span></a><a href="https://github.com/sossejs/sosse/compare/v0.2.0...v0.3.0" target="_blank">0.3.0</a> (2020-06-29)</h2>
-<h3 id="features-4"><a href="#features-4" aria-hidden="true"><span class="toc-link"><span class="icono-chain"></span></span></a>Features</h3>
+<h3 id="features-5"><a href="#features-5" aria-hidden="true"><span class="toc-link"><span class="icono-chain"></span></span></a>Features</h3>
 <ul>
 <li>make chokidar, otion and ws optional (<a href="https://github.com/sossejs/sosse/commit/45fb58c4a5e760d0ad6f30f4549cc92f0dc20a39" target="_blank">45fb58c</a>)</li>
 </ul>
 <h2 id="020-2020-06-28"><a href="#020-2020-06-28" aria-hidden="true"><span class="toc-link"><span class="icono-chain"></span></span></a><a href="https://github.com/sossejs/sosse/compare/v0.1.0...v0.2.0" target="_blank">0.2.0</a> (2020-06-28)</h2>
-<h3 id="-breaking-changes-4"><a href="#-breaking-changes-4" aria-hidden="true"><span class="toc-link"><span class="icono-chain"></span></span></a>⚠ BREAKING CHANGES</h3>
+<h3 id="-breaking-changes-5"><a href="#-breaking-changes-5" aria-hidden="true"><span class="toc-link"><span class="icono-chain"></span></span></a>⚠ BREAKING CHANGES</h3>
 <ul>
 <li>rework otion integration and html bodyAttrs</li>
 </ul>
-<h3 id="features-5"><a href="#features-5" aria-hidden="true"><span class="toc-link"><span class="icono-chain"></span></span></a>Features</h3>
+<h3 id="features-6"><a href="#features-6" aria-hidden="true"><span class="toc-link"><span class="icono-chain"></span></span></a>Features</h3>
 <ul>
 <li><strong>client-plugin:</strong> implement exitAfterBuild workflow (<a href="https://github.com/sossejs/sosse/commit/914dd3becf424bfc00fcdd8d394aec723cb5401a" target="_blank">914dd3b</a>)</li>
 <li><strong>client-plugin:</strong> log microbundle output (<a href="https://github.com/sossejs/sosse/commit/f62894c0e4c59343b78c54603403f9a3ff1eedc6" target="_blank">f62894c</a>)</li>
@@ -88,12 +108,12 @@
 <li>rework otion integration and html bodyAttrs (<a href="https://github.com/sossejs/sosse/commit/c8b9b3e749e597ac2ce7fe10ac0d9acb034a1788" target="_blank">c8b9b3e</a>)</li>
 </ul>
 <h2 id="010-2020-06-11"><a href="#010-2020-06-11" aria-hidden="true"><span class="toc-link"><span class="icono-chain"></span></span></a><a href="https://github.com/sossejs/sosse/compare/v0.0.1...v0.1.0" target="_blank">0.1.0</a> (2020-06-11)</h2>
-<h3 id="features-6"><a href="#features-6" aria-hidden="true"><span class="toc-link"><span class="icono-chain"></span></span></a>Features</h3>
+<h3 id="features-7"><a href="#features-7" aria-hidden="true"><span class="toc-link"><span class="icono-chain"></span></span></a>Features</h3>
 <ul>
 <li>implement pending restarts (<a href="https://github.com/sossejs/sosse/commit/45eda938e1cb2f50b7ff42cdec874950b96b2833" target="_blank">45eda93</a>)</li>
 </ul>
 <h3 id="001-2020-06-10"><a href="#001-2020-06-10" aria-hidden="true"><span class="toc-link"><span class="icono-chain"></span></span></a>0.0.1 (2020-06-10)</h3>
-<h3 id="features-7"><a href="#features-7" aria-hidden="true"><span class="toc-link"><span class="icono-chain"></span></span></a>Features</h3>
+<h3 id="features-8"><a href="#features-8" aria-hidden="true"><span class="toc-link"><span class="icono-chain"></span></span></a>Features</h3>
 <ul>
 <li>basic implementation (<a href="https://github.com/sossejs/sosse/commit/2839ac076b6d8e4fcfe03ff440336e89d272023e" target="_blank">2839ac0</a>)</li>
 </ul>
