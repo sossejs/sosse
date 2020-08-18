@@ -2,6 +2,8 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.8.0-next.5](https://github.com/sossejs/sosse/compare/v0.8.0-next.4...v0.8.0-next.5) (2020-08-18)
+
 ## [0.8.0-next.4](https://github.com/sossejs/sosse/compare/v0.8.0-next.3...v0.8.0-next.4) (2020-08-18)
 
 
