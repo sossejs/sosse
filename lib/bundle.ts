@@ -217,7 +217,9 @@ export const bundleClients = async function ({
 
   const startBundlers = async function () {
     const assetsJsonPath = resolve(dist, "clientAssets.json");
-    if (!watch && (await pathExists(assetsJsonPath))) {
+
+    const assetsExist = !watch && (await pathExists(assetsJsonPath));
+    if (assetsExist) {
       const clientAssets = await readJson(assetsJsonPath);
       for (const [fileBase, asset] of Object.entries(clientAssets)) {
         ctx.assets[fileBase] = asset;
