@@ -95,10 +95,12 @@ export const bundle = async function ({
     globals = {},
   } = entryOptions;
 
-  define = {
-    "process.env.NODE_ENV": process.env.NODE_ENV || "development",
-    ...define,
-  };
+  if (!server) {
+    define = {
+      "process.env.NODE_ENV": process.env.NODE_ENV || "development",
+      ...define,
+    };
+  }
 
   const pkgPath = resolve(cwd, "package.json");
   const pkgExternals: Record<string, boolean> = {};
