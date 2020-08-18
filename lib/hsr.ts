@@ -3,6 +3,7 @@ import path from "path";
 import { createCtx, setCtx, unsetCtx, Ctx } from "./ctx";
 import stripAnsi from "strip-ansi";
 import { Server } from "http";
+import { isDev } from "./env";
 
 export const hsr = async function ({
   cwd = process.cwd(),
@@ -11,7 +12,7 @@ export const hsr = async function ({
   wait = 500,
   main,
   ctx = createCtx(),
-  restart = process.env.NODE_ENV !== "production",
+  restart = isDev,
 }: {
   cwd?: string;
   watch?: string[];
