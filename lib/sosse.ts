@@ -133,6 +133,7 @@ export default () => {
     src: serverSrcMain,
     dist: serverDist,
     server: true,
+    watch: restart,
     entryOptions: bundleServer.entryOptions,
   };
   const bundleClientOptions = {
@@ -140,33 +141,34 @@ export default () => {
     cwd,
     src: clientSrcDir,
     dist: clientDistDir,
+    watch: restart,
     entryOptions: bundleClient.entryOptions,
   };
 
-  if (exitAfterBundle) {
-    if (bundleServer.enable) {
+  if (bundleServer.enable) {
+    const serverBuiltInProd =
+      !exitAfterBundle && !isDev && !(await pathExists(serverDist));
+    if (serverBuiltInProd) {
+      console.warn(
+        `Server main "${serverDist}" doesn't exist and has to be built.`
+      );
+      console.warn(`I will try to build "${serverDist}" automatically.`);
+      console.warn(
+        `Recommendation: build server main with "NODE_ENV=production sosse bundle" in advance.`
+      );
+    }
+
+    if (isDev || exitAfterBundle || serverBuiltInProd) {
       await bundle(bundleServerOptions);
     }
+  }
 
-    if (bundleClient.enable) {
-      await bundleClients(bundleClientOptions);
-    }
+  if (bundleClient.enable) {
+    await bundleClients(bundleClientOptions);
+  }
 
+  if (exitAfterBundle) {
     process.exit();
-  }
-
-  if (restart && bundleServer.enable) {
-    await bundle({
-      ...bundleServerOptions,
-      watch: true,
-    });
-  }
-
-  if (restart && bundleClient.enable) {
-    await bundleClients({
-      ...bundleClientOptions,
-      watch: true,
-    });
   }
 
   const main = bundleServer.enable ? bundleServerOptions.dist : serverSrcMain;
