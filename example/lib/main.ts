@@ -1,8 +1,8 @@
 import express from "express";
-import { useHtml, createServer } from "sosse";
 import { homeRoute } from "./routes/home";
 import "./injects";
 import { preload } from "sosse/preact";
+import { useCtx } from "sosse";
 
 export default async () => {
   await preload();
@@ -10,13 +10,13 @@ export default async () => {
   const app = express();
   await homeRoute(app);
 
-  const html = useHtml();
+  const ctx = useCtx();
 
   // 404 route
-  app.use((req, res) => res.status(404).send(html({ notFound: true })));
+  app.use((req, res) => res.status(404).send(ctx.html({ notFound: true })));
 
   const port = 8080;
-  const server = createServer(app);
+  const server = ctx.createServer(app);
 
   return () => {
     server.listen(port);

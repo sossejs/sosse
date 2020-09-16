@@ -1,7 +1,7 @@
-import { useHtml, jsx, useAsset } from "sosse";
+import { jsx, useCtx } from "sosse";
 import React, { Fragment } from "react";
 import { Express } from "express";
-import { htmlData, css } from "sosse/uni";
+import { css } from "sosse/uni";
 import {
   SsrInjectCounter,
   SuspenseInjectCounter,
@@ -14,16 +14,15 @@ import { ColorContext } from "../context";
 export const homeRoute = async function (app: Express) {
   globalThis.count = globalThis.count || 1;
 
-  const html = useHtml();
-  const indexAsset = useAsset("index");
+  const ctx = useCtx();
+  const indexAsset = ctx.useAsset("index");
 
   // Home route
   app.get("/", (req, res) => {
-    htmlData({ count: globalThis.count });
-
     res.send(
-      html(() => ({
+      ctx.html(() => ({
         title: "Hello world",
+        data: { count: globalThis.count },
         head: jsx(
           <Fragment>
             <link href="https://unpkg.com/sanitize.css" rel="stylesheet" />
