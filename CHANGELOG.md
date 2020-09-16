@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.8.0-next.7](https://github.com/sossejs/sosse/compare/v0.8.0-next.6...v0.8.0-next.7) (2020-09-16)
+
+
+### Features
+
+* export Ctx for consumption ([3b3cb6f](https://github.com/sossejs/sosse/commit/3b3cb6ff5424d53c0b09f5cd71328b49a998b93e))
+
 ## [0.8.0-next.6](https://github.com/sossejs/sosse/compare/v0.8.0-next.5...v0.8.0-next.6) (2020-09-16)
 
 
