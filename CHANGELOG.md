@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.8.0-next.6](https://github.com/sossejs/sosse/compare/v0.8.0-next.5...v0.8.0-next.6) (2020-09-16)
+
+
+### ⚠ BREAKING CHANGES
+
+* move context depended functions to context
+
+### Features
+
+* **html:** add data param and remove side effect based data ([b564757](https://github.com/sossejs/sosse/commit/b56475798206b57e247f6108172fb61d9ff86f81))
+* move context depended functions to context ([df8ae5c](https://github.com/sossejs/sosse/commit/df8ae5c73418d6322bc8b25ff80ca9c625e26e15))
+
 ## [0.8.0-next.5](https://github.com/sossejs/sosse/compare/v0.8.0-next.4...v0.8.0-next.5) (2020-08-18)
 
 ## [0.8.0-next.4](https://github.com/sossejs/sosse/compare/v0.8.0-next.3...v0.8.0-next.4) (2020-08-18)
