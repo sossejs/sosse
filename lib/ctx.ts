@@ -73,6 +73,7 @@ const createHtmlOptions = function (overrides: HtmlOptions = {}): HtmlOptions {
     title: "Powered by Sosse",
     body: "",
     bodyAttrs: {},
+    data: undefined,
     tpl: defaultTpl,
     ...overrides,
   };
@@ -84,6 +85,7 @@ export type HtmlOptions = {
   title?: string;
   body?: string;
   bodyAttrs?: Record<string, string>;
+  data?: any;
   tpl?: typeof defaultTpl;
 };
 
@@ -154,17 +156,21 @@ export class Ctx {
       options = options();
     }
 
-    let { head, title, body, bodyAttrs, tpl, notFound } = createHtmlOptions(
-      options
-    );
+    let {
+      head,
+      title,
+      body,
+      data,
+      bodyAttrs,
+      tpl,
+      notFound,
+    } = createHtmlOptions(options);
 
     if (notFound) {
       title = "Page not found";
       body = "<h1>Page not found</h1>";
     }
 
-    const data = htmlData();
-    htmlData(null);
     if (data != null) {
       head += `<script class="sosse-html-data" type="application/json">${JSON.stringify(
         data
