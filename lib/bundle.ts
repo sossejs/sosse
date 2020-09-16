@@ -131,7 +131,7 @@ export const bundle = async function ({
   if (ctx && watch) {
     onStart = function () {
       runningBuilds++;
-      ctx.throttleRestart["sosseBundle"] = true;
+      ctx._throttleRestart["sosseBundle"] = true;
     };
 
     onBuild = function () {
@@ -143,18 +143,18 @@ export const bundle = async function ({
         return;
       }
 
-      ctx.throttleRestart["sosseBundle"] = false;
-      if (!ctx.willRestart) {
+      ctx._throttleRestart["sosseBundle"] = false;
+      if (!ctx._willRestart) {
         const eventName = rebuiltServer ? "triggerRestart" : "reload";
         rebuiltServer = false;
-        ctx.events.emit(eventName);
+        ctx._events.emit(eventName);
       }
     };
 
     onError = function (e) {
       runningBuilds--;
-      ctx.errors.push(stripAnsi(e.error.stack));
-      ctx.events.emit("sosseError");
+      ctx._errors.push(stripAnsi(e.error.stack));
+      ctx._events.emit("sosseError");
     };
   }
 
@@ -224,7 +224,7 @@ export const bundleClients = async function ({
     if (assetsExist) {
       const clientAssets = await readJson(assetsJsonPath);
       for (const [fileBase, asset] of Object.entries(clientAssets)) {
-        ctx.assets[fileBase] = asset;
+        ctx._assets[fileBase] = asset;
       }
       return;
     }
@@ -270,7 +270,7 @@ export const bundleClients = async function ({
 
       const publicJsFile = `/sosse-client/${fileBase}/${distJsFileName}`;
       const publicCssFile = `/sosse-client/${fileBase}/${distCssFileName}`;
-      ctx.assets[fileBase] = {
+      ctx._assets[fileBase] = {
         js: {
           url: publicJsFile,
           path: absJsFileDist,
@@ -289,7 +289,7 @@ export const bundleClients = async function ({
           },
         },
       };
-      clientAssets[fileBase] = ctx.assets[fileBase];
+      clientAssets[fileBase] = ctx._assets[fileBase];
 
       if (watch) {
         nextWatchers[file] = Object.values(newWatchers)[0];

@@ -9,7 +9,7 @@ import { resolve } from "path";
 import { writeFile, mkdirp, pathExists, emptyDir } from "fs-extra";
 import { resolveServerMain } from "./resolveServerMain";
 import { isDev } from "./env";
-import { createCtx, ServeClientOptions, OtionOptions } from "./ctx";
+import { Ctx, ServeClientOptions, OtionOptions } from "./ctx";
 import {} from "fs";
 
 export type SosseOptions = {
@@ -121,7 +121,7 @@ export default () => {
     }
   }
 
-  const ctx = createCtx({
+  const ctx = new Ctx({
     distDir,
     serveClient,
     otion,

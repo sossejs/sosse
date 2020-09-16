@@ -1,5 +1,16 @@
 import { EventEmitter } from "events";
 import { isDev } from "./env";
+import { htmlData } from "sosse/uni";
+import {
+  Server,
+  RequestListener,
+  createServer as _createServer,
+  ServerOptions,
+} from "http";
+import url from "url";
+import { readFileSync } from "fs-extra";
+import path, { resolve } from "path";
+import serveStatic from "serve-static";
 
 let currentCtx: Ctx;
 
@@ -24,21 +35,6 @@ export type Asset = {
   };
 };
 
-export type Ctx = {
-  distDir: string;
-  serveClient: ServeClientOptions;
-  otion: OtionOptions;
-  throttleRestart: Record<string, boolean>;
-  errors: string[];
-  willRestart: boolean;
-  events: EventEmitter;
-  assets: Record<string, Asset>;
-  injectHtml: {
-    head: Record<string, string>;
-    footer: Record<string, string>;
-  };
-};
-
 export const setCtx = function (ctx: Ctx) {
   currentCtx = ctx;
 };
@@ -51,44 +47,320 @@ export const useCtx = function (): Ctx {
   return currentCtx;
 };
 
-export const createCtx = function ({
-  distDir = "",
-  serveClient = { enable: false },
-  otion = { enable: false },
-}: {
-  distDir?: string;
-  serveClient?: ServeClientOptions;
-  otion?: OtionOptions;
-} = {}): Ctx {
-  return {
-    distDir,
-    serveClient,
-    otion,
-    throttleRestart: {},
-    errors: [],
-    willRestart: false,
-    events: new EventEmitter(),
-    assets: {},
-    injectHtml: { head: {}, footer: {} },
-  };
-};
-
 export const unsetCtx = function () {
   currentCtx = undefined;
 };
 
-export const useAsset = function (name: string): Asset {
-  const ctx = useCtx();
+const defaultTpl = function ({ title, head, bodyAttrs, body }) {
+  return `
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    ${title ? `<title>${title}</title>` : ""}
+    ${head}
+  </head>
+  <body${bodyAttrs}>
+    ${body}
+  </body>
+</html>`;
+};
 
-  const asset = ctx.assets[name];
+const createHtmlOptions = function (overrides: HtmlOptions = {}): HtmlOptions {
+  return {
+    head: "",
+    title: "Powered by Sosse",
+    body: "",
+    bodyAttrs: {},
+    tpl: defaultTpl,
+    ...overrides,
+  };
+};
 
-  if (!asset) {
-    if (isDev) {
-      throw new Error(`Could not find asset "${name}"`);
-    }
+export type HtmlOptions = {
+  notFound?: boolean;
+  head?: string;
+  title?: string;
+  body?: string;
+  bodyAttrs?: Record<string, string>;
+  tpl?: typeof defaultTpl;
+};
 
-    return {};
+type HtmlOptionsFunc = () => HtmlOptions;
+
+export class Ctx {
+  _distDir: string;
+  _serveClient: ServeClientOptions;
+  _otion: OtionOptions;
+  _throttleRestart: Record<string, boolean> = {};
+  _errors: string[] = [];
+  _willRestart: boolean = false;
+  _events: EventEmitter = new EventEmitter();
+  _assets: Record<string, Asset> = {};
+  _injectHtml: {
+    head: Record<string, string>;
+    footer: Record<string, string>;
+  } = { head: {}, footer: {} };
+
+  constructor({
+    distDir = "",
+    serveClient = { enable: false },
+    otion = { enable: false },
+  }: {
+    distDir?: string;
+    serveClient?: ServeClientOptions;
+    otion?: OtionOptions;
+  } = {}) {
+    this._distDir = distDir;
+    this._serveClient = serveClient;
+    this._otion = otion;
   }
 
-  return asset;
-};
+  useAsset(name: string): Asset {
+    const asset = this._assets[name];
+
+    if (!asset) {
+      if (isDev) {
+        throw new Error(`Could not find asset "${name}"`);
+      }
+
+      return {};
+    }
+
+    return asset;
+  }
+
+  html(options: HtmlOptionsFunc | HtmlOptions = {}) {
+    let otion: { setup; server };
+    if (this._otion.enable) {
+      otion = {
+        setup: require("otion").setup,
+        server: require("otion/server"),
+      };
+    }
+
+    let injector;
+
+    if (this._otion.enable) {
+      injector = otion.server.VirtualInjector();
+      otion.setup({
+        // TODO: Maybe add support for otion nonce
+        injector,
+      });
+    }
+
+    if (typeof options === "function") {
+      options = options();
+    }
+
+    let { head, title, body, bodyAttrs, tpl, notFound } = createHtmlOptions(
+      options
+    );
+
+    if (notFound) {
+      title = "Page not found";
+      body = "<h1>Page not found</h1>";
+    }
+
+    const data = htmlData();
+    htmlData(null);
+    if (data != null) {
+      head += `<script class="sosse-html-data" type="application/json">${JSON.stringify(
+        data
+      )}</script>`;
+    }
+
+    for (const injectHtml of Object.values(this._injectHtml.head)) {
+      head += injectHtml;
+    }
+
+    for (const injectHtml of Object.values(this._injectHtml.footer)) {
+      body += injectHtml;
+    }
+
+    let bodyAttrsString = "";
+    for (const [key, value] of Object.entries(bodyAttrs)) {
+      bodyAttrsString += ` ${key}="${value}"`;
+    }
+
+    let htmlResult = tpl({
+      head,
+      title,
+      body,
+      bodyAttrs: bodyAttrsString,
+    });
+
+    if (this._otion.enable) {
+      const styleTag = otion.server.getStyleTag(
+        otion.server.filterOutUnusedRules(injector, htmlResult)
+      );
+      htmlResult = htmlResult.replace("</head>", styleTag + "</head>");
+    }
+
+    return htmlResult;
+  }
+
+  withSosse(listener?: RequestListener): RequestListener {
+    const devSocketCode = {
+      js: "",
+      map: "",
+    };
+    const devSocketUrl = "/sosse-dev/main.umd.js";
+    if (isDev) {
+      const socketJsPath = resolve(
+        __dirname,
+        "..",
+        "dev-socket-client",
+        "dist"
+      );
+      devSocketCode.js = readFileSync(resolve(socketJsPath, "main.umd.js"), {
+        encoding: "utf-8",
+      });
+      devSocketCode.map = readFileSync(
+        resolve(socketJsPath, "main.umd.js.map"),
+        {
+          encoding: "utf-8",
+        }
+      );
+
+      this._injectHtml.head.sosseDev = `
+  <script src="${devSocketUrl}"></script>
+  <script>
+  window.sosseDevSocketClient.init();
+  </script>`;
+    }
+
+    let serve;
+    if (this._serveClient.enable) {
+      serve = serveStatic(resolve(this._distDir, "client"));
+    }
+
+    return (req, res) => {
+      if (isDev) {
+        if (req.url === devSocketUrl) {
+          return res
+            .writeHead(200, { "Content-Type": "application/javascript" })
+            .end(devSocketCode.js);
+        }
+        if (req.url === devSocketUrl + ".map") {
+          return res
+            .writeHead(200, { "Content-Type": "application/json" })
+            .end(devSocketCode.map);
+        }
+      }
+
+      if (this._serveClient.enable && req.url.startsWith("/sosse-client")) {
+        let url = req.url;
+        req.url = req.url.substring("/sosse-client".length);
+        return serve(req, res, function () {
+          req.url = url;
+          if (listener) {
+            return listener(req, res);
+          }
+        });
+      }
+
+      if (!listener) {
+        return;
+      }
+
+      listener(req, res);
+    };
+  }
+
+  createServer<T = ServerOptions | RequestListener>(
+    options?: T,
+    listener?: RequestListener
+  ): Server {
+    let server: Server;
+
+    const hasOptions = options && typeof options !== "function";
+    listener = listener || (!hasOptions ? (options as any) : null);
+    const wrappedListener = this.withSosse(listener);
+
+    if (hasOptions) {
+      server = _createServer(options, wrappedListener);
+    } else {
+      server = _createServer(wrappedListener);
+    }
+
+    this.devSocket({ server });
+
+    return server;
+  }
+
+  devSocket({
+    server,
+    enable = isDev,
+  }: {
+    server: Server;
+    enable?: boolean;
+    wait?: number;
+  }) {
+    if (!enable) {
+      return;
+    }
+
+    const WebSocket = require("ws");
+    const wss = new WebSocket.Server({
+      noServer: true,
+    });
+
+    server.on("upgrade", (request, socket, head) => {
+      const pathname = url.parse(request.url).pathname;
+
+      if (pathname === "/sosse-dev") {
+        wss.handleUpgrade(request, socket, head, (ws) => {
+          wss.emit("connection", ws, request);
+          if (this._errors.length) {
+            sendError(ws);
+          }
+        });
+      } else {
+        socket.destroy();
+      }
+    });
+
+    const restartListener = () => {
+      // TODO: Currently this just deletes all errors, we should separate between (server/client)-bundler/node
+      this._errors = [];
+      wss.close();
+      this._events.removeListener("restart", restartListener);
+      this._events.removeListener("error", errorListener);
+      this._events.removeListener("reload", reloadListener);
+    };
+
+    const reloadListener = () => {
+      for (const client of wss.clients) {
+        client.send(JSON.stringify({ type: "reload" }));
+      }
+      // TODO: Currently this just deletes all errors, we should separate between (server/client)-bundler/node
+      this._errors = [];
+    };
+
+    const sendError = (client) => {
+      client.send(
+        JSON.stringify({
+          type: "error",
+          errors: this._errors,
+        })
+      );
+    };
+
+    const errorListener = () => {
+      for (const client of wss.clients) {
+        sendError(client);
+      }
+    };
+
+    const startedListener = () => {
+      this._events.removeListener("started", startedListener);
+      this._events.on("reload", reloadListener);
+      this._events.on("restart", restartListener);
+      this._events.on("sosseError", errorListener);
+    };
+
+    this._events.on("started", startedListener);
+  }
+}

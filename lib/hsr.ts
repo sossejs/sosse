@@ -1,6 +1,6 @@
 import debounce from "lodash/debounce";
 import path from "path";
-import { createCtx, setCtx, unsetCtx, Ctx } from "./ctx";
+import { Ctx, setCtx, unsetCtx } from "./ctx";
 import stripAnsi from "strip-ansi";
 import { Server } from "http";
 import { isDev } from "./env";
@@ -11,7 +11,7 @@ export const hsr = async function ({
   exclude = [],
   wait = 500,
   main,
-  ctx = createCtx(),
+  ctx = new Ctx(),
   restart = isDev,
 }: {
   cwd?: string;
@@ -53,7 +53,7 @@ export const hsr = async function ({
 
     await new Promise(function (resolve) {
       const intervalId = setInterval(function () {
-        for (const value of Object.values(ctx.throttleRestart)) {
+        for (const value of Object.values(ctx._throttleRestart)) {
           if (!value) {
             continue;
           }
@@ -78,16 +78,16 @@ export const hsr = async function ({
     try {
       listen = await main();
     } catch (err) {
-      ctx.errors.push(stripAnsi(err.stack || err.message));
+      ctx._errors.push(stripAnsi(err.stack || err.message));
       console.error(err);
-      ctx.events.emit("sosseError");
+      ctx._events.emit("sosseError");
     }
 
     unsetCtx();
 
     if (listen) {
       if (stopMain) {
-        ctx.events.emit("restart");
+        ctx._events.emit("restart");
         const oldStopMain = stopMain;
         stopMain = undefined;
         if (typeof oldStopMain === "function") {
@@ -100,24 +100,24 @@ export const hsr = async function ({
         }
       } else {
         // TODO: Currently this just deletes all errors, we should separate between (server/client)-bundler/node
-        ctx.errors = [];
+        ctx._errors = [];
       }
       stopMain = await listen();
-      ctx.events.emit("started");
+      ctx._events.emit("started");
     }
 
     restarting = false;
-    ctx.willRestart = false;
+    ctx._willRestart = false;
 
     if (pendingRestart) {
-      ctx.willRestart = true;
+      ctx._willRestart = true;
       pendingRestart = false;
       restartMain();
     }
   }, wait);
 
-  ctx.events.on("triggerRestart", function () {
-    ctx.willRestart = true;
+  ctx._events.on("triggerRestart", function () {
+    ctx._willRestart = true;
     restartMain();
   });
 
@@ -127,7 +127,7 @@ export const hsr = async function ({
       ignored: absExclude,
     });
     watcher.on("all", function () {
-      ctx.willRestart = true;
+      ctx._willRestart = true;
       restartMain();
     });
   }
