@@ -313,13 +313,15 @@ export class Ctx {
       noServer: true,
     });
 
-    server.on("upgrade", (request, socket, head) => {
+    let self = this;
+
+    server.on("upgrade", function (request, socket, head) {
       const pathname = url.parse(request.url).pathname;
 
       if (pathname === "/sosse-dev") {
-        wss.handleUpgrade(request, socket, head, (ws) => {
+        wss.handleUpgrade(request, socket, head, function (ws) {
           wss.emit("connection", ws, request);
-          if (this._errors.length) {
+          if (self._errors.length) {
             sendError(ws);
           }
         });
@@ -328,45 +330,46 @@ export class Ctx {
       }
     });
 
-    const restartListener = () => {
+    const restartListener = function () {
       // TODO: Currently this just deletes all errors, we should separate between (server/client)-bundler/node
-      this._errors = [];
+      self._errors = [];
       wss.close();
-      this._events.removeListener("restart", restartListener);
-      this._events.removeListener("error", errorListener);
-      this._events.removeListener("reload", reloadListener);
+      self._events.removeListener("restart", restartListener);
+      self._events.removeListener("sosseError", errorListener);
+      self._events.removeListener("reload", reloadListener);
+      self = null;
     };
 
-    const reloadListener = () => {
+    const reloadListener = function () {
       for (const client of wss.clients) {
         client.send(JSON.stringify({ type: "reload" }));
       }
       // TODO: Currently this just deletes all errors, we should separate between (server/client)-bundler/node
-      this._errors = [];
+      self._errors = [];
     };
 
-    const sendError = (client) => {
+    const sendError = function (client) {
       client.send(
         JSON.stringify({
           type: "error",
-          errors: this._errors,
+          errors: self._errors,
         })
       );
     };
 
-    const errorListener = () => {
+    const errorListener = function () {
       for (const client of wss.clients) {
         sendError(client);
       }
     };
 
-    const startedListener = () => {
-      this._events.removeListener("started", startedListener);
-      this._events.on("reload", reloadListener);
-      this._events.on("restart", restartListener);
-      this._events.on("sosseError", errorListener);
+    const startedListener = function () {
+      self._events.removeListener("started", startedListener);
+      self._events.on("reload", reloadListener);
+      self._events.on("restart", restartListener);
+      self._events.on("sosseError", errorListener);
     };
 
-    this._events.on("started", startedListener);
+    self._events.on("started", startedListener);
   }
 }
