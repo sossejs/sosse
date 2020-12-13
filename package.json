@@ -80,15 +80,14 @@
     "strip-ansi": "^6.0.0",
     "ts-jest": "^26.2.0",
     "typescript": "^3.9.7",
-    "ws": "^7.3.1"
+    "ws": "^7.3.1",
+    "preact-render-to-string": "^5.1.10"
   },
   "optionalDependencies": {
-    "clear-module": "^4.1.1",
     "chokidar": "^3.4.2",
     "microbundle": "^0.12.3",
     "otion": "^0.5.5",
     "preact": "^10.4.7",
-    "preact-render-to-string": "^5.1.10",
     "ws": "^7.3.1"
   },
   "_moduleAliases": {

@@ -5,6 +5,14 @@ import stripAnsi from "strip-ansi";
 import { Server } from "http";
 import { isDev } from "./env";
 
+const clearRequireCache = function (idRegex) {
+  for (const moduleId of Object.keys(require.cache)) {
+    if (idRegex.test(moduleId)) {
+      delete require.cache[moduleId];
+    }
+  }
+};
+
 export const hsr = async function ({
   cwd = process.cwd(),
   watch = ["."],
@@ -34,14 +42,14 @@ export const hsr = async function ({
     return;
   }
 
-  const clearModule = (await import("clear-module")).default;
-
   const absWatch = watch.map((dir) => path.resolve(cwd, dir));
   const absExclude = exclude.map((dir) => path.resolve(cwd, dir));
 
   let stopMain;
   let restarting = false;
   let pendingRestart = false;
+
+  const cwdRegex = new RegExp(cwd);
 
   const restartMain = debounce(async () => {
     if (restarting) {
@@ -68,11 +76,9 @@ export const hsr = async function ({
 
     pendingRestart = false;
 
+    clearRequireCache(cwdRegex);
+
     let listen;
-    clearModule.all();
-
-    const { setCtx, unsetCtx } = require("sosse");
-
     setCtx(ctx);
 
     try {

@@ -20,6 +20,9 @@ exports.pkgDir = (...suffix) => exports.resolve(__dirname, "..", ...suffix);
 exports.scriptsDir = (...suffix) => exports.pkgDir("scripts", ...suffix);
 exports.assetsDir = (...suffix) => exports.pkgDir("assets", ...suffix);
 exports.args = process.argv.slice(2);
+// Guideline 10 of https://pubs.opengroup.org/onlinepubs/9699919799/basedefs/V1_chap12.html
+const operandsIndex = process.argv.findIndex((arg) => arg === "--") + 1;
+exports.argvOperands = operandsIndex ? process.argv.slice(operandsIndex) : [];
 exports.spawn = (
   command,
   args,
@@ -58,7 +61,6 @@ exports.buildArgs = () => {
     "ws",
     "otion",
     "microbundle",
-    "clear-module",
     "preact",
     "preact-render-to-string",
     "react",
