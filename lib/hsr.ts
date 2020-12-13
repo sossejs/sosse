@@ -49,7 +49,7 @@ export const hsr = async function ({
   let restarting = false;
   let pendingRestart = false;
 
-  const cwdRegex = new RegExp(cwd);
+  const cwdRegex = new RegExp(`${cwd}(?!\/node_modules)`);
 
   const restartMain = debounce(async () => {
     if (restarting) {
