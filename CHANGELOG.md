@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.8.0-next.9](https://github.com/sossejs/sosse/compare/v0.8.0-next.8...v0.8.0-next.9) (2020-12-13)
+
+
+### Features
+
+* update sosse init template ([a8d1554](https://github.com/sossejs/sosse/commit/a8d15547b5ceb3812b9654b6986c541cf3290599))
+
+
+### Bug Fixes
+
+* dont clear node_modules from require cache ([c9297d0](https://github.com/sossejs/sosse/commit/c9297d099262a2e5df25fb62786cc14f0185a867))
+
 ## [0.8.0-next.8](https://github.com/sossejs/sosse/compare/v0.8.0-next.7...v0.8.0-next.8) (2020-12-13)
 
 
