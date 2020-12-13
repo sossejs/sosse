@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.8.0-next.8](https://github.com/sossejs/sosse/compare/v0.8.0-next.7...v0.8.0-next.8) (2020-12-13)
+
+
+### Bug Fixes
+
+* improve ctx event listeners memory usage ([b7488b8](https://github.com/sossejs/sosse/commit/b7488b8d4bf9822d32a12a4409d361a11b571815))
+* only cache clear modules from the project folder ([5519d9a](https://github.com/sossejs/sosse/commit/5519d9a0210812e5628ad839a98880238b0b6208))
+
 ## [0.8.0-next.7](https://github.com/sossejs/sosse/compare/v0.8.0-next.6...v0.8.0-next.7) (2020-09-16)
 
 
