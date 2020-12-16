@@ -9,7 +9,7 @@ Composable toolkit for (p)react full-stack node web servers:
 - 🌊 CSS server side rendering with [Otion](https://github.com/kripod/otion)
 - 📦 Bundling client assets with [Microbundle](https://github.com/developit/microbundle)
 
-## 🤓 [Getting started](https://github.com/sossejs/sosse/blob/master/docs/getting_started.md)
+## 🤓 [Getting started](https://github.com/sossejs/sosse/blob/next/docs/getting_started.md)
 
 [![](assets/badge.license.svg)](https://opensource.org/licenses/MIT)
 [![](assets/badge.npm.svg)](https://www.npmjs.com/package/sosse)
