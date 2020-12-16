@@ -1,16 +1,50 @@
 <h1 id="🥣-sosse"><a href="#%F0%9F%A5%A3-sosse" aria-hidden="true"><span class="toc-link"><span class="icono-chain"></span></span></a><a href="https://github.com/sossejs/sosse" target="_blank">🥣 Sosse</a></h1>
+<p>Composable toolkit for (p)react full-stack node web servers:</p>
+<ul>
+<li>🔥 Hot server restart</li>
+<li>🔄 Live reload</li>
+<li>🖨 Output server errors in browser</li>
+<li>⚛️ Interactive (p)react components</li>
+<li>🌊 CSS server side rendering with <a href="https://github.com/kripod/otion" target="_blank">Otion</a></li>
+<li>📦 Bundling client assets with <a href="https://github.com/developit/microbundle" target="_blank">Microbundle</a></li>
+</ul>
+<h2 id="-getting-started"><a href="#-getting-started" aria-hidden="true"><span class="toc-link"><span class="icono-chain"></span></span></a>🤓 <a href="https://github.com/sossejs/sosse/blob/next/docs/getting_started.md" target="_blank">Getting started</a></h2>
 <p><a href="https://opensource.org/licenses/MIT" target="_blank"><img src="assets/badge.license.svg" class="img-fluid"></a>
 <a href="https://www.npmjs.com/package/sosse" target="_blank"><img src="assets/badge.npm.svg" class="img-fluid"></a>
 <a href="https://prettier.io/" target="_blank"><img src="assets/badge.style.svg" class="img-fluid"></a></p>
 <hr>
-<p>Spice your servers up with a lil Sosse</p>
-<p>Usage examples can be found in the <a href="https://github.com/sossejs/sosse/blob/master/docs/getting_started.md" target="_blank">Getting started</a> section.</p>
-<h2 id="features"><a href="#features" aria-hidden="true"><span class="toc-link"><span class="icono-chain"></span></span></a>Features:</h2>
+<h2 id="tldr"><a href="#tldr" aria-hidden="true"><span class="toc-link"><span class="icono-chain"></span></span></a>TLDR</h2>
 <ul>
-<li>🔥 Hot server restart</li>
-<li>🔄 Live reload</li>
-<li>🖨 Outputs server errors in browser</li>
-<li>⚛️ Interactive (p)react components</li>
-<li>🌊 Css Serverside Rendering with <a href="https://github.com/kripod/otion" target="_blank">Otion</a></li>
-<li>📦 Bundling client assets with <a href="https://github.com/developit/microbundle" target="_blank">Microbundle</a></li>
+<li>At its core Sosse is a wrapper around node's native http server which can be replaced one-to-one</li>
+<li>This wrapper is used as a base to incrementally integrate Devtooling like "Live reload" and server features like "Server side rendering"</li>
 </ul>
+<h2 id="architecture"><a href="#architecture" aria-hidden="true"><span class="toc-link"><span class="icono-chain"></span></span></a>Architecture</h2>
+<ul>
+<li>Routing:<ul>
+<li><a href="https://github.com/expressjs/expressjs.com" target="_blank">Express</a>, <a href="https://github.com/fastify/fastify" target="_blank">Fastify</a> and others can be used as server routing solution<ul>
+<li>Sosse does not predetermine a specific routing solution, nor does it require one</li>
+</ul></li>
+<li>Client side routing is strictly not supported</li>
+</ul></li>
+<li>Rendering HTML:<ul>
+<li>(P)react is used as the view layer</li>
+<li>Static components are directly rendered on the server</li>
+<li>Dynamic components are rendered on the client<ul>
+<li>Static parts from dynamic components can be prerendered on the server</li>
+</ul></li>
+</ul></li>
+<li>Rendering CSS:<ul>
+<li>The recommended CSS in JS solution is <a href="https://github.com/kripod/otion" target="_blank">Otion</a></li>
+<li>CSS files and modules can be imported and are processed with <a href="https://github.com/postcss/postcss" target="_blank">PostCSS</a></li>
+</ul></li>
+<li>JS Bundling / Transpilation:<ul>
+<li>Done for the client &#x26; server</li>
+<li>Convention over configuration</li>
+<li>Sosse handles the bundling (with microbundle)</li>
+<li>Stay a way from Sosse if you have very specific requirements about how to bundle your JS</li>
+</ul></li>
+</ul>
+<h2 id="main-use-case"><a href="#main-use-case" aria-hidden="true"><span class="toc-link"><span class="icono-chain"></span></span></a>Main use case</h2>
+<p>Small - middle sized, but quickly growing and changing web projects with a strong focus on a composable UI, are the main target for Sosse.</p>
+<p>Setting up a component driven web site has generally a high abstraction cost. As an example I want to mention <a href="https://github.com/vercel/next.js" target="_blank">Next.js</a>, a really powerful full-stack react framework. This power comes at a price: In the best case you only have to implement a couple things like routes and redirects and the "Next.js"-way, and in the worst case it will hit you in the business logic and you have to accept unexpected trade-offs.</p>
+<p>Sosse tries to avoid typical framework-like trade-offs by limitting its feature-set, architectural style and defining clear boundaries.</p>

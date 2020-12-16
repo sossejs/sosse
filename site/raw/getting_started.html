@@ -1,93 +1,13 @@
 <h1 id="getting-started"><a href="#getting-started" aria-hidden="true"><span class="toc-link"><span class="icono-chain"></span></span></a>Getting started</h1>
-<h2 id="basic-usage"><a href="#basic-usage" aria-hidden="true"><span class="toc-link"><span class="icono-chain"></span></span></a>Basic usage</h2>
-<p>main.js:</p>
-<pre><code class="hljs language-js"><span class="hljs-keyword">import</span> { hsr } <span class="hljs-keyword">from</span> <span class="hljs-string">"sosse"</span>;
+<h2 id="project-setup"><a href="#project-setup" aria-hidden="true"><span class="toc-link"><span class="icono-chain"></span></span></a>Project setup</h2>
+<p>Running Sosse in an empty project the first time will automatically create a small example <code>main.js</code> file which can be used as a starting point.</p>
+<pre><code class="hljs language-bash"><span class="hljs-comment"># Start by creating a folder for your new app</span>
+mkdir sosse-app;
+<span class="hljs-built_in">cd</span> sosse-app;
+npm init -y;
 
-hsr({
-  <span class="hljs-comment">// Used as a prefix to resolve other configuration paths</span>
-  <span class="hljs-attr">base</span>: __dirname,
-  <span class="hljs-comment">// Will be called on file changes</span>
-  <span class="hljs-attr">main</span>: <span class="hljs-function"><span class="hljs-params">()</span> =></span> <span class="hljs-built_in">require</span>(<span class="hljs-string">"./server"</span>).default()
-})</code></pre>
-<p>server.js:</p>
-<pre><code class="hljs language-js"><span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> () {
-  <span class="hljs-comment">// Called before previous server is stopped</span>
-  <span class="hljs-built_in">console</span>.log(<span class="hljs-string">"preparation"</span>)
-
-  <span class="hljs-keyword">return</span> <span class="hljs-function"><span class="hljs-params">()</span> =></span> {
-    <span class="hljs-comment">// Called if the preparation was successfully executed and then only after the previous server is shutdown</span>
-    <span class="hljs-built_in">console</span>.log(<span class="hljs-string">"start"</span>)
-
-    <span class="hljs-keyword">return</span> <span class="hljs-function"><span class="hljs-params">()</span> =></span> {
-      <span class="hljs-comment">// Called after the next preparation was successfully executed</span>
-      <span class="hljs-built_in">console</span>.log(<span class="hljs-string">"stop"</span>)
-    }
-  }
-}</code></pre>
-<h2 id="watch-custom-directories"><a href="#watch-custom-directories" aria-hidden="true"><span class="toc-link"><span class="icono-chain"></span></span></a>Watch custom directories</h2>
-<pre><code class="hljs language-js">hsr({
-  <span class="hljs-attr">base</span>: __dirname,
-  <span class="hljs-comment">// Custom watch paths, relative to base (default: ["."])</span>
-  <span class="hljs-attr">watch</span>: [<span class="hljs-string">"routes"</span>, <span class="hljs-string">"views"</span>]
-})</code></pre>
-<h2 id="basic-express-server-example"><a href="#basic-express-server-example" aria-hidden="true"><span class="toc-link"><span class="icono-chain"></span></span></a>Basic Express server example</h2>
-<pre><code class="hljs language-js"><span class="hljs-keyword">import</span> express <span class="hljs-keyword">from</span> <span class="hljs-string">"express"</span>;
-
-globalThis.count = globalThis.count || <span class="hljs-number">1</span>;
-
-<span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> () => {
-  <span class="hljs-keyword">const</span> app = express();
-  app.get(<span class="hljs-string">"/"</span>, (req, res) =>
-    res.send(<span class="hljs-string">`&#x3C;h1>hey visitor <span class="hljs-subst">${globalThis.count++}</span>&#x3C;/h1>`</span>)); 
-
-  <span class="hljs-keyword">return</span> <span class="hljs-function"><span class="hljs-params">()</span> =></span> {
-    <span class="hljs-keyword">const</span> port = <span class="hljs-number">8080</span>;
-    <span class="hljs-keyword">const</span> server = app.listen(port);
-
-    <span class="hljs-built_in">console</span>.log(<span class="hljs-string">`Started http://localhost:<span class="hljs-subst">${port}</span>`</span>);
-
-    <span class="hljs-keyword">return</span> <span class="hljs-function"><span class="hljs-params">()</span> =></span>
-      <span class="hljs-keyword">new</span> <span class="hljs-built_in">Promise</span>(<span class="hljs-function">(<span class="hljs-params">res, rej</span>) =></span> server.close(<span class="hljs-function">(<span class="hljs-params">e</span>) =></span> (e ? rej(e) : res())));
-  };
-};</code></pre>
-<h2 id="complete-express-server-example"><a href="#complete-express-server-example" aria-hidden="true"><span class="toc-link"><span class="icono-chain"></span></span></a>Complete Express server example</h2>
-<pre><code class="hljs language-js"><span class="hljs-keyword">import</span> http <span class="hljs-keyword">from</span> <span class="hljs-string">"http"</span>;
-<span class="hljs-keyword">import</span> express <span class="hljs-keyword">from</span> <span class="hljs-string">"express"</span>;
-<span class="hljs-keyword">import</span> { html, notFoundHtml, devSocket, useCtx } <span class="hljs-keyword">from</span> <span class="hljs-string">"sosse"</span>;
-<span class="hljs-keyword">import</span> { h } <span class="hljs-keyword">from</span> <span class="hljs-string">"preact"</span>;
-<span class="hljs-keyword">import</span> render <span class="hljs-keyword">from</span> <span class="hljs-string">"preact-render-to-string"</span>;
-
-globalThis.count = globalThis.count || <span class="hljs-number">1</span>;
-
-<span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> <span class="hljs-keyword">async</span> () => {
-  <span class="hljs-keyword">const</span> ctx = useCtx();
-
-  <span class="hljs-keyword">const</span> app = express();
-
-  <span class="hljs-comment">// Home route</span>
-  app.get(<span class="hljs-string">"/"</span>, (req, res) =>
-    res.send(
-      html({
-        <span class="hljs-attr">body</span>: render(<span class="xml"><span class="hljs-tag">&#x3C;<span class="hljs-name">h1</span>></span>hey visitor {globalThis.count++}<span class="hljs-tag">&#x3C;/<span class="hljs-name">h1</span>></span></span>),
-        ctx,
-      })
-    )
-  );
-
-  <span class="hljs-comment">// 404 route</span>
-  app.use(<span class="hljs-function">(<span class="hljs-params">req, res</span>) =></span> res.status(<span class="hljs-number">404</span>).send(notFoundHtml()));
-
-  <span class="hljs-keyword">const</span> port = <span class="hljs-number">8080</span>;
-  <span class="hljs-keyword">const</span> server = http.createServer(app);
-
-  <span class="hljs-keyword">await</span> devSocket({ server });
-
-  <span class="hljs-keyword">return</span> <span class="hljs-function"><span class="hljs-params">()</span> =></span> {
-    server.listen(port);
-
-    <span class="hljs-built_in">console</span>.log(<span class="hljs-string">`Started http://localhost:<span class="hljs-subst">${port}</span>`</span>);
-
-    <span class="hljs-keyword">return</span> <span class="hljs-function"><span class="hljs-params">()</span> =></span>
-      <span class="hljs-keyword">new</span> <span class="hljs-built_in">Promise</span>(<span class="hljs-function">(<span class="hljs-params">res, rej</span>) =></span> server.close(<span class="hljs-function">(<span class="hljs-params">e</span>) =></span> (e ? rej(e) : res())));
-  };
-};</code></pre>
+<span class="hljs-comment"># Install and run sosse</span>
+npm install sosse@next;
+npx sosse start</code></pre>
+<h2 id="folder-structure"><a href="#folder-structure" aria-hidden="true"><span class="toc-link"><span class="icono-chain"></span></span></a>Folder structure</h2>
+<p>TODO</p>
