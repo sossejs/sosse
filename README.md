@@ -47,6 +47,6 @@ Composable toolkit for (p)react full-stack node web servers:
 
 Small - middle sized, but quickly growing and changing web projects with a strong focus on a composable UI, are the main target for Sosse.
 
-Setting up a component driven web site has generally a high abstraction cost. As an example I want to mention [Next.js](https://github.com/vercel/next.js), a really powerful full-stack react framework. This power comes at a price: In the best case you only have to implement a couple things like routes and redirects and the "Next.js"-way, and in the worst case it will hit you in the business logic and you have to accept unexpected trade-offs.
+Setting up a component driven web site has generally a high abstraction cost. As an example I want to mention [Next.js](https://github.com/vercel/next.js), a really powerful full-stack react framework. This power comes at a price: In the best case you only have to implement a couple things like routes and redirects in the "Next.js"-way, and in the worst case it will hit you in the business logic and you have to accept unexpected trade-offs.
 
 Sosse tries to avoid typical framework-like trade-offs by limitting its feature-set, architectural style and defining clear boundaries.
