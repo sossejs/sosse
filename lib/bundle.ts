@@ -6,27 +6,18 @@ import {
   readJson,
   writeJson,
 } from "fs-extra";
-import { dirname, extname, basename, resolve } from "path";
+import { dirname, extname, basename, resolve, relative } from "path";
 import { isDev } from "./env";
 import cuid from "cuid";
 import stripAnsi from "strip-ansi";
 import { Ctx } from "./ctx";
+import rollup from "rollup";
 
-// Currently microbundle sets the defaults only in the cli api but expects them internally also from js consumers
-const microbundleDefaults = {
-  "pkg-main": true,
-  target: "web",
-  cwd: ".",
-  sourcemap: true,
-};
+const rollupConfigFactory = require("sosse/lib/rollup");
 
 export type BundleEntryOptions = {
   alias?: Record<string, string>;
-  external?: Record<string, boolean>;
-  globals?: Record<string, string>;
   define?: Record<string, string>;
-  // TODO: implement globals option
-  jsx?: string;
   react?: boolean;
 };
 
@@ -35,33 +26,6 @@ export type EntryOptions = ({
 }: {
   name: string;
 }) => BundleEntryOptions | undefined;
-
-const optionsRecordToString = function (options) {
-  const resultParts = [];
-
-  for (const [key, value] of Object.entries(options)) {
-    if (value == null) {
-      continue;
-    }
-    resultParts.push(`${key}=${value}`);
-  }
-
-  return resultParts.join(",");
-};
-
-const boolOptionsRecordToString = function (options) {
-  const resultParts = [];
-
-  for (const [key, value] of Object.entries(options)) {
-    if (!value) {
-      continue;
-    }
-
-    resultParts.push(key);
-  }
-
-  return resultParts.join(",");
-};
 
 let runningBuilds = 0;
 let rebuiltServer = false;
@@ -86,18 +50,13 @@ export const bundle = async function ({
 
   await emptyDir(distDir);
 
-  let {
-    define = {},
-    react,
-    jsx = "h",
-    alias = {},
-    external = {},
-    globals = {},
-  } = entryOptions;
+  let { define = {}, alias = {}, react } = entryOptions;
 
   if (!server) {
     define = {
-      "process.env.NODE_ENV": process.env.NODE_ENV || "development",
+      "process.env.NODE_ENV": JSON.stringify(
+        process.env.NODE_ENV || "development"
+      ),
       ...define,
     };
   }
@@ -112,29 +71,36 @@ export const bundle = async function ({
     }
   }
 
-  external = {
-    ...pkgExternals,
-    sosse: server,
-    otion: server,
-    preact: server,
-    microbundle: true,
-    ...external,
-  };
+  const loggingLabel = `${server ? "server" : "client"} "${relative(
+    cwd,
+    src
+  )}"`;
 
-  if (react) {
-    jsx = "React.createElement";
-  } else {
-    alias["react"] = "preact/compat";
-  }
+  const rollupConfig = rollupConfigFactory({
+    react,
+    cwd,
+    isServer: server,
+    isDev,
+    input: src,
+    alias,
+    define,
+    output: {
+      exports: server ? "named" : "auto",
+      entryFileNames: relative(distDir, dist),
+      dir: distDir,
+      format: server ? "cjs" : "es",
+      sourcemap: true,
+    },
+  });
 
-  let onStart, onBuild, onError;
-  if (ctx && watch) {
-    onStart = function () {
+  if (watch) {
+    const onStart = function () {
       runningBuilds++;
       ctx._throttleRestart["sosseBundle"] = true;
     };
 
-    onBuild = function () {
+    const onBuild = function () {
+      console.log(`Built ${loggingLabel}`);
       runningBuilds--;
 
       if (server) rebuiltServer = true;
@@ -151,53 +117,52 @@ export const bundle = async function ({
       }
     };
 
-    onError = function (e) {
+    const onError = function (error) {
+      console.log(`Error while building ${loggingLabel}`);
+      console.error(error);
       runningBuilds--;
-      ctx._errors.push(stripAnsi(e.error.stack));
+      ctx._errors.push(stripAnsi(error.stack));
       ctx._events.emit("sosseError");
+    };
+
+    const watcher = rollup.watch(rollupConfig);
+    watcher.on("event", (event) => {
+      if (event.code === "BUNDLE_START") {
+        onStart();
+      }
+      if (event.code === "BUNDLE_END") {
+        onBuild();
+        event.result.close();
+      }
+      if (event.code === "ERROR") {
+        onError(event.error);
+      }
+    });
+
+    return {
+      watchers: {
+        [src]: watcher,
+      },
     };
   }
 
-  const microbundleConfig = {
-    ...microbundleDefaults,
-    entries: [src],
-    output: dist,
-    watch,
-    compress: server ? false : isDev,
-    format: server ? "cjs" : "modern",
-    "pkg-main": false,
-    jsx,
-    define: optionsRecordToString(define),
-    target: server ? "node" : "web",
-    onStart,
-    onBuild,
-    onError,
-  };
+  let buildOk = true;
 
-  if (cwd) {
-    microbundleConfig.cwd = cwd;
+  try {
+    const bundle = await rollup.rollup(rollupConfig);
+    await bundle.write(rollupConfig.output);
+    await bundle.close();
+  } catch (err) {
+    buildOk = false;
+    console.log(`Error while building ${loggingLabel}`);
+    console.error(err);
   }
 
-  const aliasString = optionsRecordToString(alias);
-  if (aliasString.length) microbundleConfig["alias"] = aliasString;
-
-  const globalsString = optionsRecordToString(globals);
-  if (globalsString.length) microbundleConfig["globals"] = globalsString;
-
-  const externalString = boolOptionsRecordToString(external);
-  if (externalString.length) microbundleConfig["external"] = externalString;
-
-  if (!server) {
-    microbundleConfig["external"] = "none";
+  if (buildOk) {
+    console.log(`Built ${loggingLabel}`);
   }
 
-  const microbundle = (await import("microbundle")).default;
-  const bundleResult = await microbundle(microbundleConfig);
-  if (bundleResult.output) {
-    console.log(bundleResult.output);
-  }
-
-  return bundleResult;
+  return {};
 };
 
 export const bundleClients = async function ({

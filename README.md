@@ -7,7 +7,7 @@ Composable toolkit for (p)react full-stack node web servers:
 - 🖨 Output server errors in browser
 - ⚛️ Interactive (p)react components
 - 🌊 CSS server side rendering with [Otion](https://github.com/kripod/otion)
-- 📦 Bundling client assets with [Microbundle](https://github.com/developit/microbundle)
+- 📦 Bundling JS with [Rollup](https://github.com/rollup/rollup)
 
 ## 🤓 [Getting started](https://github.com/sossejs/sosse/blob/next/docs/getting_started.md)
 
@@ -24,10 +24,11 @@ Composable toolkit for (p)react full-stack node web servers:
 
 ## Architecture
 
+- Explicitly **not** a single page application framework
 - Routing:
+  - Implemented on the server
   - [Express](https://github.com/expressjs/expressjs.com), [Fastify](https://github.com/fastify/fastify) and others can be used as server routing solution
-    - Sosse does not predetermine a specific routing solution, nor does it require one
-  - Client side routing is strictly not supported
+    - Sosse does not predetermine a specific routing library, nor does it require one
 - Rendering HTML:
   - (P)react is used as the view layer
   - Static components are directly rendered on the server
@@ -39,7 +40,7 @@ Composable toolkit for (p)react full-stack node web servers:
 - JS Bundling / Transpilation:
   - Done for the client & server
   - Convention over configuration
-  - Sosse handles the bundling (with microbundle)
+  - Sosse handles the bundling (with Rollup)
   - Stay a way from Sosse if you have very specific requirements about how to bundle your JS
 
 ## Main use case

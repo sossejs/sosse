@@ -133,7 +133,7 @@ export default () => {
     src: serverSrcMain,
     dist: serverDist,
     server: true,
-    watch: restart,
+    watch: restart && !exitAfterBundle,
     entryOptions: bundleServer.entryOptions,
   };
   const bundleClientOptions = {
@@ -141,7 +141,7 @@ export default () => {
     cwd,
     src: clientSrcDir,
     dist: clientDistDir,
-    watch: restart,
+    watch: restart && !exitAfterBundle,
     entryOptions: bundleClient.entryOptions,
   };
 
