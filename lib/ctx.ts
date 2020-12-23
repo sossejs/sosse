@@ -11,6 +11,8 @@ import url from "url";
 import { readFileSync } from "fs-extra";
 import path, { resolve } from "path";
 import serveStatic from "serve-static";
+import { html, jsx } from "./html";
+import { VNode } from "preact";
 
 let currentCtx: Ctx;
 
@@ -50,46 +52,6 @@ export const useCtx = function (): Ctx {
 export const unsetCtx = function () {
   currentCtx = undefined;
 };
-
-const defaultTpl = function ({ title, head, bodyAttrs, body }) {
-  return `
-<!doctype html>
-<html>
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    ${title ? `<title>${title}</title>` : ""}
-    ${head}
-  </head>
-  <body${bodyAttrs}>
-    ${body}
-  </body>
-</html>`;
-};
-
-const createHtmlOptions = function (overrides: HtmlOptions = {}): HtmlOptions {
-  return {
-    head: "",
-    title: "Powered by Sosse",
-    body: "",
-    bodyAttrs: {},
-    data: undefined,
-    tpl: defaultTpl,
-    ...overrides,
-  };
-};
-
-export type HtmlOptions = {
-  notFound?: boolean;
-  head?: string;
-  title?: string;
-  body?: string;
-  bodyAttrs?: Record<string, string>;
-  data?: any;
-  tpl?: typeof defaultTpl;
-};
-
-type HtmlOptionsFunc = () => HtmlOptions;
 
 export class Ctx {
   _distDir: string;
@@ -133,7 +95,10 @@ export class Ctx {
     return asset;
   }
 
-  html(options: HtmlOptionsFunc | HtmlOptions = {}) {
+  render(
+    bodyFn: () => string | VNode,
+    tplOptions?: Omit<Parameters<typeof html>[0], "body">
+  ) {
     let otion: { setup; server };
     if (this._otion.enable) {
       otion = {
@@ -152,59 +117,52 @@ export class Ctx {
       });
     }
 
-    if (typeof options === "function") {
-      options = options();
+    let body = bodyFn();
+    if (typeof body !== "string") {
+      body = jsx(body);
     }
 
-    let {
-      head,
-      title,
+    const assets = {
+      head: "",
       body,
-      data,
-      bodyAttrs,
-      tpl,
-      notFound,
-    } = createHtmlOptions(options);
+    };
 
-    if (notFound) {
-      title = "Page not found";
-      body = "<h1>Page not found</h1>";
-    }
-
+    const data = htmlData();
     if (data != null) {
-      head += `<script class="sosse-html-data" type="application/json">${JSON.stringify(
+      assets.head += `<script class="sosse-html-data" type="application/json">${JSON.stringify(
         data
       )}</script>`;
+      htmlData(null);
     }
 
     for (const injectHtml of Object.values(this._injectHtml.head)) {
-      head += injectHtml;
+      assets.head += injectHtml;
     }
 
     for (const injectHtml of Object.values(this._injectHtml.footer)) {
-      body += injectHtml;
+      assets.body += injectHtml;
     }
-
-    let bodyAttrsString = "";
-    for (const [key, value] of Object.entries(bodyAttrs)) {
-      bodyAttrsString += ` ${key}="${value}"`;
-    }
-
-    let htmlResult = tpl({
-      head,
-      title,
-      body,
-      bodyAttrs: bodyAttrsString,
-    });
 
     if (this._otion.enable) {
       const styleTag = otion.server.getStyleTag(
-        otion.server.filterOutUnusedRules(injector, htmlResult)
+        otion.server.filterOutUnusedRules(injector, assets.body)
       );
-      htmlResult = htmlResult.replace("</head>", styleTag + "</head>");
+      assets.head += styleTag;
     }
 
-    return htmlResult;
+    if (tplOptions) {
+      const preparedTplOptions = {
+        head: "",
+        body: assets.body,
+        ...tplOptions,
+      };
+
+      preparedTplOptions.head += assets.head;
+
+      return html(preparedTplOptions);
+    }
+
+    return assets;
   }
 
   withSosse(listener?: RequestListener): RequestListener {
