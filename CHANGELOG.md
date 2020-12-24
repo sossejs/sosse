@@ -2,6 +2,22 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.8.0-next.11](https://github.com/sossejs/sosse/compare/v0.8.0-next.10...v0.8.0-next.11) (2020-12-24)
+
+
+### ⚠ BREAKING CHANGES
+
+* rework preact components and ssr with preact-iso
+* rename uni module to iso
+
+### Features
+
+* rework ctx html functions ([5c4695b](https://github.com/sossejs/sosse/commit/5c4695b1996030a9822a2b097c9c53b80c611cd9))
+* rework preact components and ssr with preact-iso ([cc1d948](https://github.com/sossejs/sosse/commit/cc1d948ff45486fbbc02588168889d43d5492344))
+
+
+* rename uni module to iso ([e778555](https://github.com/sossejs/sosse/commit/e778555a9f2f1da94b6483a654959a14fa579e05))
+
 ## [0.8.0-next.10](https://github.com/sossejs/sosse/compare/v0.8.0-next.9...v0.8.0-next.10) (2020-12-16)
 
 ## [0.8.0-next.9](https://github.com/sossejs/sosse/compare/v0.8.0-next.8...v0.8.0-next.9) (2020-12-13)
