@@ -16,11 +16,11 @@
       "import": "./dev-socket-client/dist/main.mjs",
       "require": "./dev-socket-client/dist/main.js"
     },
-    "./uni": {
-      "browser": "./uni/dist/main.mjs",
-      "umd": "./uni/dist/main.umd.js",
-      "import": "./uni/dist/main.mjs",
-      "require": "./uni/dist/main.js"
+    "./iso": {
+      "browser": "./iso/dist/main.mjs",
+      "umd": "./iso/dist/main.umd.js",
+      "import": "./iso/dist/main.mjs",
+      "require": "./iso/dist/main.js"
     },
     "./react": {
       "browser": "./react/dist/main.mjs",
@@ -126,9 +126,9 @@
     "dev-socket-client/package.json",
     "dev-socket-client/lib",
     "dev-socket-client/dist",
-    "uni/package.json",
-    "uni/lib",
-    "uni/dist",
+    "iso/package.json",
+    "iso/lib",
+    "iso/dist",
     "react/package.json",
     "react/lib",
     "react/dist",
@@ -160,7 +160,7 @@
       "example/lib/**/*.{ts,tsx,js,jsx}",
       "preact/lib/**/*.{ts,tsx,js,jsx}",
       "dev-socket-client/lib/**/*.{ts,tsx,js,jsx}",
-      "uni/lib/**/*.{ts,tsx,js,jsx}",
+      "iso/lib/**/*.{ts,tsx,js,jsx}",
       "react/lib/**/*.{ts,tsx,js,jsx}",
       "cli/lib/**/*.{ts,tsx,js,jsx}"
     ]

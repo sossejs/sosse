@@ -6,7 +6,7 @@ import React, {
   useEffect,
   useState,
 } from "react";
-import { isNode } from "sosse/uni";
+import { isNode } from "sosse/iso";
 
 const emptyFunc = () => {};
 

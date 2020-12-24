@@ -90,7 +90,7 @@ export const sosse = async function ({
       await writeFile(
         serverSrcMain,
         `import { useCtx, jsx } from "sosse";
-import { css } from "sosse/uni";
+import { css } from "sosse/iso";
 import { h } from "preact";
 
 export default () => {

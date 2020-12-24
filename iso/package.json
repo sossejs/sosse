@@ -1,6 +1,6 @@
 {
-  "name": "sosse-uni",
-  "amdName": "sosseUni",
+  "name": "sosse-iso",
+  "amdName": "sosseIso",
   "source": "lib/main.ts",
   "main": "dist/main.js",
   "module": "dist/main.mjs",

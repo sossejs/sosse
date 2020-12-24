@@ -1,6 +1,6 @@
 import { EventEmitter } from "events";
 import { isDev } from "./env";
-import { htmlData } from "sosse/uni";
+import { htmlData } from "sosse/iso";
 import {
   Server,
   RequestListener,
