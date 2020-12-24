@@ -3,15 +3,12 @@ const { resolve } = require("../scripts/lib");
 const entryOptions = {
   //jsx: "React.createElement",
   alias: {
-    "sosse/uni2": resolve(__dirname, "..", "uni"),
-  },
-  external: {
-    express: true,
+    "sosse/iso": resolve(__dirname, "..", "iso"),
   },
 };
 
 module.exports = {
-  libDir: "lib2",
+  libDir: "lib",
   bundleServer: {
     entryOptions,
   },

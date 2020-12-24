@@ -1,19 +1,21 @@
 import express from "express";
 import { homeRoute } from "./routes/home";
-import "./injects";
-import { preload } from "sosse/preact";
+import "./injects.tsx";
 import { useCtx } from "sosse";
+import { h } from "preact";
 
 export default async () => {
-  await preload();
-
   const app = express();
   await homeRoute(app);
 
   const ctx = useCtx();
 
   // 404 route
-  app.use((req, res) => res.status(404).send(ctx.html({ notFound: true })));
+  app.use(async (req, res) =>
+    res
+      .status(404)
+      .send(await ctx.render(() => <h1>Not found</h1>, { title: "Not found" }))
+  );
 
   const port = 8080;
   const server = ctx.createServer(app);
@@ -23,6 +25,6 @@ export default async () => {
 
     console.log(`Started http://localhost:${port}`);
     return () =>
-      new Promise((res, rej) => server.close((e) => (e ? rej(e) : res())));
+      new Promise((res, rej) => server.close((e) => (e ? rej(e) : res(null))));
   };
 };

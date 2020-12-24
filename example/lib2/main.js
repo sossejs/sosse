@@ -1,20 +1,31 @@
-import { useCtx, jsx } from "sosse";
-import { css } from "sosse/uni";
-import { h } from "preact";
+import { useCtx } from "sosse";
+import { css } from "sosse/iso";
+import config from "./config.json";
 
-export default () => {
+export default async () => {
   const sosse = useCtx();
-  const server = sosse.createServer((req, res) => {
+
+  const route = await import(`./routes/route${config.route}.js`);
+
+  const server = sosse.createServer(async (req, res) => {
     if (req.url !== "/") return res.writeHead(500).end();
 
     globalThis.counter++;
 
-    res.end(
-      sosse.html(() => ({
-        data: { count: globalThis.counter },
-        body: jsx(<h1 class={css({ color: "orange" })}>Hello world</h1>),
-      }))
+    const body = await sosse.render(
+      () => (
+        <>
+          <h1 class={css({ color: "orange" })}>Hello world {route.label}</h1>
+          <script {...sosse.useAsset("index").js.props} />
+        </>
+      ),
+      {
+        title: "Huhu",
+        vhead: <style {...sosse.useAsset("server").css.props} />,
+      }
     );
+
+    res.end(body);
   });
 
   return () => {

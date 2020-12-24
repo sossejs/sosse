@@ -1,5 +1,5 @@
-import { createContext } from "react";
-import { valueRef } from "sosse/preact";
+import { createContext } from "preact";
+import { valueRef } from "sosse/iso";
 
 export const ColorContext = createContext("yellow");
 

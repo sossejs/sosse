@@ -1,7 +1,6 @@
-import { jsx, useCtx } from "sosse";
-import React, { Fragment } from "react";
+import { useCtx } from "sosse";
 import { Express } from "express";
-import { css } from "sosse/uni";
+import { css, ErrorBoundary } from "sosse/iso";
 import {
   SsrInjectCounter,
   SuspenseInjectCounter,
@@ -10,6 +9,7 @@ import {
   HydrateColorContext,
 } from "../injects";
 import { ColorContext } from "../context";
+import { h, Fragment } from "preact";
 
 export const homeRoute = async function (app: Express) {
   globalThis.count = globalThis.count || 1;
@@ -18,50 +18,24 @@ export const homeRoute = async function (app: Express) {
   const indexAsset = ctx.useAsset("index");
 
   // Home route
-  app.get("/", (req, res) => {
+  app.get("/", async (req, res) => {
     res.send(
-      ctx.html(() => ({
-        title: "Hello world",
-        data: { count: globalThis.count },
-        head: jsx(
-          <Fragment>
-            <link href="https://unpkg.com/sanitize.css" rel="stylesheet" />
-            <link
-              href="https://unpkg.com/sanitize.css/forms.css"
-              rel="stylesheet"
-            />
-            <link
-              href="https://unpkg.com/sanitize.css/typography.css"
-              rel="stylesheet"
-            />
-            <link {...indexAsset.css.props} />
-            <script {...indexAsset.js.props} defer={true} />
-          </Fragment>
-        ),
-        bodyAttrs: {
-          class: css({
-            selectors: {
-              "& > #app": {
-                width: "40rem",
-                margin: "auto",
-              },
-            },
-          }),
-        },
-        body: jsx(
+      await ctx.render(
+        () => (
           <ColorContext.Provider value="#A09BD7">
             <HydrateColorContext />
             <div id="app">
               <h1>hello visitor {globalThis.count++}</h1>
+              <ErrorBoundary>
+                <Box />
+                <Box />
+                <SsrInjectCounter startCount={4} />
+                <SuspenseInjectCounter startCount={7} />
+                <div class={css({ marginTop: "100rem" })} />
+                <LazyInjectCounter startCount={9} />
+                <Box />
+              </ErrorBoundary>
 
-              <Box />
-              <Box />
-
-              <SsrInjectCounter startCount={4} />
-              <SuspenseInjectCounter startCount={7} />
-              <div class={css({ marginTop: "100rem" })} />
-              <LazyInjectCounter startCount={9} />
-              <Box />
               <footer
                 class={css({
                   backgroundColor: "#034",
@@ -75,7 +49,25 @@ export const homeRoute = async function (app: Express) {
             </div>
           </ColorContext.Provider>
         ),
-      }))
+        {
+          title: "Hello world",
+          vhead: (
+            <>
+              <link href="https://unpkg.com/sanitize.css" rel="stylesheet" />
+              <link
+                href="https://unpkg.com/sanitize.css/forms.css"
+                rel="stylesheet"
+              />
+              <link
+                href="https://unpkg.com/sanitize.css/typography.css"
+                rel="stylesheet"
+              />
+              <link {...indexAsset.css.props} />
+              <script {...indexAsset.js.props} defer={true} />
+            </>
+          ),
+        }
+      )
     );
   });
 };

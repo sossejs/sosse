@@ -1,6 +1,7 @@
-import React, { useContext } from "react";
 import { ColorContext } from "../context";
-import { css } from "sosse/uni";
+import { css } from "sosse/iso";
+import { h } from "preact";
+import { useContext } from "preact/compat";
 
 export const Box = function () {
   const color = useContext(ColorContext);

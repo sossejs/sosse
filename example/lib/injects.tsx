@@ -1,8 +1,9 @@
-import React, { Suspense } from "react";
-import { interactive, hydratedContext } from "sosse/preact";
+import { h, Component } from "preact";
+import { Suspense } from "preact/compat";
+import { interactive, hydratedContext } from "sosse/iso";
 import { ColorContext, colorRef } from "./context";
 
-class ErrorBoundary extends React.Component {
+class ErrorBoundary extends Component {
   state = { hasError: false };
 
   static getDerivedStateFromError(error) {
