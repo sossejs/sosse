@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.8.0-next.12](https://github.com/sossejs/sosse/compare/v0.8.0-next.11...v0.8.0-next.12) (2020-12-24)
+
+
+### Bug Fixes
+
+* upgrade to current microbundle and fix types dist ([30286f3](https://github.com/sossejs/sosse/commit/30286f3c53ccceb412531fa6a069313b7bd7ac61))
+
 ## [0.8.0-next.11](https://github.com/sossejs/sosse/compare/v0.8.0-next.10...v0.8.0-next.11) (2020-12-24)
 
 

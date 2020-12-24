@@ -1,12 +1,15 @@
+<ul>
+<li>server main css</li>
+</ul>
 <h1 id="🥣-sosse"><a href="#%F0%9F%A5%A3-sosse" aria-hidden="true"><span class="toc-link"><span class="icono-chain"></span></span></a><a href="https://github.com/sossejs/sosse" target="_blank">🥣 Sosse</a></h1>
-<p>Composable toolkit for (p)react full-stack node web servers:</p>
+<p>Composable toolkit for Preact full-stack node web servers:</p>
 <ul>
 <li>🔥 Hot server restart</li>
 <li>🔄 Live reload</li>
 <li>🖨 Output server errors in browser</li>
-<li>⚛️ Interactive (p)react components</li>
+<li>⚛️ Interactive Preact components</li>
 <li>🌊 CSS server side rendering with <a href="https://github.com/kripod/otion" target="_blank">Otion</a></li>
-<li>📦 Bundling client assets with <a href="https://github.com/developit/microbundle" target="_blank">Microbundle</a></li>
+<li>📦 Bundling JS with <a href="https://github.com/rollup/rollup" target="_blank">Rollup</a></li>
 </ul>
 <h2 id="-getting-started"><a href="#-getting-started" aria-hidden="true"><span class="toc-link"><span class="icono-chain"></span></span></a>🤓 <a href="https://github.com/sossejs/sosse/blob/next/docs/getting_started.md" target="_blank">Getting started</a></h2>
 <p><a href="https://opensource.org/licenses/MIT" target="_blank"><img src="assets/badge.license.svg" class="img-fluid"></a>
@@ -20,14 +23,15 @@
 </ul>
 <h2 id="architecture"><a href="#architecture" aria-hidden="true"><span class="toc-link"><span class="icono-chain"></span></span></a>Architecture</h2>
 <ul>
+<li>Explicitly <strong>not</strong> a single page application framework</li>
 <li>Routing:<ul>
+<li>Implemented on the server</li>
 <li><a href="https://github.com/expressjs/expressjs.com" target="_blank">Express</a>, <a href="https://github.com/fastify/fastify" target="_blank">Fastify</a> and others can be used as server routing solution<ul>
-<li>Sosse does not predetermine a specific routing solution, nor does it require one</li>
+<li>Sosse does not predetermine a specific routing library, nor does it require one</li>
 </ul></li>
-<li>Client side routing is strictly not supported</li>
 </ul></li>
 <li>Rendering HTML:<ul>
-<li>(P)react is used as the view layer</li>
+<li><a href="https://github.com/preactjs/preact" target="_blank">Preact</a> is used as the view layer</li>
 <li>Static components are directly rendered on the server</li>
 <li>Dynamic components are rendered on the client<ul>
 <li>Static parts from dynamic components can be prerendered on the server</li>
@@ -35,16 +39,24 @@
 </ul></li>
 <li>Rendering CSS:<ul>
 <li>The recommended CSS in JS solution is <a href="https://github.com/kripod/otion" target="_blank">Otion</a></li>
-<li>CSS files and modules can be imported and are processed with <a href="https://github.com/postcss/postcss" target="_blank">PostCSS</a></li>
+<li>CSS files and modules are supported for client side rendering and are processed with <a href="https://github.com/postcss/postcss" target="_blank">PostCSS</a></li>
 </ul></li>
 <li>JS Bundling / Transpilation:<ul>
 <li>Done for the client &#x26; server</li>
 <li>Convention over configuration</li>
-<li>Sosse handles the bundling (with microbundle)</li>
-<li>Stay a way from Sosse if you have very specific requirements about how to bundle your JS</li>
+<li>Sosse handles the bundling (with Rollup)</li>
+<li>Stay away from Sosse if you have very specific requirements about how to bundle your JS</li>
 </ul></li>
 </ul>
 <h2 id="main-use-case"><a href="#main-use-case" aria-hidden="true"><span class="toc-link"><span class="icono-chain"></span></span></a>Main use case</h2>
 <p>Small - middle sized, but quickly growing and changing web projects with a strong focus on a composable UI, are the main target for Sosse.</p>
-<p>Setting up a component driven web site has generally a high abstraction cost. As an example I want to mention <a href="https://github.com/vercel/next.js" target="_blank">Next.js</a>, a really powerful full-stack react framework. This power comes at a price: In the best case you only have to implement a couple things like routes and redirects and the "Next.js"-way, and in the worst case it will hit you in the business logic and you have to accept unexpected trade-offs.</p>
+<p>Setting up a component driven web site has generally a high abstraction cost. As an example I want to mention <a href="https://github.com/vercel/next.js" target="_blank">Next.js</a>, a really powerful full-stack react framework. This power comes at a price: In the best case you only have to implement a couple things like routes and redirects in the "Next.js"-way, and in the worst case it will hit you in the business logic and you have to accept unexpected trade-offs.</p>
 <p>Sosse tries to avoid typical framework-like trade-offs by limitting its feature-set, architectural style and defining clear boundaries.</p>
+<h1 id="ideas-for-the-future"><a href="#ideas-for-the-future" aria-hidden="true"><span class="toc-link"><span class="icono-chain"></span></span></a>Ideas for the future</h1>
+<ul>
+<li>CSS server side rendering support<ul>
+<li>Currently css files can be imported on both client and server, but importing them on the server does not do anything to the client</li>
+<li>Proper ssr support would mean that only the needed css styles would be rendered in the document, we would need to implement something similar as described here: <a href="https://github.com/egoist/rollup-plugin-postcss/issues/177" target="_blank">https://github.com/egoist/rollup-plugin-postcss/issues/177</a></li>
+<li>An alternative would be to attach a full bundled css file, but that fails with this issue: <a href="https://github.com/rollup/rollup/issues/3669" target="_blank">https://github.com/rollup/rollup/issues/3669</a></li>
+</ul></li>
+</ul>
