@@ -70,7 +70,7 @@ export const hsr = async function ({
         }
 
         clearInterval(intervalId);
-        resolve();
+        resolve(null);
       }, 300);
     });
 
@@ -101,7 +101,7 @@ export const hsr = async function ({
         } else {
           // If the consumer returns their server instance we close it for them
           await new Promise((res, rej) =>
-            oldStopMain.close((e) => (e ? rej(e) : res()))
+            oldStopMain.close((e) => (e ? rej(e) : res(null)))
           );
         }
       } else {
