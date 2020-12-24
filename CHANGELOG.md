@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.8.0-next.13](https://github.com/sossejs/sosse/compare/v0.8.0-next.12...v0.8.0-next.13) (2020-12-24)
+
+
+### Bug Fixes
+
+* move not bundleable dependencies out of dev ([a0e36c3](https://github.com/sossejs/sosse/commit/a0e36c30a53d9d344a43b7dddb56e165d83f5dc3))
+
 ## [0.8.0-next.12](https://github.com/sossejs/sosse/compare/v0.8.0-next.11...v0.8.0-next.12) (2020-12-24)
 
 
