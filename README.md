@@ -1,3 +1,5 @@
+- server main css
+
 # [🥣 Sosse](https://github.com/sossejs/sosse)
 
 Composable toolkit for (p)react full-stack node web servers:
@@ -50,3 +52,10 @@ Small - middle sized, but quickly growing and changing web projects with a stron
 Setting up a component driven web site has generally a high abstraction cost. As an example I want to mention [Next.js](https://github.com/vercel/next.js), a really powerful full-stack react framework. This power comes at a price: In the best case you only have to implement a couple things like routes and redirects in the "Next.js"-way, and in the worst case it will hit you in the business logic and you have to accept unexpected trade-offs.
 
 Sosse tries to avoid typical framework-like trade-offs by limitting its feature-set, architectural style and defining clear boundaries.
+
+# Ideas for the future
+
+- CSS Modules ssr support
+  - Currently css modules can be imported on both client and server, but importing them on the server does not do anything to the client
+  - Proper ssr support would mean that only the needed css styles would be rendered in the document, we would need to implement something similar as described here: https://github.com/egoist/rollup-plugin-postcss/issues/177
+  - An alternative would be to attach a full css file of all on the server imported css modules, but it fails with this issue: https://github.com/rollup/rollup/issues/3669

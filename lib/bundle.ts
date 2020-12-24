@@ -6,7 +6,7 @@ import {
   readJson,
   writeJson,
 } from "fs-extra";
-import { dirname, extname, basename, resolve, relative } from "path";
+import { dirname, extname, basename, resolve, relative, join } from "path";
 import { isDev } from "./env";
 import cuid from "cuid";
 import stripAnsi from "strip-ansi";
@@ -76,6 +76,24 @@ export const bundle = async function ({
     src
   )}"`;
 
+  let cssExtract: boolean | string = true;
+  if (server) {
+    ctx._assets["server"] = {
+      css: createCssAsset({
+        dist: resolve(ctx._distDir, "client"),
+        watch,
+        file: join("client", "server", "server.css"),
+      }),
+    };
+
+    // TODO: This doesnt work because of (https://github.com/rollup/rollup/issues/3669)
+    // cssExtract = relative(distDir, ctx._assets['server'].css.path);
+    cssExtract = false;
+
+    // TODO: We can only enable this, if there is a check if some server css even exist
+    // ctx._injectHtml.head['serverCss'] = `<link rel="stylesheet" type="text/css" href="${ctx._assets['server'].css.url}" />`
+  }
+
   const rollupConfig = rollupConfigFactory({
     react,
     cwd,
@@ -84,6 +102,7 @@ export const bundle = async function ({
     input: src,
     alias,
     define,
+    cssExtract,
     output: {
       exports: server ? "named" : "auto",
       entryFileNames: relative(distDir, dist),
@@ -165,6 +184,25 @@ export const bundle = async function ({
   return {};
 };
 
+const createCssAsset = function ({ file, watch, dist }) {
+  const fileExt = extname(file);
+  const fileBase = basename(file, fileExt);
+  const uniqueFileBase = fileBase + (!watch ? `.${cuid()}` : "");
+  const distCssFileName = uniqueFileBase + ".css";
+  const absCssFileDist = resolve(dist, fileBase, distCssFileName);
+  const publicCssFile = `/sosse-client/${fileBase}/${distCssFileName}`;
+
+  return {
+    url: publicCssFile,
+    path: absCssFileDist,
+    props: {
+      rel: "stylesheet",
+      type: "text/css",
+      href: publicCssFile,
+    },
+  };
+};
+
 export const bundleClients = async function ({
   src,
   dist,
@@ -210,9 +248,7 @@ export const bundleClients = async function ({
       const absFile = resolve(src, file);
       const uniqueFileBase = fileBase + (!watch ? `.${cuid()}` : "");
       const distJsFileName = uniqueFileBase + ".js";
-      const distCssFileName = uniqueFileBase + ".css";
       const absJsFileDist = resolve(dist, fileBase, distJsFileName);
-      const absCssFileDist = resolve(dist, fileBase, distCssFileName);
 
       let aEntryOptions: BundleEntryOptions = {};
       if (entryOptions) {
@@ -234,7 +270,7 @@ export const bundleClients = async function ({
       const newWatchers = bundleResult.watchers;
 
       const publicJsFile = `/sosse-client/${fileBase}/${distJsFileName}`;
-      const publicCssFile = `/sosse-client/${fileBase}/${distCssFileName}`;
+
       ctx._assets[fileBase] = {
         js: {
           url: publicJsFile,
@@ -244,15 +280,11 @@ export const bundleClients = async function ({
             src: publicJsFile,
           },
         },
-        css: {
-          url: publicCssFile,
-          path: absCssFileDist,
-          props: {
-            rel: "stylesheet",
-            type: "text/css",
-            href: publicCssFile,
-          },
-        },
+        css: createCssAsset({
+          file,
+          watch,
+          dist,
+        }),
       };
       clientAssets[fileBase] = ctx._assets[fileBase];
 
