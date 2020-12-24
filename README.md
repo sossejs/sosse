@@ -1,5 +1,3 @@
-- server main css
-
 # [🥣 Sosse](https://github.com/sossejs/sosse)
 
 Composable toolkit for Preact full-stack node web servers:
