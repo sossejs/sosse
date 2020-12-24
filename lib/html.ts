@@ -1,11 +1,16 @@
 import { VNode } from "preact";
+import prerender from "preact-iso/prerender";
 import render from "preact-render-to-string";
+
+export const jssx = function (vnode: VNode) {
+  return prerender(vnode);
+};
 
 export const jsx = function (vnode: VNode) {
   return render(vnode);
 };
 
-export const html = function ({
+export const html = async function ({
   title,
   head = "",
   vhead,
@@ -24,7 +29,7 @@ export const html = function ({
   }
 
   if (vhead) {
-    head += jsx(vhead);
+    head += (await jssx(vhead)).html;
   }
 
   return `

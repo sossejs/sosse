@@ -1,12 +1,14 @@
-import React, {
+import { createContext, h } from "preact";
+import {
   Fragment,
-  hydrate,
   render,
   useContext,
   useEffect,
   useState,
-} from "react";
-import { isNode } from "sosse/iso";
+} from "preact/compat";
+import { lazy as _lazy, hydrate, ErrorBoundary } from "preact-iso";
+export { lazy, ErrorBoundary } from "preact-iso";
+import { isNode } from "./isNode";
 
 const emptyFunc = () => {};
 
@@ -22,25 +24,7 @@ type Options<T> = {
 
 type ThenArg<T> = T extends PromiseLike<infer U> ? U : T;
 
-let components: Record<string, any> = {};
 const injectCache: Record<string, any> = {};
-
-export const preload = async function () {
-  const importPromises = [];
-  for (const [id, { component, ssr }] of Object.entries(injectCache)) {
-    if (!ssr) {
-      continue;
-    }
-
-    const importPromise = (async () => {
-      components[id] = await component();
-    })();
-
-    importPromises.push(importPromise);
-  }
-
-  await Promise.all(importPromises);
-};
 
 export const inject = function ({
   logInjects = process.env.NODE_ENV !== "production",
@@ -63,7 +47,7 @@ export const inject = function ({
       (async () => {
         let ComponentPromise = component();
         return ASuspense
-          ? React.lazy(async () => ({ default: await ComponentPromise }))
+          ? _lazy(async () => ({ default: await ComponentPromise }))
           : await ComponentPromise;
       })();
 
@@ -109,21 +93,17 @@ export const interactive = function <T, C = ThenArg<T>>({
   id,
   container = defaultContainer,
   component,
-  suspense,
+  suspense = ErrorBoundary,
   lazy = false,
   ssr = false,
   wrapper = [],
 }: Options<T>): C {
-  if (suspense && ssr) {
-    console.warn("Using suspense and ssr together isn't supported");
-  }
-
   lazy = lazy && typeof IntersectionObserver === "function";
 
   injectCache[id] = {
     component,
     ssr,
-    suspense: !ssr && suspense,
+    suspense: suspense,
     lazy,
     wrapper,
   };
@@ -131,9 +111,9 @@ export const interactive = function <T, C = ThenArg<T>>({
   if (isNode) {
     const Container = container;
 
-    return function (props) {
-      const Component = components[id];
+    const Component = _lazy(component);
 
+    return function (props) {
       return (
         <Fragment>
           <script

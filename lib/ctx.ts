@@ -1,6 +1,5 @@
 import { EventEmitter } from "events";
 import { isDev } from "./env";
-import { htmlData } from "sosse/iso";
 import {
   Server,
   RequestListener,
@@ -11,7 +10,7 @@ import url from "url";
 import { readFileSync } from "fs-extra";
 import path, { resolve } from "path";
 import serveStatic from "serve-static";
-import { html, jsx } from "./html";
+import { html, jssx } from "./html";
 import { VNode } from "preact";
 
 let currentCtx: Ctx;
@@ -95,7 +94,7 @@ export class Ctx {
     return asset;
   }
 
-  render(
+  async render(
     bodyFn: () => string | VNode,
     tplOptions?: Omit<Parameters<typeof html>[0], "body">
   ) {
@@ -119,21 +118,13 @@ export class Ctx {
 
     let body = bodyFn();
     if (typeof body !== "string") {
-      body = jsx(body);
+      body = (await jssx(body)).html;
     }
 
     const assets = {
       head: "",
-      body,
+      body: body as string,
     };
-
-    const data = htmlData();
-    if (data != null) {
-      assets.head += `<script class="sosse-html-data" type="application/json">${JSON.stringify(
-        data
-      )}</script>`;
-      htmlData(null);
-    }
 
     for (const injectHtml of Object.values(this._injectHtml.head)) {
       assets.head += injectHtml;
