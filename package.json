@@ -28,6 +28,12 @@
       "import": "./cli/dist/main.mjs",
       "require": "./cli/dist/main.js"
     },
+    "./fastify": {
+      "browser": "./fastify/dist/main.mjs",
+      "umd": "./fastify/dist/main.umd.js",
+      "import": "./fastify/dist/main.mjs",
+      "require": "./fastify/dist/main.js"
+    },
     "./package.json": "./package.json",
     "./": "./"
   },
@@ -118,7 +124,10 @@
     "iso/dist",
     "cli/package.json",
     "cli/lib",
-    "cli/dist"
+    "cli/dist",
+    "fastify/package.json",
+    "fastify/lib",
+    "fastify/dist"
   ],
   "standard-version": {
     "scripts": {
@@ -143,7 +152,8 @@
       "lib/**/*.{ts,tsx,js,jsx}",
       "dev-socket-client/lib/**/*.{ts,tsx,js,jsx}",
       "iso/lib/**/*.{ts,tsx,js,jsx}",
-      "cli/lib/**/*.{ts,tsx,js,jsx}"
+      "cli/lib/**/*.{ts,tsx,js,jsx}",
+      "fastify/lib/**/*.{ts,tsx,js,jsx}"
     ]
   }
 }

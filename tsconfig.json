@@ -18,7 +18,8 @@
       "sosse/dev-socket-client": ["../dev-socket-client/lib/main.ts"],
       "sosse/iso": ["../iso/lib/main.ts"],
       "sosse/react": ["../react/lib/main.tsx"],
-      "sosse/cli": ["../cli/lib/main.ts"]
+      "sosse/cli": ["../cli/lib/main.ts"],
+      "sosse/fastify": ["../fastify/lib/main.ts"]
     }
   },
   "exclude": ["node_modules", "**/dist"]
