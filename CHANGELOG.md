@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.8.0-next.14](https://github.com/sossejs/sosse/compare/v0.8.0-next.13...v0.8.0-next.14) (2020-12-25)
+
+
+### Features
+
+* add fastify decorate and serverFactory ([bd0619e](https://github.com/sossejs/sosse/commit/bd0619e43d6e8cbd5383b10b5e918a2783170fb9))
+
 ## [0.8.0-next.13](https://github.com/sossejs/sosse/compare/v0.8.0-next.12...v0.8.0-next.13) (2020-12-24)
 
 
