@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.8.0-next.15](https://github.com/sossejs/sosse/compare/v0.8.0-next.14...v0.8.0-next.15) (2020-12-25)
+
+
+### Bug Fixes
+
+* ignore subfolders in client assets ([7d2f6d2](https://github.com/sossejs/sosse/commit/7d2f6d235225d6323ab0d6f3352829d5ecbe2170))
+
 ## [0.8.0-next.14](https://github.com/sossejs/sosse/compare/v0.8.0-next.13...v0.8.0-next.14) (2020-12-25)
 
 
