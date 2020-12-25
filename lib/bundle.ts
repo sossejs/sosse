@@ -246,6 +246,10 @@ export const bundleClients = async function ({
       const fileExt = extname(file);
       const fileBase = basename(file, fileExt);
       const absFile = resolve(src, file);
+      if (!fileExt) {
+        continue;
+      }
+
       const uniqueFileBase = fileBase + (!watch ? `.${cuid()}` : "");
       const distJsFileName = uniqueFileBase + ".js";
       const absJsFileDist = resolve(dist, fileBase, distJsFileName);
