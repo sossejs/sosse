@@ -10,8 +10,8 @@ import url from "url";
 import { readFileSync } from "fs-extra";
 import path, { resolve } from "path";
 import serveStatic from "serve-static";
-import { html, jssx } from "./html";
-import { VNode } from "preact";
+import { Html, jssx } from "./html";
+import { h, VNode } from "preact";
 
 let currentCtx: Ctx;
 
@@ -95,9 +95,8 @@ export class Ctx {
   }
 
   async render(
-    bodyFn: () => string | VNode,
-    tplOptions?: Omit<Parameters<typeof html>[0], "body">
-  ) {
+    Template: (props: { Html: typeof Html }) => VNode
+  ): Promise<string> {
     let otion: { setup; server };
     if (this._otion.enable) {
       otion = {
@@ -116,44 +115,27 @@ export class Ctx {
       });
     }
 
-    let body = bodyFn();
-    if (typeof body !== "string") {
-      body = (await jssx(body)).html;
-    }
+    let html = (await jssx(<Template Html={Html} />)).html;
 
-    const assets = {
-      head: "",
-      body: body as string,
-    };
-
-    for (const injectHtml of Object.values(this._injectHtml.head)) {
-      assets.head += injectHtml;
-    }
-
-    for (const injectHtml of Object.values(this._injectHtml.footer)) {
-      assets.body += injectHtml;
-    }
+    html = html.replace(
+      "</head>",
+      Object.values(this._injectHtml.head).join("") + "</head>"
+    );
+    html = html.replace(
+      "</body>",
+      Object.values(this._injectHtml.footer).join("") + "</body>"
+    );
 
     if (this._otion.enable) {
       const styleTag = otion.server.getStyleTag(
-        otion.server.filterOutUnusedRules(injector, assets.body)
+        otion.server.filterOutUnusedRules(injector, html)
       );
-      assets.head += styleTag;
+      html = html.replace("</head>", styleTag + "</head>");
     }
 
-    if (tplOptions) {
-      const preparedTplOptions = {
-        head: "",
-        body: assets.body,
-        ...tplOptions,
-      };
+    html = "<!doctype html>\n" + html;
 
-      preparedTplOptions.head += assets.head;
-
-      return html(preparedTplOptions);
-    }
-
-    return assets;
+    return html;
   }
 
   withSosse(listener?: RequestListener): RequestListener {
