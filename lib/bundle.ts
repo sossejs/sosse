@@ -88,16 +88,19 @@ export const bundle = async function ({
 
   let cssExtract: boolean | string = true;
   if (server) {
+    // TODO: This doesnt work because of (https://github.com/rollup/rollup/issues/3669)
+    /*
     ctx._assets["server"] = {
       css: createCssAsset({
         dist: resolve(ctx._distDir, "client"),
-        watch,
-        file: join("client", "server", "server.css"),
+        jsDist: dist
+        // file: join("client", "server", "server.css"),
       }),
     };
 
-    // TODO: This doesnt work because of (https://github.com/rollup/rollup/issues/3669)
-    // cssExtract = relative(distDir, ctx._assets['server'].css.path);
+    cssExtract = relative(distDir, ctx._assets['server'].css.path);
+    */
+
     cssExtract = false;
 
     // TODO: We can only enable this, if there is a check if some server css even exist
@@ -194,10 +197,7 @@ export const bundle = async function ({
   return {};
 };
 
-const createCssAsset = function ({ file, watch, dist }) {
-  const fileExt = extname(file);
-  const fileBase = basename(file, fileExt);
-  const uniqueFileBase = fileBase + (!watch ? `.${cuid()}` : "");
+const createCssAsset = function ({ fileBase, uniqueFileBase, dist }) {
   const distCssFileName = uniqueFileBase + ".css";
   const absCssFileDist = resolve(dist, fileBase, distCssFileName);
   const publicCssFile = `/sosse-client/${fileBase}/${distCssFileName}`;
@@ -295,8 +295,8 @@ export const bundleClients = async function ({
           },
         },
         css: createCssAsset({
-          file,
-          watch,
+          fileBase,
+          uniqueFileBase,
           dist,
         }),
       };
