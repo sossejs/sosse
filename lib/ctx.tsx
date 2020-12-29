@@ -115,7 +115,7 @@ export class Ctx {
       });
     }
 
-    let html = (await jssx(<Template Html={Html} />)).html;
+    let html: string = (await jssx(<Template Html={Html} />)).html;
 
     html = html.replace(
       "</head>",
@@ -134,6 +134,14 @@ export class Ctx {
     }
 
     html = "<!doctype html>\n" + html;
+
+    // TODO: This is a workaround to move preact-iso isodata to a better place in the document
+    const preactIsoPos = html.lastIndexOf('<script type="isodata"');
+    if (preactIsoPos > -1) {
+      const preactIsoTag = html.slice(preactIsoPos);
+      html = html.replace(preactIsoTag, "");
+      html = html.replace("</body>", preactIsoTag + "</body>");
+    }
 
     return html;
   }
