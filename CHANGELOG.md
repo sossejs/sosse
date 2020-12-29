@@ -2,6 +2,25 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.8.0-next.16](https://github.com/sossejs/sosse/compare/v0.8.0-next.15...v0.8.0-next.16) (2020-12-29)
+
+
+### ⚠ BREAKING CHANGES
+
+* add SOSSE rollup build globals
+* rework html and render functions
+
+### Features
+
+* add SOSSE rollup build globals ([a7a57ef](https://github.com/sossejs/sosse/commit/a7a57ef0de7cd582c7a2422910dc647c51d3be7c))
+* implement source-map-support ([0f2f509](https://github.com/sossejs/sosse/commit/0f2f50983052639f7ec83861b4c6d694913b52af))
+* rework html and render functions ([36df444](https://github.com/sossejs/sosse/commit/36df44421a2514f2b55e33a146c739a5738ff5ca))
+
+
+### Bug Fixes
+
+* move preact-iso isodata into body ([7e13678](https://github.com/sossejs/sosse/commit/7e13678f58215973de1031f1e7f5497a44081780))
+
 ## [0.8.0-next.15](https://github.com/sossejs/sosse/compare/v0.8.0-next.14...v0.8.0-next.15) (2020-12-25)
 
 
