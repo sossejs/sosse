@@ -15,6 +15,13 @@ import rollup from "rollup";
 
 const rollupConfigFactory = require("sosse/lib/rollup");
 
+declare global {
+  var SOSSE: {
+    libDir: string;
+    isNode: boolean;
+  };
+}
+
 export type BundleEntryOptions = {
   alias?: Record<string, string>;
   define?: Record<string, string>;
@@ -60,6 +67,9 @@ export const bundle = async function ({
       ...define,
     };
   }
+
+  define["SOSSE.libDir"] = JSON.stringify(ctx._libDir);
+  define["SOSSE.isNode"] = JSON.stringify(server);
 
   const pkgPath = resolve(cwd, "package.json");
   const pkgExternals: Record<string, boolean> = {};

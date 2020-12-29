@@ -122,6 +122,7 @@ export default () => {
   }
 
   const ctx = new Ctx({
+    libDir,
     distDir,
     serveClient,
     otion,

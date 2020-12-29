@@ -53,6 +53,7 @@ export const unsetCtx = function () {
 };
 
 export class Ctx {
+  _libDir: string;
   _distDir: string;
   _serveClient: ServeClientOptions;
   _otion: OtionOptions;
@@ -67,14 +68,17 @@ export class Ctx {
   } = { head: {}, footer: {} };
 
   constructor({
+    libDir = "",
     distDir = "",
     serveClient = { enable: false },
     otion = { enable: false },
   }: {
+    libDir?: string;
     distDir?: string;
     serveClient?: ServeClientOptions;
     otion?: OtionOptions;
   } = {}) {
+    this._libDir = libDir;
     this._distDir = distDir;
     this._serveClient = serveClient;
     this._otion = otion;
