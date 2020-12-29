@@ -1,5 +1,6 @@
 #!/usr/bin/env node
 
+require("@lufrai/source-map-support").install();
 import sade from "sade";
 import { resolve } from "path";
 const { pathExists } = require("fs-extra");

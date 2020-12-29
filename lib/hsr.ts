@@ -4,6 +4,7 @@ import { Ctx, setCtx, unsetCtx } from "./ctx";
 import stripAnsi from "strip-ansi";
 import { Server } from "http";
 import { isDev } from "./env";
+import { emptyCache } from "@lufrai/source-map-support";
 
 const clearRequireCache = function (idRegex) {
   for (const moduleId of Object.keys(require.cache)) {
@@ -76,6 +77,7 @@ export const hsr = async function ({
 
     pendingRestart = false;
 
+    emptyCache();
     clearRequireCache(cwdRegex);
 
     let listen;
