@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.8.0-next.20](https://github.com/sossejs/sosse/compare/v0.8.0-next.19...v0.8.0-next.20) (2020-12-30)
+
+
+### Features
+
+* add isDev to postcss ctx ([88ae6d9](https://github.com/sossejs/sosse/commit/88ae6d98cfafc1ad00233f7511ec51d6bb8d08ae))
+
 ## [0.8.0-next.19](https://github.com/sossejs/sosse/compare/v0.8.0-next.18...v0.8.0-next.19) (2020-12-30)
 
 
