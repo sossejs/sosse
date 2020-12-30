@@ -1,11 +1,5 @@
-import { createContext, h } from "preact";
-import {
-  Fragment,
-  render,
-  useContext,
-  useEffect,
-  useState,
-} from "preact/compat";
+import { h } from "preact";
+import { Fragment, useContext, useEffect, useState } from "preact/compat";
 import { lazy as _lazy, hydrate, ErrorBoundary } from "preact-iso";
 export { lazy, ErrorBoundary } from "preact-iso";
 import { isNode } from "./isNode";
@@ -39,7 +33,7 @@ export const inject = function ({
   const jsonEls = Array.from(jsonElList);
   jsonEls.forEach(async (el) => {
     const id = el["dataset"].interactive;
-    const { component, ssr, suspense, lazy, wrapper } = injectCache[id];
+    const { component, suspense, lazy, wrapper } = injectCache[id];
     const ASuspense = suspense;
 
     componentPromises[id] =
@@ -69,8 +63,7 @@ export const inject = function ({
       if (ASuspense) {
         vdom = <ASuspense>{vdom}</ASuspense>;
       }
-      const injector = ssr ? hydrate : render;
-      injector(vdom, containerEl);
+      hydrate(vdom, containerEl);
     };
 
     if (lazy) {
@@ -102,7 +95,6 @@ export const interactive = function <T, C = ThenArg<T>>({
 
   injectCache[id] = {
     component,
-    ssr,
     suspense: suspense,
     lazy,
     wrapper,
