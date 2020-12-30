@@ -1,6 +1,7 @@
-import { createContext, h } from "preact";
+import { h } from "preact";
 import {
   Fragment,
+  createPortal,
   render,
   useContext,
   useEffect,
@@ -27,16 +28,45 @@ type ThenArg<T> = T extends PromiseLike<infer U> ? U : T;
 const injectCache: Record<string, any> = {};
 
 export const inject = function ({
-  logInjects = process.env.NODE_ENV !== "production",
+  logInjects = false, // process.env.NODE_ENV !== "production",
 } = {}) {
   let jsonElList = document.getElementsByClassName(`sosse-interactive`);
   if (jsonElList.length === 0) {
     return;
   }
 
-  const componentPromises: Record<string, any> = {};
+  console.log(process.env.NODE_ENV);
 
+  const elVdom = [];
+  const componentPromises: Record<string, any> = {};
   const jsonEls = Array.from(jsonElList);
+  for (const el of jsonEls) {
+    const id = el["dataset"].interactive;
+    const { component, ssr, suspense, lazy, wrapper } = injectCache[id];
+
+    const Component = _lazy(async () => ({ default: await component() }));
+    const props = JSON.parse(el.innerHTML);
+    let vdom = <Component {...props} />;
+
+    if (wrapper.length) {
+      for (const Wrapper of wrapper) {
+        vdom = <Wrapper>{vdom}</Wrapper>;
+      }
+    }
+
+    const Suspense = suspense;
+    vdom = <Suspense>{vdom}</Suspense>;
+
+    const containerEl = el.nextElementSibling;
+    vdom = createPortal(vdom, containerEl);
+
+    elVdom.push(vdom);
+  }
+
+  hydrate(h(Fragment, {}, ...elVdom), document.querySelector("#inject-root"));
+
+  /*
+
   jsonEls.forEach(async (el) => {
     const id = el["dataset"].interactive;
     const { component, ssr, suspense, lazy, wrapper } = injectCache[id];
@@ -47,7 +77,7 @@ export const inject = function ({
       (async () => {
         let ComponentPromise = component();
         return ASuspense
-          ? _lazy(async () => ({ default: await ComponentPromise }))
+          ? 
           : await ComponentPromise;
       })();
 
@@ -83,6 +113,7 @@ export const inject = function ({
       aInject();
     }
   });
+  */
 };
 
 const defaultContainer = function ({ children }) {
