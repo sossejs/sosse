@@ -127,7 +127,9 @@ export class Ctx {
     );
     html = html.replace(
       "</body>",
-      Object.values(this._injectHtml.footer).join("") + "</body>"
+      Object.values(this._injectHtml.footer).join("") +
+        '<div id="inject-root"></div>' +
+        "</body>"
     );
 
     if (this._otion.enable) {
