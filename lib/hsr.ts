@@ -3,7 +3,6 @@ import path from "path";
 import { Ctx, setCtx, unsetCtx } from "./ctx";
 import stripAnsi from "strip-ansi";
 import { Server } from "http";
-import { isDev } from "./env";
 import { emptyCache } from "@lufrai/source-map-support";
 
 const clearRequireCache = function (idRegex) {
@@ -21,7 +20,7 @@ export const hsr = async function ({
   wait = 500,
   main,
   ctx = new Ctx(),
-  restart = isDev,
+  restart = ctx._isDev,
 }: {
   cwd?: string;
   watch?: string[];

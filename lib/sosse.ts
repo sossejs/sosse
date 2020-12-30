@@ -8,7 +8,6 @@ import {
 import { resolve } from "path";
 import { writeFile, mkdirp, pathExists, emptyDir } from "fs-extra";
 import { resolveServerMain } from "./resolveServerMain";
-import { isDev } from "./env";
 import { Ctx, ServeClientOptions, OtionOptions } from "./ctx";
 import {} from "fs";
 
@@ -19,7 +18,8 @@ export type SosseOptions = {
   serveClient?: ServeClientOptions;
   otion?: OtionOptions;
   distDir?: string;
-  exitAfterBundle?: boolean;
+  productionBuild?: boolean;
+  isDev?: boolean;
   restart?: boolean;
   bundleServer?: {
     enable?: boolean;
@@ -35,7 +35,8 @@ export const sosse = async function ({
   cwd = process.cwd(),
   libDir = ".",
   distDir = "dist",
-  exitAfterBundle = false,
+  productionBuild = false,
+  isDev = true,
   restart = isDev,
   serverMain = "main",
   serveClient = {},
@@ -63,11 +64,15 @@ export const sosse = async function ({
     ...bundleServer,
   };
 
+  if (productionBuild) {
+    process.env.NODE_ENV = "production";
+  }
+
   cwd = resolve(cwd);
   libDir = resolve(cwd, libDir);
   await mkdirp(libDir);
   distDir = resolve(cwd, distDir);
-  if (restart || exitAfterBundle) {
+  if (restart || productionBuild) {
     await emptyDir(distDir);
   }
 
@@ -122,6 +127,7 @@ export default () => {
   }
 
   const ctx = new Ctx({
+    isDev,
     libDir,
     distDir,
     serveClient,
@@ -134,7 +140,7 @@ export default () => {
     src: serverSrcMain,
     dist: serverDist,
     server: true,
-    watch: restart && !exitAfterBundle,
+    watch: restart && !productionBuild,
     entryOptions: bundleServer.entryOptions,
   };
   const bundleClientOptions = {
@@ -142,24 +148,24 @@ export default () => {
     cwd,
     src: clientSrcDir,
     dist: clientDistDir,
-    watch: restart && !exitAfterBundle,
+    watch: restart && !productionBuild,
     entryOptions: bundleClient.entryOptions,
   };
 
   if (bundleServer.enable) {
     const serverBuiltInProd =
-      !exitAfterBundle && !isDev && !(await pathExists(serverDist));
+      !productionBuild && !isDev && !(await pathExists(serverDist));
     if (serverBuiltInProd) {
       console.warn(
         `Server main "${serverDist}" doesn't exist and has to be built.`
       );
       console.warn(`I will try to build "${serverDist}" automatically.`);
       console.warn(
-        `Recommendation: build server main with "NODE_ENV=production sosse bundle" in advance.`
+        `Recommendation: build server main with "sosse bundle" in advance.`
       );
     }
 
-    if (isDev || exitAfterBundle || serverBuiltInProd) {
+    if (isDev || productionBuild || serverBuiltInProd) {
       await bundle(bundleServerOptions);
     }
   }
@@ -168,7 +174,7 @@ export default () => {
     await bundleClients(bundleClientOptions);
   }
 
-  if (exitAfterBundle) {
+  if (productionBuild) {
     process.exit();
   }
 

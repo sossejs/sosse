@@ -7,7 +7,6 @@ import {
   writeJson,
 } from "fs-extra";
 import { dirname, extname, basename, resolve, relative, join } from "path";
-import { isDev } from "./env";
 import cuid from "cuid";
 import stripAnsi from "strip-ansi";
 import { Ctx } from "./ctx";
@@ -111,7 +110,7 @@ export const bundle = async function ({
     react,
     cwd,
     isServer: server,
-    isDev,
+    isDev: ctx._isDev,
     input: src,
     alias,
     define,

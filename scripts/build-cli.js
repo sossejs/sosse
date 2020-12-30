@@ -13,7 +13,7 @@ const { spawn, args, buildArgs, rmDir, pkgDir } = require("./lib");
     "--cwd",
     "cli",
     "--define",
-    `process.env.NODE_ENV=${process.env.NODE_ENV || "production"}`,
+    `process.env.SOSSE_DEV=${process.env.NODE_ENV === "development"}`,
     "--raw",
     ...buildArgs(),
     ...args,

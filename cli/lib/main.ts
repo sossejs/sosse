@@ -5,7 +5,7 @@ import sade from "sade";
 import { resolve } from "path";
 const { pathExists } = require("fs-extra");
 
-if (process.env.NODE_ENV === "development") {
+if (process.env.SOSSE_DEV) {
   require("module-alias/register");
 }
 
@@ -19,7 +19,7 @@ prog.describe(pkg.description);
 
 prog.option("--cwd", "Run sosse under an other directory", process.cwd());
 
-const getConfig = async function ({ cwd }) {
+const getConfig = async function ({ cwd, isDev }) {
   cwd = resolve(cwd);
 
   let config = {};
@@ -33,6 +33,7 @@ const getConfig = async function ({ cwd }) {
   }
 
   return {
+    isDev,
     cwd,
     ...config,
   };
@@ -41,8 +42,15 @@ const getConfig = async function ({ cwd }) {
 prog
   .command("start")
   .describe("Start the server")
+  .option("-p, --production", "Same as process.env.NODE_ENV=production")
   .action(async function (opts) {
-    const config = await getConfig({ cwd: opts.cwd });
+    const isDev = !opts.production && process.env.NODE_ENV !== "production";
+
+    if (!isDev && !process.env.NODE_ENV) {
+      process.env.NODE_ENV = "production";
+    }
+
+    const config = await getConfig({ cwd: opts.cwd, isDev });
     sosse(config);
   });
 
@@ -50,10 +58,10 @@ prog
   .command("bundle")
   .describe("Bundle server and client")
   .action(async function (opts) {
-    const config = await getConfig({ cwd: opts.cwd });
+    const config = await getConfig({ isDev: false, cwd: opts.cwd });
     sosse({
       ...config,
-      exitAfterBundle: true,
+      productionBuild: true,
     });
   });
 

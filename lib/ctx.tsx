@@ -1,5 +1,4 @@
 import { EventEmitter } from "events";
-import { isDev } from "./env";
 import {
   Server,
   RequestListener,
@@ -53,6 +52,7 @@ export const unsetCtx = function () {
 };
 
 export class Ctx {
+  _isDev: boolean;
   _libDir: string;
   _distDir: string;
   _serveClient: ServeClientOptions;
@@ -68,16 +68,19 @@ export class Ctx {
   } = { head: {}, footer: {} };
 
   constructor({
+    isDev = true,
     libDir = "",
     distDir = "",
     serveClient = { enable: false },
     otion = { enable: false },
   }: {
+    isDev?: boolean;
     libDir?: string;
     distDir?: string;
     serveClient?: ServeClientOptions;
     otion?: OtionOptions;
   } = {}) {
+    this._isDev = isDev;
     this._libDir = libDir;
     this._distDir = distDir;
     this._serveClient = serveClient;
@@ -88,7 +91,7 @@ export class Ctx {
     const asset = this._assets[name];
 
     if (!asset) {
-      if (isDev) {
+      if (this._isDev) {
         throw new Error(`Could not find asset "${name}"`);
       }
 
@@ -156,7 +159,7 @@ export class Ctx {
       map: "",
     };
     const devSocketUrl = "/sosse-dev/main.umd.js";
-    if (isDev) {
+    if (this._isDev) {
       const socketJsPath = resolve(
         __dirname,
         "..",
@@ -186,7 +189,7 @@ export class Ctx {
     }
 
     return (req, res) => {
-      if (isDev) {
+      if (this._isDev) {
         if (req.url === devSocketUrl) {
           return res
             .writeHead(200, { "Content-Type": "application/javascript" })
@@ -241,7 +244,7 @@ export class Ctx {
 
   devSocket({
     server,
-    enable = isDev,
+    enable = this._isDev,
   }: {
     server: Server;
     enable?: boolean;
