@@ -2,6 +2,23 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.8.0-next.18](https://github.com/sossejs/sosse/compare/v0.8.0-next.17...v0.8.0-next.18) (2020-12-30)
+
+
+### ⚠ BREAKING CHANGES
+
+* rework isDev env and add cli -p option
+
+### Features
+
+* rework isDev env and add cli -p option ([0ab0ac2](https://github.com/sossejs/sosse/commit/0ab0ac28344784e9651d2291dca75e0f5d513db8))
+
+
+### Bug Fixes
+
+* always use hydrate from preact-iso for client rendering ([fb58ae5](https://github.com/sossejs/sosse/commit/fb58ae55b0e418f9730923b870fe5226a0ccbd19))
+* use terser for production client builds ([1dcd1ea](https://github.com/sossejs/sosse/commit/1dcd1ea120f2d0f270f06736b7660385a7b21474))
+
 ## [0.8.0-next.17](https://github.com/sossejs/sosse/compare/v0.8.0-next.16...v0.8.0-next.17) (2020-12-29)
 
 
