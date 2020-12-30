@@ -57,4 +57,3 @@ Sosse tries to avoid typical framework-like trade-offs by limitting its feature-
   - Currently css files can be imported on both client and server, but importing them on the server does not do anything to the client
   - Proper ssr support would mean that only the needed css styles would be rendered in the document, we would need to implement something similar as described here: https://github.com/egoist/rollup-plugin-postcss/issues/177
   - An alternative would be to attach a full bundled css file, but that fails with this issue: https://github.com/rollup/rollup/issues/3669
-- Add --cwd param to cli
