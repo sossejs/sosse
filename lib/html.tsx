@@ -12,6 +12,10 @@ export const jsx = function (vnode: VNode) {
 
 export const Html = function ({
   title = "",
+  description = "",
+  lang = "",
+  className = "",
+  viewport = "width=device-width, initial-scale=1",
   htmlProps = {},
   bodyProps = {},
   head = null,
@@ -19,10 +23,15 @@ export const Html = function ({
 }) {
   return (
     <Fragment>
-      <html {...htmlProps}>
+      <html
+        className={className || undefined}
+        lang={lang || undefined}
+        {...htmlProps}
+      >
         <head>
           <meta charSet="utf-8" />
-          <meta name="viewport" content="width=device-width, initial-scale=1" />
+          {viewport && <meta name="viewport" content={viewport} />}
+          {description && <meta name="description" content={description} />}
           {title && <title>{title}</title>}
           {head}
         </head>
