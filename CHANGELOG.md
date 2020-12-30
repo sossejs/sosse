@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.8.0-next.21](https://github.com/sossejs/sosse/compare/v0.8.0-next.20...v0.8.0-next.21) (2020-12-30)
+
+
+### Features
+
+* add lang, className, viewport and description props to Html ([2f78526](https://github.com/sossejs/sosse/commit/2f78526ba6f71bf13082dccd9d4f6f5f639210d3))
+
 ## [0.8.0-next.20](https://github.com/sossejs/sosse/compare/v0.8.0-next.19...v0.8.0-next.20) (2020-12-30)
 
 
