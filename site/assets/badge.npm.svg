@@ -1,5 +1,5 @@
-<svg width="121.3" height="20" viewBox="0 0 1213 200" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="npm: 0.8.0-next.18">
-  <title>npm: 0.8.0-next.18</title>
+<svg width="121.3" height="20" viewBox="0 0 1213 200" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="npm: 0.8.0-next.19">
+  <title>npm: 0.8.0-next.19</title>
   <linearGradient id="a" x2="0" y2="100%">
     <stop offset="0" stop-opacity=".1" stop-color="#EEE"/>
     <stop offset="1" stop-opacity=".1"/>
@@ -13,8 +13,8 @@
   <g aria-hidden="true" fill="#fff" text-anchor="start" font-family="Verdana,DejaVu Sans,sans-serif" font-size="110">
     <text x="60" y="148" textLength="249" fill="#000" opacity="0.25">npm</text>
     <text x="50" y="138" textLength="249">npm</text>
-    <text x="404" y="148" textLength="764" fill="#000" opacity="0.25">0.8.0-next.18</text>
-    <text x="394" y="138" textLength="764">0.8.0-next.18</text>
+    <text x="404" y="148" textLength="764" fill="#000" opacity="0.25">0.8.0-next.19</text>
+    <text x="394" y="138" textLength="764">0.8.0-next.19</text>
   </g>
   
 </svg>

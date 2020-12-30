@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.8.0-next.19](https://github.com/sossejs/sosse/compare/v0.8.0-next.18...v0.8.0-next.19) (2020-12-30)
+
+
+### Features
+
+* implement css minification ([f890e19](https://github.com/sossejs/sosse/commit/f890e19cc7cf9919b3e39bf85b8724f2d9e040ab))
+
 ## [0.8.0-next.18](https://github.com/sossejs/sosse/compare/v0.8.0-next.17...v0.8.0-next.18) (2020-12-30)
 
 
