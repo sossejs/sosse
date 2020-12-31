@@ -109,7 +109,14 @@ export const hsr = async function ({
         // TODO: Currently this just deletes all errors, we should separate between (server/client)-bundler/node
         ctx._errors = [];
       }
-      stopMain = await listen();
+
+      try {
+        stopMain = await listen();
+      } catch (err) {
+        console.error("Error while starting to listen:");
+        console.error(err);
+      }
+
       ctx._events.emit("started");
     }
 
