@@ -2,7 +2,7 @@
   "name": "sosse",
   "amdName": "sosse",
   "version": "0.8.0-next.21",
-  "description": "Composable toolkit for Preact full-stack node web servers",
+  "description": "Composable toolkit for full-stack node web servers with Preact",
   "source": "lib/main.ts",
   "main": "dist/main.js",
   "bin": "cli/dist/main.js",

@@ -1,6 +1,6 @@
 # [🥣 Sosse](https://github.com/sossejs/sosse)
 
-Composable toolkit for Preact full-stack node web servers:
+Composable toolkit for full-stack node web servers with Preact:
 
 - 🔥 Hot server restart
 - 🔄 Live reload
