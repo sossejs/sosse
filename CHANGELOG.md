@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.8.0-next.22](https://github.com/sossejs/sosse/compare/v0.8.0-next.21...v0.8.0-next.22) (2021-01-01)
+
+
+### Features
+
+* catch listen errors ([cfd7798](https://github.com/sossejs/sosse/commit/cfd7798f6ee5330b1a3f780ea544b66560ed2f7e))
+* implement url and svgr rollup plugins ([81bc04c](https://github.com/sossejs/sosse/commit/81bc04c303d1725e4db8319b24ee26816bee51da))
+
 ## [0.8.0-next.21](https://github.com/sossejs/sosse/compare/v0.8.0-next.20...v0.8.0-next.21) (2020-12-30)
 
 
