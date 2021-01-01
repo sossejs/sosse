@@ -107,6 +107,7 @@ export const bundle = async function ({
   }
 
   const rollupConfig = rollupConfigFactory({
+    cwd,
     react,
     isServer: server,
     isDev: ctx._isDev,
