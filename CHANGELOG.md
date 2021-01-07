@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.8.0-next.23](https://github.com/sossejs/sosse/compare/v0.8.0-next.22...v0.8.0-next.23) (2021-01-07)
+
+
+### Features
+
+* disable unused import warning for server ([6c2c779](https://github.com/sossejs/sosse/commit/6c2c779cb5cb0e395d8418a5cfceaea8ac83ba2c))
+* revive scroll position after live reload ([72db323](https://github.com/sossejs/sosse/commit/72db3231ab6cbf13e50fa3951e8a77e648b0743c))
+
 ## [0.8.0-next.22](https://github.com/sossejs/sosse/compare/v0.8.0-next.21...v0.8.0-next.22) (2021-01-01)
 
 
