@@ -1,6 +1,26 @@
 import Sockette from "sockette";
 
+const storageKey = `sosse-scrollpos-`;
+
+if (!document.hidden) {
+  const scrollY = parseInt(localStorage.getItem(storageKey + "y") ?? "0");
+  const scrollX = parseInt(localStorage.getItem(storageKey + "x") ?? "0");
+  if (scrollY || scrollX) {
+    window.addEventListener("load", function () {
+      window.scrollTo(scrollX, scrollY);
+    });
+  }
+
+  localStorage.removeItem(storageKey + "y");
+  localStorage.removeItem(storageKey + "x");
+}
+
 const reload = function () {
+  if (!document.hidden) {
+    localStorage.setItem(storageKey + "y", window.scrollY + "");
+    localStorage.setItem(storageKey + "x", window.scrollX + "");
+  }
+
   location.reload(true);
 };
 
