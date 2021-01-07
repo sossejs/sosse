@@ -1,5 +1,5 @@
-import { h } from "preact";
-import { Fragment, useContext, useEffect, useState } from "preact/compat";
+import { h, Fragment } from "preact";
+import { useContext, useEffect, useState } from "preact/hooks";
 import { lazy as _lazy, hydrate, ErrorBoundary } from "preact-iso";
 export { lazy, ErrorBoundary } from "preact-iso";
 import { isNode } from "./isNode";
