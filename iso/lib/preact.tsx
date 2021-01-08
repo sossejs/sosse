@@ -1,7 +1,8 @@
 import { h, Fragment } from "preact";
 import { useContext, useEffect, useState } from "preact/hooks";
-import { lazy as _lazy, hydrate, ErrorBoundary } from "preact-iso";
-export { lazy, ErrorBoundary } from "preact-iso";
+import { render, hydrate } from "preact";
+import _lazy, { ErrorBoundary } from "preact-iso/lazy";
+export { default as lazy, ErrorBoundary } from "preact-iso/lazy";
 import { isNode } from "./isNode";
 
 const emptyFunc = () => {};
@@ -33,7 +34,7 @@ export const inject = function ({
   const jsonEls = Array.from(jsonElList);
   jsonEls.forEach(async (el) => {
     const id = el["dataset"].interactive;
-    const { component, suspense, lazy, wrapper } = injectCache[id];
+    const { component, suspense, lazy, wrapper, ssr } = injectCache[id];
     const ASuspense = suspense;
 
     componentPromises[id] =
@@ -63,7 +64,8 @@ export const inject = function ({
       if (ASuspense) {
         vdom = <ASuspense>{vdom}</ASuspense>;
       }
-      hydrate(vdom, containerEl);
+
+      (ssr ? hydrate : render)(vdom, containerEl);
     };
 
     if (lazy) {
@@ -94,6 +96,7 @@ export const interactive = function <T, C = ThenArg<T>>({
   lazy = lazy && typeof IntersectionObserver === "function";
 
   injectCache[id] = {
+    ssr,
     component,
     suspense: suspense,
     lazy,
@@ -103,7 +106,7 @@ export const interactive = function <T, C = ThenArg<T>>({
   if (isNode) {
     const Container = container;
 
-    const Component = _lazy(component);
+    const Component: any = _lazy(component as any);
 
     return function (props) {
       return (
