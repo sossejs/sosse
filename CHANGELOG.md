@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.8.0-next.24](https://github.com/sossejs/sosse/compare/v0.8.0-next.23...v0.8.0-next.24) (2021-01-08)
+
+
+### Features
+
+* update preact to 10.5.9 and update dev dependencies ([98bd1aa](https://github.com/sossejs/sosse/commit/98bd1aa6a87b3ebde0029b78ff22d0b21bb3617f))
+
+
+### Bug Fixes
+
+* **iso:** readd own preact hydration switch, update preact-iso imports ([0fc0573](https://github.com/sossejs/sosse/commit/0fc0573fd8bf444a48f9e1e5362881ca03e34093))
+
 ## [0.8.0-next.23](https://github.com/sossejs/sosse/compare/v0.8.0-next.22...v0.8.0-next.23) (2021-01-07)
 
 
