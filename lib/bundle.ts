@@ -71,12 +71,12 @@ export const bundle = async function ({
   define["SOSSE.isNode"] = JSON.stringify(server);
 
   const pkgPath = resolve(cwd, "package.json");
-  const bundledDependencies: Record<string, boolean> = {};
+  const bundledDependencies: string[] = [];
   if (await pathExists(pkgPath)) {
     const pkg = require(pkgPath);
     const pkgDependencies = Object.keys(pkg.devDependencies || {});
     for (const name of pkgDependencies) {
-      bundledDependencies[name] = true;
+      bundledDependencies.push(name);
     }
   }
 
