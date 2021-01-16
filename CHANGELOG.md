@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.8.0-next.25](https://github.com/sossejs/sosse/compare/v0.8.0-next.24...v0.8.0-next.25) (2021-01-16)
+
+
+### Features
+
+* process client dependencies for the server bundle ([2445257](https://github.com/sossejs/sosse/commit/2445257edc489b816821aca6a09befaa2588c67e))
+
 ## [0.8.0-next.24](https://github.com/sossejs/sosse/compare/v0.8.0-next.23...v0.8.0-next.24) (2021-01-08)
 
 
