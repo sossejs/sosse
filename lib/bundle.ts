@@ -71,12 +71,12 @@ export const bundle = async function ({
   define["SOSSE.isNode"] = JSON.stringify(server);
 
   const pkgPath = resolve(cwd, "package.json");
-  const pkgExternals: Record<string, boolean> = {};
+  const bundledDependencies: Record<string, boolean> = {};
   if (await pathExists(pkgPath)) {
     const pkg = require(pkgPath);
-    const pkgDependencies = Object.keys(pkg.dependencies || {});
+    const pkgDependencies = Object.keys(pkg.devDependencies || {});
     for (const name of pkgDependencies) {
-      pkgExternals[name] = true;
+      bundledDependencies[name] = true;
     }
   }
 
@@ -108,6 +108,7 @@ export const bundle = async function ({
 
   const rollupConfig = rollupConfigFactory({
     cwd,
+    bundledDependencies,
     react,
     isServer: server,
     isDev: ctx._isDev,
