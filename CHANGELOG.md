@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.8.0-next.26](https://github.com/sossejs/sosse/compare/v0.8.0-next.25...v0.8.0-next.26) (2021-01-16)
+
+
+### Bug Fixes
+
+* process submodules and nested imports from bundledDependencies ([6ecbf0d](https://github.com/sossejs/sosse/commit/6ecbf0d766b80fddf0533e711676010efc25031b))
+
 ## [0.8.0-next.25](https://github.com/sossejs/sosse/compare/v0.8.0-next.24...v0.8.0-next.25) (2021-01-16)
 
 
