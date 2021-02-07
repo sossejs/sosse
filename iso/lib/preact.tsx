@@ -4,6 +4,7 @@ import { render, hydrate } from "preact";
 import _lazy, { ErrorBoundary } from "preact-iso/lazy";
 export { default as lazy, ErrorBoundary } from "preact-iso/lazy";
 import { isNode } from "./isNode";
+import { encodeURI, decode } from "js-base64";
 
 const emptyFunc = () => {};
 
@@ -15,6 +16,8 @@ type Options<T> = {
   lazy?: boolean;
   ssr?: boolean;
   wrapper?: any[];
+  serialize?: typeof defaultSerializer;
+  deserialize?: typeof defaultDeserializer;
 };
 
 type ThenArg<T> = T extends PromiseLike<infer U> ? U : T;
@@ -24,17 +27,24 @@ const injectCache: Record<string, any> = {};
 export const inject = function ({
   logInjects = process.env.NODE_ENV !== "production",
 } = {}) {
-  let jsonElList = document.getElementsByClassName(`sosse-interactive`);
-  if (jsonElList.length === 0) {
+  let containerElList = document.getElementsByClassName(`sosse-interactive`);
+  if (containerElList.length === 0) {
     return;
   }
 
   const componentPromises: Record<string, any> = {};
 
-  const jsonEls = Array.from(jsonElList);
-  jsonEls.forEach(async (el) => {
-    const id = el["dataset"].interactive;
-    const { component, suspense, lazy, wrapper, ssr } = injectCache[id];
+  const containerEls = Array.from(containerElList);
+  containerEls.forEach(async (el) => {
+    const { interactive: id, props } = el["dataset"];
+    const {
+      deserialize,
+      component,
+      suspense,
+      lazy,
+      wrapper,
+      ssr,
+    } = injectCache[id];
     const ASuspense = suspense;
 
     componentPromises[id] =
@@ -47,15 +57,13 @@ export const inject = function ({
       })();
 
     const LoadingComponent = await componentPromises[id];
-    const containerEl = el.nextElementSibling;
 
     const aInject = function () {
       if (logInjects) {
         console.info("Injected: " + id);
       }
 
-      const props = JSON.parse(el.innerHTML);
-      let vdom = <LoadingComponent {...props} />;
+      let vdom = <LoadingComponent {...deserialize(props)} />;
       if (wrapper.length) {
         for (const Wrapper of wrapper) {
           vdom = <Wrapper>{vdom}</Wrapper>;
@@ -65,23 +73,23 @@ export const inject = function ({
         vdom = <ASuspense>{vdom}</ASuspense>;
       }
 
-      (ssr ? hydrate : render)(vdom, containerEl);
+      (ssr ? hydrate : render)(vdom, el);
     };
 
     if (lazy) {
       new IntersectionObserver(([entry], obs) => {
         if (!entry.isIntersecting) return;
-        obs.unobserve(containerEl);
+        obs.unobserve(el);
         aInject();
-      }).observe(containerEl);
+      }).observe(el);
     } else {
       aInject();
     }
   });
 };
 
-const defaultContainer = function ({ children }) {
-  return <div>{children}</div>;
+const defaultContainer = function (props) {
+  return <div {...props} />;
 };
 
 export const interactive = function <T, C = ThenArg<T>>({
@@ -92,6 +100,8 @@ export const interactive = function <T, C = ThenArg<T>>({
   lazy = false,
   ssr = false,
   wrapper = [],
+  serialize = defaultSerializer,
+  deserialize = defaultDeserializer,
 }: Options<T>): C {
   lazy = lazy && typeof IntersectionObserver === "function";
 
@@ -99,6 +109,7 @@ export const interactive = function <T, C = ThenArg<T>>({
     ssr,
     component,
     suspense: suspense,
+    deserialize,
     lazy,
     wrapper,
   };
@@ -110,15 +121,13 @@ export const interactive = function <T, C = ThenArg<T>>({
 
     return function (props) {
       return (
-        <Fragment>
-          <script
-            type="application/json"
-            class="sosse-interactive"
-            data-interactive={id}
-            dangerouslySetInnerHTML={{ __html: JSON.stringify(props) }}
-          />
-          <Container>{ssr && <Component {...props} />}</Container>
-        </Fragment>
+        <Container
+          class="sosse-interactive"
+          data-interactive={id}
+          data-props={serialize(props)}
+        >
+          {ssr && <Component {...props} />}
+        </Container>
       );
     } as any;
   } else {
@@ -127,11 +136,11 @@ export const interactive = function <T, C = ThenArg<T>>({
 };
 
 const defaultSerializer = function (value) {
-  return JSON.stringify(value);
+  return encodeURI(JSON.stringify(value));
 };
 
 const defaultDeserializer = function (value) {
-  return JSON.parse(value);
+  return JSON.parse(decode(value));
 };
 
 export const valueRef = function <T = any>(
