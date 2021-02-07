@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.8.0-next.27](https://github.com/sossejs/sosse/compare/v0.8.0-next.26...v0.8.0-next.27) (2021-02-07)
+
+
+### Features
+
+* encode interactive comp props with base64 ([29b36d3](https://github.com/sossejs/sosse/commit/29b36d37857e3cc013148b1d4c9ba9f669eecc7f))
+
 ## [0.8.0-next.26](https://github.com/sossejs/sosse/compare/v0.8.0-next.25...v0.8.0-next.26) (2021-01-16)
 
 
