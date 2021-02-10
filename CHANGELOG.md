@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.8.0-next.28](https://github.com/sossejs/sosse/compare/v0.8.0-next.27...v0.8.0-next.28) (2021-02-10)
+
+
+### Features
+
+* **core:** implement jpg, png image optimization ([61aa7c1](https://github.com/sossejs/sosse/commit/61aa7c12e93e5250626abe149ffa6247bdcea142))
+* **iso:** add ssrContainer prop to interactive components ([72f6879](https://github.com/sossejs/sosse/commit/72f687936b2031360e9ceeb85cfd4ca647364e39))
+
 ## [0.8.0-next.27](https://github.com/sossejs/sosse/compare/v0.8.0-next.26...v0.8.0-next.27) (2021-02-07)
 
 
