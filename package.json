@@ -105,6 +105,9 @@
   },
   "optionalDependencies": {
     "chokidar": "^3.4.3",
+    "imagemin": "^7.0.1",
+    "imagemin-mozjpeg": "^9.0.0",
+    "imagemin-pngquant": "^9.0.1",
     "otion": "^0.6.2",
     "preact": "^10.5.9",
     "ws": "^7.4.1"
