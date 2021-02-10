@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.8.0-next.29](https://github.com/sossejs/sosse/compare/v0.8.0-next.28...v0.8.0-next.29) (2021-02-10)
+
+
+### Bug Fixes
+
+* **core:** wait for imagemin promise during parent resolveId ([434f38a](https://github.com/sossejs/sosse/commit/434f38a5f7e39fa3e7171c5138d6bcac044e869d))
+
 ## [0.8.0-next.28](https://github.com/sossejs/sosse/compare/v0.8.0-next.27...v0.8.0-next.28) (2021-02-10)
 
 
