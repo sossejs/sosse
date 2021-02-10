@@ -1,6 +1,12 @@
-import { h, Fragment } from "preact";
+import { h } from "preact";
 import { useContext, useEffect, useState } from "preact/hooks";
-import { render, hydrate } from "preact";
+import {
+  render,
+  hydrate,
+  FunctionComponent,
+  ComponentType,
+  ComponentProps,
+} from "preact";
 import _lazy, { ErrorBoundary } from "preact-iso/lazy";
 export { default as lazy, ErrorBoundary } from "preact-iso/lazy";
 import { isNode } from "./isNode";
@@ -11,7 +17,7 @@ const emptyFunc = () => {};
 type Options<T> = {
   id: string;
   component: () => T;
-  container?: Function;
+  ssrContainer?: Function;
   suspense?: Function;
   lazy?: boolean;
   ssr?: boolean;
@@ -92,9 +98,12 @@ const defaultContainer = function (props) {
   return <div {...props} />;
 };
 
-export const interactive = function <T, C = ThenArg<T>>({
+export const interactive = function <
+  T extends PromiseLike<ComponentType<any>>,
+  C extends ComponentType<any> = ThenArg<T>
+>({
   id,
-  container = defaultContainer,
+  ssrContainer = defaultContainer,
   component,
   suspense = ErrorBoundary,
   lazy = false,
@@ -102,7 +111,9 @@ export const interactive = function <T, C = ThenArg<T>>({
   wrapper = [],
   serialize = defaultSerializer,
   deserialize = defaultDeserializer,
-}: Options<T>): C {
+}: Options<T>): FunctionComponent<
+  ComponentProps<C> & { ssrContainer?: ComponentType<any> }
+> {
   lazy = lazy && typeof IntersectionObserver === "function";
 
   injectCache[id] = {
@@ -114,12 +125,14 @@ export const interactive = function <T, C = ThenArg<T>>({
     wrapper,
   };
 
-  if (isNode) {
-    const Container = container;
+  const _ssrContainer = ssrContainer;
 
+  if (isNode) {
     const Component: any = _lazy(component as any);
 
-    return function (props) {
+    return function ({ ssrContainer, ...props }) {
+      const Container = ssrContainer || _ssrContainer;
+
       return (
         <Container
           class="sosse-interactive"
