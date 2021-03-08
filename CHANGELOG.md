@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.8.0-next.30](https://github.com/sossejs/sosse/compare/v0.8.0-next.29...v0.8.0-next.30) (2021-03-08)
+
+
+### Features
+
+* minor update dependencies ([ab9cb41](https://github.com/sossejs/sosse/commit/ab9cb41010d83d52571a8914100a420f6072c346))
+
+
+### Bug Fixes
+
+* enable preserveSymlinks in rollup ([f4d1926](https://github.com/sossejs/sosse/commit/f4d192602f096647c1aae3a227964cc16a047a97))
+
 ## [0.8.0-next.29](https://github.com/sossejs/sosse/compare/v0.8.0-next.28...v0.8.0-next.29) (2021-02-10)
 
 
