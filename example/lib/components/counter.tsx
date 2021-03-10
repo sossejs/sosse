@@ -1,6 +1,6 @@
-import React from "react";
+import { h } from "preact";
 import { useState } from "preact/hooks";
-import { css } from "otion";
+import { css } from "sosse/iso";
 
 export const Counter = function ({ startCount = 0 }) {
   const [count, setCount] = useState(startCount);

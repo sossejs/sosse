@@ -1,18 +1,13 @@
 {
   "name": "sosse",
   "amdName": "sosse",
-  "version": "0.7.2",
-  "description": "Spice your servers up with a lil Sosse",
+  "version": "0.8.0-next.30",
+  "description": "Composable toolkit for full-stack node web servers with Preact",
   "source": "lib/main.ts",
   "main": "dist/main.js",
-  "module": "dist/main.mjs",
-  "umd:main": "dist/main.umd.js",
-  "esmodule": "dist/main.modern.js",
+  "bin": "cli/dist/main.js",
   "exports": {
     ".": {
-      "browser": "./dist/main.mjs",
-      "umd": "./dist/main.umd.js",
-      "import": "./dist/main.mjs",
       "require": "./dist/main.js"
     },
     "./dev-socket-client": {
@@ -21,23 +16,23 @@
       "import": "./dev-socket-client/dist/main.mjs",
       "require": "./dev-socket-client/dist/main.js"
     },
-    "./uni": {
-      "browser": "./uni/dist/main.mjs",
-      "umd": "./uni/dist/main.umd.js",
-      "import": "./uni/dist/main.mjs",
-      "require": "./uni/dist/main.js"
+    "./iso": {
+      "browser": "./iso/dist/main.mjs",
+      "umd": "./iso/dist/main.umd.js",
+      "import": "./iso/dist/main.mjs",
+      "require": "./iso/dist/main.js"
     },
-    "./react": {
-      "browser": "./react/dist/main.mjs",
-      "umd": "./react/dist/main.umd.js",
-      "import": "./react/dist/main.mjs",
-      "require": "./react/dist/main.js"
+    "./cli": {
+      "browser": "./cli/dist/main.mjs",
+      "umd": "./cli/dist/main.umd.js",
+      "import": "./cli/dist/main.mjs",
+      "require": "./cli/dist/main.js"
     },
-    "./preact": {
-      "browser": "./preact/dist/main.mjs",
-      "umd": "./preact/dist/main.umd.js",
-      "import": "./preact/dist/main.mjs",
-      "require": "./preact/dist/main.js"
+    "./fastify": {
+      "browser": "./fastify/dist/main.mjs",
+      "umd": "./fastify/dist/main.umd.js",
+      "import": "./fastify/dist/main.mjs",
+      "require": "./fastify/dist/main.js"
     },
     "./package.json": "./package.json",
     "./": "./"
@@ -53,56 +48,73 @@
   },
   "license": "MIT",
   "devDependencies": {
-    "@types/chai": "^4.2.11",
-    "@types/express": "^4.17.6",
-    "@types/fs-extra": "^9.0.1",
-    "@types/jest": "^25.2.3",
-    "@types/lodash": "^4.14.155",
-    "@types/node": "^14.0.11",
-    "@types/ws": "^7.2.5",
-    "badgen": "^3.1.0",
-    "chai": "^4.2.0",
-    "colorette": "1.2.0",
+    "@types/chai": "^4.2.15",
+    "@types/express": "^4.17.11",
+    "@types/fs-extra": "^9.0.8",
+    "@types/jest": "^26.0.20",
+    "@types/lodash": "^4.14.168",
+    "@types/node": "^14.14.32",
+    "@types/ws": "^7.4.0",
+    "badgen": "^3.2.2",
+    "chai": "^4.3.3",
+    "colorette": "1.2.2",
     "cuid": "^2.1.8",
     "express": "^4.17.1",
-    "fs-extra": "^9.0.1",
-    "jest": "^26.0.1",
-    "lodash": "^4.17.15",
+    "jest": "^26.6.3",
+    "js-base64": "^3.6.0",
+    "lodash": "^4.17.21",
     "mallery": "1.0.0-alpha.7",
-    "microbundle": "^0.12.3",
-    "otion": "^0.3.2",
-    "preact": "^10.4.4",
-    "preact-render-to-string": "^5.1.9",
-    "prettier": "^2.0.5",
-    "react": "^16.13.1",
+    "microbundle": "^0.13.0",
+    "preact-iso": "^1.0.1",
+    "prettier": "^2.2.1",
+    "serve-static": "^1.14.1",
     "sockette": "^2.0.6",
-    "standard-version": "^8.0.0",
+    "standard-version": "^9.1.1",
     "strip-ansi": "^6.0.0",
-    "ts-jest": "^26.1.0",
-    "ts-node": "^8.10.2",
-    "tsconfig-paths": "^3.9.0",
-    "typescript": "^3.9.3",
-    "ws": "^7.3.0"
+    "ts-jest": "^26.5.3",
+    "typescript": "^4.2.3"
+  },
+  "dependencies": {
+    "@babel/core": "^7.13.10",
+    "@babel/preset-env": "^7.13.10",
+    "@babel/preset-react": "^7.12.13",
+    "@babel/preset-typescript": "^7.13.0",
+    "@lufrai/source-map-support": "^0.6.0",
+    "@rollup/plugin-alias": "^3.1.2",
+    "@rollup/plugin-babel": "^5.3.0",
+    "@rollup/plugin-commonjs": "^17.1.0",
+    "@rollup/plugin-dynamic-import-vars": "^1.1.1",
+    "@rollup/plugin-json": "^4.1.0",
+    "@rollup/plugin-node-resolve": "^11.2.0",
+    "@rollup/plugin-replace": "^2.4.1",
+    "@rollup/plugin-url": "^6.0.0",
+    "@rollup/plugin-yaml": "^3.0.0",
+    "@svgr/rollup": "^5.5.0",
+    "core-js": "^3.9.1",
+    "cssnano": "^4.1.10",
+    "fibers": "^5.0.0",
+    "fs-extra": "^9.1.0",
+    "module-alias": "^2.2.2",
+    "npm-check-updates": "^11.2.0",
+    "postcss": "^8.2.7",
+    "preact-render-to-string": "^5.1.14",
+    "rollup": "^2.40.0",
+    "rollup-plugin-postcss": "^4.0.0",
+    "rollup-plugin-terser": "^7.0.2",
+    "sade": "^1.7.4",
+    "sass": "^1.32.8"
   },
   "optionalDependencies": {
-    "clear-module": "^4.1.1",
-    "chokidar": "^3.4.0"
+    "chokidar": "^3.5.1",
+    "imagemin": "^7.0.1",
+    "imagemin-mozjpeg": "^9.0.0",
+    "imagemin-pngquant": "^9.0.2",
+    "otion": "^0.6.2",
+    "preact": "^10.5.12",
+    "ws": "^7.4.4"
   },
-  "peerDependenciesMeta": {
-    "microbundle": {
-      "optional": true
-    },
-    "otion": {
-      "optional": true
-    },
-    "ws": {
-      "optional": true
-    }
-  },
-  "peerDependencies": {
-    "microbundle": "^0.12.3",
-    "otion": "^0.3.2",
-    "ws": "^7.3.0"
+  "_moduleAliases": {
+    "sosse": "."
   },
   "files": [
     "lib",
@@ -110,21 +122,21 @@
     "example/package.json",
     "example/lib",
     "example/dist",
-    "preact/package.json",
-    "preact/lib",
-    "preact/dist",
     "otion/package.json",
     "otion/lib",
     "otion/dist",
     "dev-socket-client/package.json",
     "dev-socket-client/lib",
     "dev-socket-client/dist",
-    "uni/package.json",
-    "uni/lib",
-    "uni/dist",
-    "react/package.json",
-    "react/lib",
-    "react/dist"
+    "iso/package.json",
+    "iso/lib",
+    "iso/dist",
+    "cli/package.json",
+    "cli/lib",
+    "cli/dist",
+    "fastify/package.json",
+    "fastify/lib",
+    "fastify/dist"
   ],
   "standard-version": {
     "scripts": {
@@ -147,12 +159,10 @@
     ],
     "collectCoverageFrom": [
       "lib/**/*.{ts,tsx,js,jsx}",
-      "example/lib/**/*.{ts,tsx,js,jsx}",
-      "preact/lib/**/*.{ts,tsx,js,jsx}",
-      "otion/lib/**/*.{ts,tsx,js,jsx}",
       "dev-socket-client/lib/**/*.{ts,tsx,js,jsx}",
-      "uni/lib/**/*.{ts,tsx,js,jsx}",
-      "react/lib/**/*.{ts,tsx,js,jsx}"
+      "iso/lib/**/*.{ts,tsx,js,jsx}",
+      "cli/lib/**/*.{ts,tsx,js,jsx}",
+      "fastify/lib/**/*.{ts,tsx,js,jsx}"
     ]
   }
 }

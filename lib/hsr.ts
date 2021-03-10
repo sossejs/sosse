@@ -1,41 +1,37 @@
 import debounce from "lodash/debounce";
 import path from "path";
-import { createCtx, setCtx, unsetCtx } from "./ctx";
+import { Ctx, setCtx, unsetCtx } from "./ctx";
 import stripAnsi from "strip-ansi";
+import { Server } from "http";
+import { emptyCache } from "@lufrai/source-map-support";
 
-type PluginCtx = { throttleRestart?: boolean };
+const clearRequireCache = function (idRegex) {
+  for (const moduleId of Object.keys(require.cache)) {
+    if (idRegex.test(moduleId)) {
+      delete require.cache[moduleId];
+    }
+  }
+};
 
 export const hsr = async function ({
-  base = process.cwd(),
+  cwd = process.cwd(),
   watch = ["."],
-  publicDir = "public",
-  exclude = ["client", "node_modules"],
+  exclude = [],
   wait = 500,
   main,
-  plugins = [],
-  restart = process.env.NODE_ENV !== "production",
+  ctx = new Ctx(),
+  restart = ctx._isDev,
 }: {
-  base?: string;
+  cwd?: string;
   watch?: string[];
   publicDir?: string;
   exclude?: string[];
   wait?: number;
-  main: () => () => Function | void;
-  plugins?: ((opts) => void | Promise<PluginCtx | void>)[];
+  main: () => () => Server | Function | void;
+  ctx?: Ctx;
   restart?: boolean;
 }) {
-  exclude.push(publicDir);
-
-  const ctx = createCtx({ base, publicDir });
-  const pluginsCtx: PluginCtx[] = [];
-  for (const plugin of plugins) {
-    const pluginCtx = await plugin({ ctx });
-    if (!pluginCtx) {
-      continue;
-    }
-
-    pluginsCtx.push(pluginCtx);
-  }
+  exclude.push("node_modules");
 
   if (!restart) {
     setCtx(ctx);
@@ -46,14 +42,14 @@ export const hsr = async function ({
     return;
   }
 
-  const clearModule = (await import("clear-module")).default;
-
-  const absWatch = watch.map((dir) => path.resolve(base, dir));
-  const absExclude = exclude.map((dir) => path.resolve(base, dir));
+  const absWatch = watch.map((dir) => path.resolve(cwd, dir));
+  const absExclude = exclude.map((dir) => path.resolve(cwd, dir));
 
   let stopMain;
   let restarting = false;
   let pendingRestart = false;
+
+  const cwdRegex = new RegExp(`${cwd}(?!\/node_modules)`);
 
   const restartMain = debounce(async () => {
     if (restarting) {
@@ -65,8 +61,8 @@ export const hsr = async function ({
 
     await new Promise(function (resolve) {
       const intervalId = setInterval(function () {
-        for (const pluginCtx of pluginsCtx) {
-          if (!pluginCtx.throttleRestart) {
+        for (const value of Object.values(ctx._throttleRestart)) {
+          if (!value) {
             continue;
           }
 
@@ -74,57 +70,79 @@ export const hsr = async function ({
         }
 
         clearInterval(intervalId);
-        resolve();
+        resolve(null);
       }, 300);
     });
 
     pendingRestart = false;
 
+    emptyCache();
+    clearRequireCache(cwdRegex);
+
     let listen;
-    clearModule.all();
-
-    const { setCtx, unsetCtx } = require("sosse");
-
     setCtx(ctx);
 
     try {
       listen = await main();
     } catch (err) {
-      ctx.errors.push(stripAnsi(err.message));
+      ctx._errors.push(stripAnsi(err.stack || err.message));
       console.error(err);
-      ctx.events.emit("error");
+      ctx._events.emit("sosseError");
     }
 
     unsetCtx();
 
     if (listen) {
       if (stopMain) {
-        ctx.events.emit("restart");
+        ctx._events.emit("restart");
         const oldStopMain = stopMain;
         stopMain = undefined;
-        await oldStopMain();
+        if (typeof oldStopMain === "function") {
+          await oldStopMain();
+        } else {
+          // If the consumer returns their server instance we close it for them
+          await new Promise((res, rej) =>
+            oldStopMain.close((e) => (e ? rej(e) : res(null)))
+          );
+        }
+      } else {
+        // TODO: Currently this just deletes all errors, we should separate between (server/client)-bundler/node
+        ctx._errors = [];
       }
-      stopMain = await listen();
-      ctx.events.emit("started");
+
+      try {
+        stopMain = await listen();
+      } catch (err) {
+        console.error("Error while starting to listen:");
+        console.error(err);
+      }
+
+      ctx._events.emit("started");
     }
 
     restarting = false;
-    ctx.willRestart = false;
+    ctx._willRestart = false;
 
     if (pendingRestart) {
-      ctx.willRestart = true;
+      ctx._willRestart = true;
       pendingRestart = false;
       restartMain();
     }
   }, wait);
 
-  const chokidar = require("chokidar");
-
-  const watcher = chokidar.watch(absWatch, {
-    ignored: absExclude,
-  });
-  watcher.on("all", function () {
-    ctx.willRestart = true;
+  ctx._events.on("triggerRestart", function () {
+    ctx._willRestart = true;
     restartMain();
   });
+
+  if (absWatch.length) {
+    const chokidar = require("chokidar");
+    const watcher = chokidar.watch(absWatch, {
+      ignored: absExclude,
+    });
+    watcher.on("all", function () {
+      ctx._willRestart = true;
+      restartMain();
+    });
+  }
 };

@@ -1,6 +1,8 @@
 {
   "compilerOptions": {
     "jsx": "react",
+    "jsxFactory": "h",
+    "jsxFragmentFactory": "Fragment",
     "noEmit": true,
     "allowJs": true,
     "baseUrl": "./node_modules",
@@ -13,10 +15,11 @@
       "sosse": ["../lib/main.ts"],
       "sosse/example": ["../example/lib/main.ts"],
       "sosse/preact": ["../preact/lib/main.ts"],
-      "sosse/otion": ["../otion/lib/main.ts"],
       "sosse/dev-socket-client": ["../dev-socket-client/lib/main.ts"],
-      "sosse/uni": ["../uni/lib/main.ts"],
-      "sosse/react": ["../react/lib/main.tsx"]
+      "sosse/iso": ["../iso/lib/main.ts"],
+      "sosse/react": ["../react/lib/main.tsx"],
+      "sosse/cli": ["../cli/lib/main.ts"],
+      "sosse/fastify": ["../fastify/lib/main.ts"]
     }
   },
   "exclude": ["node_modules", "**/dist"]

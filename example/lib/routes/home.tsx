@@ -1,10 +1,6 @@
-import { html, useCtx } from "sosse";
-import React, { Fragment } from "react";
-import render from "preact-render-to-string";
+import { useCtx } from "sosse";
 import { Express } from "express";
-import { otion } from "sosse/otion";
-import { css } from "otion";
-import { htmlData } from "sosse/uni";
+import { css, ErrorBoundary } from "sosse/iso";
 import {
   SsrInjectCounter,
   SuspenseInjectCounter,
@@ -13,22 +9,50 @@ import {
   HydrateColorContext,
 } from "../injects";
 import { ColorContext } from "../context";
-
-const ctx = useCtx();
+import { h, Fragment } from "preact";
 
 export const homeRoute = async function (app: Express) {
   globalThis.count = globalThis.count || 1;
 
-  // Home route
-  app.get("/", (req, res) =>
-    res.send(
-      otion(() => {
-        htmlData({ count: globalThis.count });
+  const ctx = useCtx();
+  const indexAsset = ctx.useAsset("index");
 
-        return html({
+  // Home route
+  app.get("/", async (req, res) => {
+    res.send(
+      await ctx.render(
+        () => (
+          <ColorContext.Provider value="#A09BD7">
+            <HydrateColorContext />
+            <div id="app">
+              <h1>hello visitor {globalThis.count++}</h1>
+              <ErrorBoundary>
+                <Box />
+                <Box />
+                <SsrInjectCounter startCount={4} />
+                <SuspenseInjectCounter startCount={7} />
+                <div class={css({ marginTop: "100rem" })} />
+                <LazyInjectCounter startCount={9} />
+                <Box />
+              </ErrorBoundary>
+
+              <footer
+                class={css({
+                  backgroundColor: "#034",
+                  marginTop: "1rem",
+                  padding: "3rem",
+                  color: "#fff",
+                })}
+              >
+                Spiced up with Sosse
+              </footer>
+            </div>
+          </ColorContext.Provider>
+        ),
+        {
           title: "Hello world",
-          head: render(
-            <Fragment>
+          vhead: (
+            <>
               <link href="https://unpkg.com/sanitize.css" rel="stylesheet" />
               <link
                 href="https://unpkg.com/sanitize.css/forms.css"
@@ -38,49 +62,12 @@ export const homeRoute = async function (app: Express) {
                 href="https://unpkg.com/sanitize.css/typography.css"
                 rel="stylesheet"
               />
-            </Fragment>
+              <link {...indexAsset.css.props} />
+              <script {...indexAsset.js.props} defer={true} />
+            </>
           ),
-          bodyAttrs: {
-            class: css({
-              selectors: {
-                "& > #app": {
-                  width: "40rem",
-                  margin: "auto",
-                },
-              },
-            }),
-          },
-          body:
-            render(
-              <ColorContext.Provider value="#A09BD7">
-                <HydrateColorContext />
-                <div id="app">
-                  <h1>hello visitor {globalThis.count++}</h1>
-
-                  <Box />
-                  <Box />
-
-                  <SsrInjectCounter startCount={4} />
-                  <SuspenseInjectCounter startCount={7} />
-                  <div class={css({ marginTop: "100rem" })} />
-                  <LazyInjectCounter startCount={9} />
-                  <Box />
-                  <footer
-                    class={css({
-                      backgroundColor: "#034",
-                      marginTop: "1rem",
-                      padding: "3rem",
-                      color: "#fff",
-                    })}
-                  >
-                    Spiced up with Sosse
-                  </footer>
-                </div>
-              </ColorContext.Provider>
-            ) + ctx.assets.index.html,
-          ctx,
-        });
-      })
-    )
-  );
+        }
+      )
+    );
+  });
 };

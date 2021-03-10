@@ -1,11 +1,8 @@
-import { hydrate, setup } from "otion";
 import "../injects";
-import { inject } from "sosse/preact";
-import { htmlData } from "sosse/uni";
+import { inject } from "sosse/iso";
 import { colorRef } from "../context";
+import "../index.css";
 
-setup({});
-hydrate();
 inject();
 
 let idx = 0;
@@ -15,5 +12,3 @@ setInterval(function () {
   colorRef.update(colors[idx]);
   idx < colors.length - 1 ? idx++ : (idx = 0);
 }, 1000);
-
-console.info("Visitor count", htmlData().count);

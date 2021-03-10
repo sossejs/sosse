@@ -21,98 +21,18 @@
     <div id="app">
       <main>
         <h1 id="getting-started"><a href="#getting-started" aria-hidden="true"><span class="toc-link"><span class="icono-chain"></span></span></a>Getting started</h1>
-<h2 id="basic-usage"><a href="#basic-usage" aria-hidden="true"><span class="toc-link"><span class="icono-chain"></span></span></a>Basic usage</h2>
-<p>main.js:</p>
-<pre><code class="hljs language-js"><span class="hljs-keyword">import</span> { hsr } <span class="hljs-keyword">from</span> <span class="hljs-string">"sosse"</span>;
+<h2 id="project-setup"><a href="#project-setup" aria-hidden="true"><span class="toc-link"><span class="icono-chain"></span></span></a>Project setup</h2>
+<p>Running Sosse in an empty project the first time will automatically create a small example <code>main.js</code> file which can be used as a starting point.</p>
+<pre><code class="hljs language-bash"><span class="hljs-comment"># Start by creating a folder for your new app</span>
+mkdir sosse-app;
+<span class="hljs-built_in">cd</span> sosse-app;
+npm init -y;
 
-hsr({
-  <span class="hljs-comment">// Used as a prefix to resolve other configuration paths</span>
-  <span class="hljs-attr">base</span>: __dirname,
-  <span class="hljs-comment">// Will be called on file changes</span>
-  <span class="hljs-attr">main</span>: <span class="hljs-function"><span class="hljs-params">()</span> =></span> <span class="hljs-built_in">require</span>(<span class="hljs-string">"./server"</span>).default()
-})</code></pre>
-<p>server.js:</p>
-<pre><code class="hljs language-js"><span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> () {
-  <span class="hljs-comment">// Called before previous server is stopped</span>
-  <span class="hljs-built_in">console</span>.log(<span class="hljs-string">"preparation"</span>)
-
-  <span class="hljs-keyword">return</span> <span class="hljs-function"><span class="hljs-params">()</span> =></span> {
-    <span class="hljs-comment">// Called if the preparation was successfully executed and then only after the previous server is shutdown</span>
-    <span class="hljs-built_in">console</span>.log(<span class="hljs-string">"start"</span>)
-
-    <span class="hljs-keyword">return</span> <span class="hljs-function"><span class="hljs-params">()</span> =></span> {
-      <span class="hljs-comment">// Called after the next preparation was successfully executed</span>
-      <span class="hljs-built_in">console</span>.log(<span class="hljs-string">"stop"</span>)
-    }
-  }
-}</code></pre>
-<h2 id="watch-custom-directories"><a href="#watch-custom-directories" aria-hidden="true"><span class="toc-link"><span class="icono-chain"></span></span></a>Watch custom directories</h2>
-<pre><code class="hljs language-js">hsr({
-  <span class="hljs-attr">base</span>: __dirname,
-  <span class="hljs-comment">// Custom watch paths, relative to base (default: ["."])</span>
-  <span class="hljs-attr">watch</span>: [<span class="hljs-string">"routes"</span>, <span class="hljs-string">"views"</span>]
-})</code></pre>
-<h2 id="basic-express-server-example"><a href="#basic-express-server-example" aria-hidden="true"><span class="toc-link"><span class="icono-chain"></span></span></a>Basic Express server example</h2>
-<pre><code class="hljs language-js"><span class="hljs-keyword">import</span> express <span class="hljs-keyword">from</span> <span class="hljs-string">"express"</span>;
-
-globalThis.count = globalThis.count || <span class="hljs-number">1</span>;
-
-<span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> () => {
-  <span class="hljs-keyword">const</span> app = express();
-  app.get(<span class="hljs-string">"/"</span>, (req, res) =>
-    res.send(<span class="hljs-string">`&#x3C;h1>hey visitor <span class="hljs-subst">${globalThis.count++}</span>&#x3C;/h1>`</span>)); 
-
-  <span class="hljs-keyword">return</span> <span class="hljs-function"><span class="hljs-params">()</span> =></span> {
-    <span class="hljs-keyword">const</span> port = <span class="hljs-number">8080</span>;
-    <span class="hljs-keyword">const</span> server = app.listen(port);
-
-    <span class="hljs-built_in">console</span>.log(<span class="hljs-string">`Started http://localhost:<span class="hljs-subst">${port}</span>`</span>);
-
-    <span class="hljs-keyword">return</span> <span class="hljs-function"><span class="hljs-params">()</span> =></span>
-      <span class="hljs-keyword">new</span> <span class="hljs-built_in">Promise</span>(<span class="hljs-function">(<span class="hljs-params">res, rej</span>) =></span> server.close(<span class="hljs-function">(<span class="hljs-params">e</span>) =></span> (e ? rej(e) : res())));
-  };
-};</code></pre>
-<h2 id="complete-express-server-example"><a href="#complete-express-server-example" aria-hidden="true"><span class="toc-link"><span class="icono-chain"></span></span></a>Complete Express server example</h2>
-<pre><code class="hljs language-js"><span class="hljs-keyword">import</span> http <span class="hljs-keyword">from</span> <span class="hljs-string">"http"</span>;
-<span class="hljs-keyword">import</span> express <span class="hljs-keyword">from</span> <span class="hljs-string">"express"</span>;
-<span class="hljs-keyword">import</span> { html, notFoundHtml, devSocket, useCtx } <span class="hljs-keyword">from</span> <span class="hljs-string">"sosse"</span>;
-<span class="hljs-keyword">import</span> { h } <span class="hljs-keyword">from</span> <span class="hljs-string">"preact"</span>;
-<span class="hljs-keyword">import</span> render <span class="hljs-keyword">from</span> <span class="hljs-string">"preact-render-to-string"</span>;
-
-globalThis.count = globalThis.count || <span class="hljs-number">1</span>;
-
-<span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> <span class="hljs-keyword">async</span> () => {
-  <span class="hljs-keyword">const</span> ctx = useCtx();
-
-  <span class="hljs-keyword">const</span> app = express();
-
-  <span class="hljs-comment">// Home route</span>
-  app.get(<span class="hljs-string">"/"</span>, (req, res) =>
-    res.send(
-      html({
-        <span class="hljs-attr">body</span>: render(<span class="xml"><span class="hljs-tag">&#x3C;<span class="hljs-name">h1</span>></span>hey visitor {globalThis.count++}<span class="hljs-tag">&#x3C;/<span class="hljs-name">h1</span>></span></span>),
-        ctx,
-      })
-    )
-  );
-
-  <span class="hljs-comment">// 404 route</span>
-  app.use(<span class="hljs-function">(<span class="hljs-params">req, res</span>) =></span> res.status(<span class="hljs-number">404</span>).send(notFoundHtml()));
-
-  <span class="hljs-keyword">const</span> port = <span class="hljs-number">8080</span>;
-  <span class="hljs-keyword">const</span> server = http.createServer(app);
-
-  <span class="hljs-keyword">await</span> devSocket({ server });
-
-  <span class="hljs-keyword">return</span> <span class="hljs-function"><span class="hljs-params">()</span> =></span> {
-    server.listen(port);
-
-    <span class="hljs-built_in">console</span>.log(<span class="hljs-string">`Started http://localhost:<span class="hljs-subst">${port}</span>`</span>);
-
-    <span class="hljs-keyword">return</span> <span class="hljs-function"><span class="hljs-params">()</span> =></span>
-      <span class="hljs-keyword">new</span> <span class="hljs-built_in">Promise</span>(<span class="hljs-function">(<span class="hljs-params">res, rej</span>) =></span> server.close(<span class="hljs-function">(<span class="hljs-params">e</span>) =></span> (e ? rej(e) : res())));
-  };
-};</code></pre>
+<span class="hljs-comment"># Install and run sosse</span>
+npm install sosse@next;
+npx sosse start</code></pre>
+<h2 id="folder-structure"><a href="#folder-structure" aria-hidden="true"><span class="toc-link"><span class="icono-chain"></span></span></a>Folder structure</h2>
+<p>TODO</p>
 
       </main>
     </div>
@@ -143,7 +63,8 @@ globalThis.count = globalThis.count || <span class="hljs-number">1</span>;
     "baseUrl": "./",
     "chapters": {
      "root": [
-      0
+      0,
+      5
      ],
      "items": [
       {
@@ -151,16 +72,47 @@ globalThis.count = globalThis.count || <span class="hljs-number">1</span>;
        "heading": "🥣 Sosse",
        "hash": "🥣-sosse",
        "children": [
-        1
+        1,
+        2,
+        3,
+        4
        ],
        "id": 0
       },
       {
        "level": "2",
-       "heading": "Features:",
-       "hash": "features",
+       "heading": "🤓 Getting started",
+       "hash": "-getting-started",
        "children": [],
        "id": 1
+      },
+      {
+       "level": "2",
+       "heading": "TLDR",
+       "hash": "tldr",
+       "children": [],
+       "id": 2
+      },
+      {
+       "level": "2",
+       "heading": "Architecture",
+       "hash": "architecture",
+       "children": [],
+       "id": 3
+      },
+      {
+       "level": "2",
+       "heading": "Main use case",
+       "hash": "main-use-case",
+       "children": [],
+       "id": 4
+      },
+      {
+       "level": "1",
+       "heading": "Ideas for the future",
+       "hash": "ideas-for-the-future",
+       "children": [],
+       "id": 5
       }
      ]
     },
@@ -187,39 +139,23 @@ globalThis.count = globalThis.count || <span class="hljs-number">1</span>;
        "hash": "getting-started",
        "children": [
         1,
-        2,
-        3,
-        4
+        2
        ],
        "id": 0
       },
       {
        "level": "2",
-       "heading": "Basic usage",
-       "hash": "basic-usage",
+       "heading": "Project setup",
+       "hash": "project-setup",
        "children": [],
        "id": 1
       },
       {
        "level": "2",
-       "heading": "Watch custom directories",
-       "hash": "watch-custom-directories",
+       "heading": "Folder structure",
+       "hash": "folder-structure",
        "children": [],
        "id": 2
-      },
-      {
-       "level": "2",
-       "heading": "Basic Express server example",
-       "hash": "basic-express-server-example",
-       "children": [],
-       "id": 3
-      },
-      {
-       "level": "2",
-       "heading": "Complete Express server example",
-       "hash": "complete-express-server-example",
-       "children": [],
-       "id": 4
       }
      ]
     },
@@ -246,198 +182,802 @@ globalThis.count = globalThis.count || <span class="hljs-number">1</span>;
        "hash": "changelog",
        "children": [
         1,
-        2,
-        3,
-        5,
+        4,
+        6,
         8,
-        13,
-        15,
+        10,
+        12,
+        14,
         17,
-        20
+        19,
+        21,
+        23,
+        25,
+        27,
+        31,
+        33,
+        37,
+        39,
+        41,
+        43,
+        45,
+        48,
+        49,
+        52,
+        54,
+        56,
+        59,
+        60,
+        64,
+        67,
+        69,
+        70,
+        75,
+        77,
+        80,
+        85,
+        87,
+        89,
+        92
        ],
        "id": 0
       },
       {
-       "level": "3",
-       "heading": "0.7.2 (2020-07-25)",
-       "hash": "072-2020-07-25",
-       "children": [],
+       "level": "2",
+       "heading": "0.8.0-next.30 (2021-03-08)",
+       "hash": "080-next30-2021-03-08",
+       "children": [
+        2,
+        3
+       ],
        "id": 1
-      },
-      {
-       "level": "3",
-       "heading": "0.7.1 (2020-07-18)",
-       "hash": "071-2020-07-18",
-       "children": [],
-       "id": 2
-      },
-      {
-       "level": "2",
-       "heading": "0.7.0 (2020-07-17)",
-       "hash": "070-2020-07-17",
-       "children": [
-        4
-       ],
-       "id": 3
-      },
-      {
-       "level": "3",
-       "heading": "Bug Fixes",
-       "hash": "bug-fixes",
-       "children": [],
-       "id": 4
-      },
-      {
-       "level": "2",
-       "heading": "0.6.0 (2020-07-16)",
-       "hash": "060-2020-07-16",
-       "children": [
-        6,
-        7
-       ],
-       "id": 5
-      },
-      {
-       "level": "3",
-       "heading": "⚠ BREAKING CHANGES",
-       "hash": "-breaking-changes",
-       "children": [],
-       "id": 6
       },
       {
        "level": "3",
        "heading": "Features",
        "hash": "features",
        "children": [],
-       "id": 7
+       "id": 2
+      },
+      {
+       "level": "3",
+       "heading": "Bug Fixes",
+       "hash": "bug-fixes",
+       "children": [],
+       "id": 3
       },
       {
        "level": "2",
-       "heading": "0.5.0 (2020-07-15)",
-       "hash": "050-2020-07-15",
+       "heading": "0.8.0-next.29 (2021-02-10)",
+       "hash": "080-next29-2021-02-10",
        "children": [
-        9,
-        10,
-        11,
-        12
+        5
        ],
-       "id": 8
-      },
-      {
-       "level": "3",
-       "heading": "⚠ BREAKING CHANGES",
-       "hash": "-breaking-changes-1",
-       "children": [],
-       "id": 9
-      },
-      {
-       "level": "3",
-       "heading": "Features",
-       "hash": "features-1",
-       "children": [],
-       "id": 10
-      },
-      {
-       "level": "3",
-       "heading": "0.4.1 (2020-06-29)",
-       "hash": "041-2020-06-29",
-       "children": [],
-       "id": 11
+       "id": 4
       },
       {
        "level": "3",
        "heading": "Bug Fixes",
        "hash": "bug-fixes-1",
        "children": [],
-       "id": 12
+       "id": 5
       },
       {
        "level": "2",
-       "heading": "0.4.0 (2020-06-29)",
-       "hash": "040-2020-06-29",
+       "heading": "0.8.0-next.28 (2021-02-10)",
+       "hash": "080-next28-2021-02-10",
        "children": [
-        14
+        7
        ],
-       "id": 13
+       "id": 6
       },
       {
        "level": "3",
-       "heading": "Bug Fixes",
-       "hash": "bug-fixes-2",
+       "heading": "Features",
+       "hash": "features-1",
        "children": [],
-       "id": 14
+       "id": 7
       },
       {
        "level": "2",
-       "heading": "0.3.0 (2020-06-29)",
-       "hash": "030-2020-06-29",
+       "heading": "0.8.0-next.27 (2021-02-07)",
+       "hash": "080-next27-2021-02-07",
        "children": [
-        16
+        9
        ],
-       "id": 15
+       "id": 8
       },
       {
        "level": "3",
        "heading": "Features",
        "hash": "features-2",
        "children": [],
-       "id": 16
+       "id": 9
       },
       {
        "level": "2",
-       "heading": "0.2.0 (2020-06-28)",
-       "hash": "020-2020-06-28",
+       "heading": "0.8.0-next.26 (2021-01-16)",
+       "hash": "080-next26-2021-01-16",
        "children": [
-        18,
-        19
+        11
        ],
-       "id": 17
+       "id": 10
       },
       {
        "level": "3",
-       "heading": "⚠ BREAKING CHANGES",
-       "hash": "-breaking-changes-2",
+       "heading": "Bug Fixes",
+       "hash": "bug-fixes-2",
        "children": [],
-       "id": 18
+       "id": 11
+      },
+      {
+       "level": "2",
+       "heading": "0.8.0-next.25 (2021-01-16)",
+       "hash": "080-next25-2021-01-16",
+       "children": [
+        13
+       ],
+       "id": 12
       },
       {
        "level": "3",
        "heading": "Features",
        "hash": "features-3",
        "children": [],
-       "id": 19
+       "id": 13
       },
       {
        "level": "2",
-       "heading": "0.1.0 (2020-06-11)",
-       "hash": "010-2020-06-11",
+       "heading": "0.8.0-next.24 (2021-01-08)",
+       "hash": "080-next24-2021-01-08",
        "children": [
-        21,
-        22,
-        23
+        15,
+        16
        ],
-       "id": 20
+       "id": 14
       },
       {
        "level": "3",
        "heading": "Features",
        "hash": "features-4",
        "children": [],
-       "id": 21
+       "id": 15
       },
       {
        "level": "3",
-       "heading": "0.0.1 (2020-06-10)",
-       "hash": "001-2020-06-10",
+       "heading": "Bug Fixes",
+       "hash": "bug-fixes-3",
        "children": [],
-       "id": 22
+       "id": 16
+      },
+      {
+       "level": "2",
+       "heading": "0.8.0-next.23 (2021-01-07)",
+       "hash": "080-next23-2021-01-07",
+       "children": [
+        18
+       ],
+       "id": 17
       },
       {
        "level": "3",
        "heading": "Features",
        "hash": "features-5",
        "children": [],
+       "id": 18
+      },
+      {
+       "level": "2",
+       "heading": "0.8.0-next.22 (2021-01-01)",
+       "hash": "080-next22-2021-01-01",
+       "children": [
+        20
+       ],
+       "id": 19
+      },
+      {
+       "level": "3",
+       "heading": "Features",
+       "hash": "features-6",
+       "children": [],
+       "id": 20
+      },
+      {
+       "level": "2",
+       "heading": "0.8.0-next.21 (2020-12-30)",
+       "hash": "080-next21-2020-12-30",
+       "children": [
+        22
+       ],
+       "id": 21
+      },
+      {
+       "level": "3",
+       "heading": "Features",
+       "hash": "features-7",
+       "children": [],
+       "id": 22
+      },
+      {
+       "level": "2",
+       "heading": "0.8.0-next.20 (2020-12-30)",
+       "hash": "080-next20-2020-12-30",
+       "children": [
+        24
+       ],
        "id": 23
+      },
+      {
+       "level": "3",
+       "heading": "Features",
+       "hash": "features-8",
+       "children": [],
+       "id": 24
+      },
+      {
+       "level": "2",
+       "heading": "0.8.0-next.19 (2020-12-30)",
+       "hash": "080-next19-2020-12-30",
+       "children": [
+        26
+       ],
+       "id": 25
+      },
+      {
+       "level": "3",
+       "heading": "Features",
+       "hash": "features-9",
+       "children": [],
+       "id": 26
+      },
+      {
+       "level": "2",
+       "heading": "0.8.0-next.18 (2020-12-30)",
+       "hash": "080-next18-2020-12-30",
+       "children": [
+        28,
+        29,
+        30
+       ],
+       "id": 27
+      },
+      {
+       "level": "3",
+       "heading": "⚠ BREAKING CHANGES",
+       "hash": "-breaking-changes",
+       "children": [],
+       "id": 28
+      },
+      {
+       "level": "3",
+       "heading": "Features",
+       "hash": "features-10",
+       "children": [],
+       "id": 29
+      },
+      {
+       "level": "3",
+       "heading": "Bug Fixes",
+       "hash": "bug-fixes-4",
+       "children": [],
+       "id": 30
+      },
+      {
+       "level": "2",
+       "heading": "0.8.0-next.17 (2020-12-29)",
+       "hash": "080-next17-2020-12-29",
+       "children": [
+        32
+       ],
+       "id": 31
+      },
+      {
+       "level": "3",
+       "heading": "Bug Fixes",
+       "hash": "bug-fixes-5",
+       "children": [],
+       "id": 32
+      },
+      {
+       "level": "2",
+       "heading": "0.8.0-next.16 (2020-12-29)",
+       "hash": "080-next16-2020-12-29",
+       "children": [
+        34,
+        35,
+        36
+       ],
+       "id": 33
+      },
+      {
+       "level": "3",
+       "heading": "⚠ BREAKING CHANGES",
+       "hash": "-breaking-changes-1",
+       "children": [],
+       "id": 34
+      },
+      {
+       "level": "3",
+       "heading": "Features",
+       "hash": "features-11",
+       "children": [],
+       "id": 35
+      },
+      {
+       "level": "3",
+       "heading": "Bug Fixes",
+       "hash": "bug-fixes-6",
+       "children": [],
+       "id": 36
+      },
+      {
+       "level": "2",
+       "heading": "0.8.0-next.15 (2020-12-25)",
+       "hash": "080-next15-2020-12-25",
+       "children": [
+        38
+       ],
+       "id": 37
+      },
+      {
+       "level": "3",
+       "heading": "Bug Fixes",
+       "hash": "bug-fixes-7",
+       "children": [],
+       "id": 38
+      },
+      {
+       "level": "2",
+       "heading": "0.8.0-next.14 (2020-12-25)",
+       "hash": "080-next14-2020-12-25",
+       "children": [
+        40
+       ],
+       "id": 39
+      },
+      {
+       "level": "3",
+       "heading": "Features",
+       "hash": "features-12",
+       "children": [],
+       "id": 40
+      },
+      {
+       "level": "2",
+       "heading": "0.8.0-next.13 (2020-12-24)",
+       "hash": "080-next13-2020-12-24",
+       "children": [
+        42
+       ],
+       "id": 41
+      },
+      {
+       "level": "3",
+       "heading": "Bug Fixes",
+       "hash": "bug-fixes-8",
+       "children": [],
+       "id": 42
+      },
+      {
+       "level": "2",
+       "heading": "0.8.0-next.12 (2020-12-24)",
+       "hash": "080-next12-2020-12-24",
+       "children": [
+        44
+       ],
+       "id": 43
+      },
+      {
+       "level": "3",
+       "heading": "Bug Fixes",
+       "hash": "bug-fixes-9",
+       "children": [],
+       "id": 44
+      },
+      {
+       "level": "2",
+       "heading": "0.8.0-next.11 (2020-12-24)",
+       "hash": "080-next11-2020-12-24",
+       "children": [
+        46,
+        47
+       ],
+       "id": 45
+      },
+      {
+       "level": "3",
+       "heading": "⚠ BREAKING CHANGES",
+       "hash": "-breaking-changes-2",
+       "children": [],
+       "id": 46
+      },
+      {
+       "level": "3",
+       "heading": "Features",
+       "hash": "features-13",
+       "children": [],
+       "id": 47
+      },
+      {
+       "level": "2",
+       "heading": "0.8.0-next.10 (2020-12-16)",
+       "hash": "080-next10-2020-12-16",
+       "children": [],
+       "id": 48
+      },
+      {
+       "level": "2",
+       "heading": "0.8.0-next.9 (2020-12-13)",
+       "hash": "080-next9-2020-12-13",
+       "children": [
+        50,
+        51
+       ],
+       "id": 49
+      },
+      {
+       "level": "3",
+       "heading": "Features",
+       "hash": "features-14",
+       "children": [],
+       "id": 50
+      },
+      {
+       "level": "3",
+       "heading": "Bug Fixes",
+       "hash": "bug-fixes-10",
+       "children": [],
+       "id": 51
+      },
+      {
+       "level": "2",
+       "heading": "0.8.0-next.8 (2020-12-13)",
+       "hash": "080-next8-2020-12-13",
+       "children": [
+        53
+       ],
+       "id": 52
+      },
+      {
+       "level": "3",
+       "heading": "Bug Fixes",
+       "hash": "bug-fixes-11",
+       "children": [],
+       "id": 53
+      },
+      {
+       "level": "2",
+       "heading": "0.8.0-next.7 (2020-09-16)",
+       "hash": "080-next7-2020-09-16",
+       "children": [
+        55
+       ],
+       "id": 54
+      },
+      {
+       "level": "3",
+       "heading": "Features",
+       "hash": "features-15",
+       "children": [],
+       "id": 55
+      },
+      {
+       "level": "2",
+       "heading": "0.8.0-next.6 (2020-09-16)",
+       "hash": "080-next6-2020-09-16",
+       "children": [
+        57,
+        58
+       ],
+       "id": 56
+      },
+      {
+       "level": "3",
+       "heading": "⚠ BREAKING CHANGES",
+       "hash": "-breaking-changes-3",
+       "children": [],
+       "id": 57
+      },
+      {
+       "level": "3",
+       "heading": "Features",
+       "hash": "features-16",
+       "children": [],
+       "id": 58
+      },
+      {
+       "level": "2",
+       "heading": "0.8.0-next.5 (2020-08-18)",
+       "hash": "080-next5-2020-08-18",
+       "children": [],
+       "id": 59
+      },
+      {
+       "level": "2",
+       "heading": "0.8.0-next.4 (2020-08-18)",
+       "hash": "080-next4-2020-08-18",
+       "children": [
+        61,
+        62,
+        63
+       ],
+       "id": 60
+      },
+      {
+       "level": "3",
+       "heading": "⚠ BREAKING CHANGES",
+       "hash": "-breaking-changes-4",
+       "children": [],
+       "id": 61
+      },
+      {
+       "level": "3",
+       "heading": "Features",
+       "hash": "features-17",
+       "children": [],
+       "id": 62
+      },
+      {
+       "level": "3",
+       "heading": "Bug Fixes",
+       "hash": "bug-fixes-12",
+       "children": [],
+       "id": 63
+      },
+      {
+       "level": "2",
+       "heading": "0.8.0-next.3 (2020-08-09)",
+       "hash": "080-next3-2020-08-09",
+       "children": [
+        65,
+        66
+       ],
+       "id": 64
+      },
+      {
+       "level": "3",
+       "heading": "⚠ BREAKING CHANGES",
+       "hash": "-breaking-changes-5",
+       "children": [],
+       "id": 65
+      },
+      {
+       "level": "3",
+       "heading": "Features",
+       "hash": "features-18",
+       "children": [],
+       "id": 66
+      },
+      {
+       "level": "2",
+       "heading": "0.8.0-next.2 (2020-08-05)",
+       "hash": "080-next2-2020-08-05",
+       "children": [
+        68
+       ],
+       "id": 67
+      },
+      {
+       "level": "3",
+       "heading": "Bug Fixes",
+       "hash": "bug-fixes-13",
+       "children": [],
+       "id": 68
+      },
+      {
+       "level": "2",
+       "heading": "0.8.0-next.1 (2020-08-05)",
+       "hash": "080-next1-2020-08-05",
+       "children": [],
+       "id": 69
+      },
+      {
+       "level": "2",
+       "heading": "0.8.0-next.0 (2020-08-03)",
+       "hash": "080-next0-2020-08-03",
+       "children": [
+        71,
+        72,
+        73,
+        74
+       ],
+       "id": 70
+      },
+      {
+       "level": "3",
+       "heading": "⚠ BREAKING CHANGES",
+       "hash": "-breaking-changes-6",
+       "children": [],
+       "id": 71
+      },
+      {
+       "level": "3",
+       "heading": "Features",
+       "hash": "features-19",
+       "children": [],
+       "id": 72
+      },
+      {
+       "level": "3",
+       "heading": "0.7.2 (2020-07-25)",
+       "hash": "072-2020-07-25",
+       "children": [],
+       "id": 73
+      },
+      {
+       "level": "3",
+       "heading": "0.7.1 (2020-07-18)",
+       "hash": "071-2020-07-18",
+       "children": [],
+       "id": 74
+      },
+      {
+       "level": "2",
+       "heading": "0.7.0 (2020-07-17)",
+       "hash": "070-2020-07-17",
+       "children": [
+        76
+       ],
+       "id": 75
+      },
+      {
+       "level": "3",
+       "heading": "Bug Fixes",
+       "hash": "bug-fixes-14",
+       "children": [],
+       "id": 76
+      },
+      {
+       "level": "2",
+       "heading": "0.6.0 (2020-07-16)",
+       "hash": "060-2020-07-16",
+       "children": [
+        78,
+        79
+       ],
+       "id": 77
+      },
+      {
+       "level": "3",
+       "heading": "⚠ BREAKING CHANGES",
+       "hash": "-breaking-changes-7",
+       "children": [],
+       "id": 78
+      },
+      {
+       "level": "3",
+       "heading": "Features",
+       "hash": "features-20",
+       "children": [],
+       "id": 79
+      },
+      {
+       "level": "2",
+       "heading": "0.5.0 (2020-07-15)",
+       "hash": "050-2020-07-15",
+       "children": [
+        81,
+        82,
+        83,
+        84
+       ],
+       "id": 80
+      },
+      {
+       "level": "3",
+       "heading": "⚠ BREAKING CHANGES",
+       "hash": "-breaking-changes-8",
+       "children": [],
+       "id": 81
+      },
+      {
+       "level": "3",
+       "heading": "Features",
+       "hash": "features-21",
+       "children": [],
+       "id": 82
+      },
+      {
+       "level": "3",
+       "heading": "0.4.1 (2020-06-29)",
+       "hash": "041-2020-06-29",
+       "children": [],
+       "id": 83
+      },
+      {
+       "level": "3",
+       "heading": "Bug Fixes",
+       "hash": "bug-fixes-15",
+       "children": [],
+       "id": 84
+      },
+      {
+       "level": "2",
+       "heading": "0.4.0 (2020-06-29)",
+       "hash": "040-2020-06-29",
+       "children": [
+        86
+       ],
+       "id": 85
+      },
+      {
+       "level": "3",
+       "heading": "Bug Fixes",
+       "hash": "bug-fixes-16",
+       "children": [],
+       "id": 86
+      },
+      {
+       "level": "2",
+       "heading": "0.3.0 (2020-06-29)",
+       "hash": "030-2020-06-29",
+       "children": [
+        88
+       ],
+       "id": 87
+      },
+      {
+       "level": "3",
+       "heading": "Features",
+       "hash": "features-22",
+       "children": [],
+       "id": 88
+      },
+      {
+       "level": "2",
+       "heading": "0.2.0 (2020-06-28)",
+       "hash": "020-2020-06-28",
+       "children": [
+        90,
+        91
+       ],
+       "id": 89
+      },
+      {
+       "level": "3",
+       "heading": "⚠ BREAKING CHANGES",
+       "hash": "-breaking-changes-9",
+       "children": [],
+       "id": 90
+      },
+      {
+       "level": "3",
+       "heading": "Features",
+       "hash": "features-23",
+       "children": [],
+       "id": 91
+      },
+      {
+       "level": "2",
+       "heading": "0.1.0 (2020-06-11)",
+       "hash": "010-2020-06-11",
+       "children": [
+        93,
+        94,
+        95
+       ],
+       "id": 92
+      },
+      {
+       "level": "3",
+       "heading": "Features",
+       "hash": "features-24",
+       "children": [],
+       "id": 93
+      },
+      {
+       "level": "3",
+       "heading": "0.0.1 (2020-06-10)",
+       "hash": "001-2020-06-10",
+       "children": [],
+       "id": 94
+      },
+      {
+       "level": "3",
+       "heading": "Features",
+       "hash": "features-25",
+       "children": [],
+       "id": 95
       }
      ]
     },
